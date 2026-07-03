@@ -977,15 +977,22 @@
       border: 1px solid var(--border);
       border-radius: 16px;
       background: #fff;
-      padding: 14px 14px 12px;
+      padding: 14px 16px;
       text-align: left;
-      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(15,23,42,.05);
       transition: var(--transition);
     }
-    .source-card:active { transform: scale(.99); }
+    button.source-card { cursor: pointer; }
+    button.source-card:hover { border-color: var(--border-strong); box-shadow: 0 4px 14px rgba(15,23,42,.08); }
+    button.source-card:active { transform: scale(.99); background: var(--bg); }
+    .source-card--summary { display: flex; flex-direction: column; }
+    .source-card--summary:hover { border-color: var(--border-strong); box-shadow: 0 4px 14px rgba(15,23,42,.08); }
+    .source-card-main { cursor: pointer; transition: opacity .15s; }
+    .source-card-main:active { opacity: .6; }
     .source-card--child {
       border-radius: 14px;
       background: #fcfcfd;
+      box-shadow: none;
     }
     .source-card-title {
       color: var(--text-primary);
@@ -1000,22 +1007,31 @@
       line-height: 1.65;
     }
     .source-card-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      width: 100%;
+      margin-top: 12px;
+      padding: 10px 0 0;
       border: none;
+      border-top: 1px solid var(--border);
       background: transparent;
       color: var(--accent);
       font-size: 12px;
       font-weight: 700;
-      padding: 0;
       text-align: left;
       cursor: pointer;
     }
+    .source-card-toggle .source-chev { flex: 0 0 auto; transition: transform .2s ease; }
+    .source-card-toggle.expanded .source-chev { transform: rotate(180deg); }
     .source-children {
       display: flex;
       flex-direction: column;
       gap: 8px;
+      margin-top: 12px;
       padding-left: 10px;
       border-left: 2px solid #f0f2f5;
-      margin-left: 10px;
     }
     .source-empty {
       padding: 26px 12px;
@@ -1300,7 +1316,9 @@
       font-weight: 900;
       cursor: pointer;
     }
-    .super-agent-fab.show { display: inline-flex; }
+    /* Super Agent 悬浮入口已下线，仅保留「消息」列表中的入口 */
+    .super-agent-fab,
+    .super-agent-fab.show { display: none !important; }
     .super-agent-fab-dot {
       position: absolute;
       top: 8px;
@@ -1318,6 +1336,20 @@
       flex-direction: column;
       min-height: calc(100dvh - 44px);
       background: #f7f8fb;
+    }
+    /* 聊天页：视口定高，会话区内部滚动，header 吸顶 */
+    #superAgentPage.screen-page {
+      height: 100dvh;
+      min-height: 0;
+      padding-bottom: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    #superAgentPage .super-shell {
+      flex: 1;
+      min-height: 0;
+      height: auto;
     }
     .super-page-bar {
       position: sticky;
@@ -1423,14 +1455,21 @@
     .super-source-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: #fff4e8;
-      color: #ff8b21;
-      font-size: 13px;
-      font-weight: 800;
+      gap: 5px;
+      align-self: flex-start;
+      margin-top: 8px;
+      padding: 4px 4px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text-tertiary);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
     }
+    .super-source-pill:hover { color: var(--accent); }
+    .super-source-pill:active { transform: scale(.96); }
     .super-composer-wrap {
       position: fixed;
       left: 50%;
@@ -4087,9 +4126,8 @@
         draft: '',
         messages: [
           { id: 'super-report', role: 'agent', type: 'report-card', title: '今日速览', subtitle: '企业关键动态日报', text: '日报已生成，包含重点变化、风险提醒和下一步动作建议。', actionLabel: '查看日报', time: '今天 09:00' },
-          { id: 'super-source', role: 'agent', type: 'source-pill', count: 3, time: '09:02' },
           { id: 'super-intro', role: 'agent', text: '你好，我是 Super Agent。可以总结信息、解释洞察、提炼要点，也可以根据明确行动结论生成任务。', time: '09:02' },
-          { id: 'super-rec', role: 'agent', text: '根据近一周的信号，我给出三条要点结论：\n1）客户 A Onboarding 出现明显阻力，主要卡在 SSO 对接；\n2）CFO 在 Slack 抛出「预算再砍 15%」的信号，需要 CS/销售侧同步节奏；\n3）ARR 目标下调后，续费策略需要重排。', time: '09:07', recs: ['帮我总结当前列表', '有哪些重点结论', '创建一个新的自动化任务'] }
+          { id: 'super-rec', role: 'agent', text: '根据近一周的信号，我给出三条要点结论：\n1）客户 A Onboarding 出现明显阻力，主要卡在 SSO 对接；\n2）CFO 在 Slack 抛出「预算再砍 15%」的信号，需要 CS/销售侧同步节奏；\n3）ARR 目标下调后，续费策略需要重排。', time: '09:07', sourceCount: 3, recs: ['帮我总结当前列表', '有哪些重点结论', '创建一个新的自动化任务'] }
         ],
         settings: [
           { title: '基础设置', subtitle: '名称、头像', note: 'Super Agent 默认名称为“我的 agent”，头像同步更新悬浮入口与消息列表。' },
@@ -4614,17 +4652,14 @@
             '</div>' +
           '</div></div>';
         }
-        if (message.type === 'source-pill') {
-          return '<div class="super-msg-row agent"><div class="super-msg-main">' +
-            '<div class="super-msg-meta">' + escapeHTML(message.time || '') + '</div>' +
-            '<button class="super-source-pill" type="button" data-super-action="open-sources" data-source-count="' + escapeHTML(message.count) + '">' +
-              '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"></path></svg>' +
-              '<span>来源 · ' + escapeHTML(message.count) + '</span>' +
-            '</button>' +
-          '</div></div>';
-        }
         var bubble = '<div class="super-msg-row ' + (message.role === 'user' ? 'user' : 'agent') + '"><div class="super-msg-main">' +
           '<div class="super-msg-bubble">' + escapeHTML(message.text || '').replace(/\n/g, '<br>') + '</div>';
+        if (message.role !== 'user' && message.sourceCount) {
+          bubble += '<button class="super-source-pill" type="button" data-super-action="open-sources" data-source-count="' + escapeHTML(message.sourceCount) + '">' +
+            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"></path></svg>' +
+            '<span>来源 · ' + escapeHTML(message.sourceCount) + '</span>' +
+          '</button>';
+        }
         if (message.recs && message.recs.length) {
           bubble += '<div class="super-rec-wrap">' + message.recs.map(function (rec) {
             return '<button class="super-rec-btn" type="button" data-super-question="' + escapeHTML(rec) + '">' + escapeHTML(rec) + '</button>';
@@ -4751,8 +4786,8 @@
             return;
           }
           if (item.dataset.convId === 'audio-ast') {
-            markAudioAssistantEntryViewed();
-            switchPage('audio');
+            // 录音助手功能已在本版 demo 下线，仅保留入口
+            showToast('录音助手功能暂未开放');
           }
         };
       }
@@ -5061,8 +5096,8 @@
           ? '<div class="event-detail-ref-body">' + escapeHTML(reference) + '</div>'
           : '';
         return '<div class="event-detail-card">' +
-          (tags ? '<div class="event-detail-tags">' + tags + '</div>' : '') +
           '<h2 class="event-detail-item-title">' + escapeHTML(source.title || '未命名事项') + '</h2>' +
+          (tags ? '<div class="event-detail-tags">' + tags + '</div>' : '') +
           (source.summary ? '<div class="event-detail-summary">' + escapeHTML(source.summary) + '</div>' : '') +
         '</div>' + refHead + refBody;
       }
@@ -5085,8 +5120,9 @@
           var hasChildren = !!(source.children && source.children.length);
           var expanded = hasChildren && expandedSet.has(source.id);
           var toggle = hasChildren
-            ? '<button class="source-card-toggle" type="button" data-source-toggle="' + escapeHTML(source.id) + '">' +
-                (expanded ? '收起' : '展开') + ' ' + source.children.length + ' 个相关子事项' +
+            ? '<button class="source-card-toggle' + (expanded ? ' expanded' : '') + '" type="button" data-source-toggle="' + escapeHTML(source.id) + '">' +
+                '<span>' + (expanded ? '收起' : '展开 ' + source.children.length + ' 个相关子事项') + '</span>' +
+                '<svg class="source-chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
               '</button>'
             : '';
           var children = expanded
@@ -5097,18 +5133,30 @@
                 '</button>';
               }).join('') + '</div>'
             : '';
+          if (hasChildren) {
+            // 总结事项：展开 / 收起入口包在卡片内部
+            return '<div class="source-item">' +
+              '<div class="source-card source-card--summary' + (expanded ? ' expanded' : '') + '">' +
+                '<div class="source-card-main" data-source-open="' + escapeHTML(source.id) + '">' +
+                  '<div class="source-card-title">' + escapeHTML(source.title || '未命名事项') + '</div>' +
+                  '<div class="source-card-desc">' + escapeHTML(source.summary || '') + '</div>' +
+                '</div>' +
+                toggle +
+                children +
+              '</div>' +
+            '</div>';
+          }
+          // 单独子事项：整卡可点
           return '<div class="source-item">' +
             '<button class="source-card" type="button" data-source-open="' + escapeHTML(source.id) + '">' +
               '<div class="source-card-title">' + escapeHTML(source.title || '未命名事项') + '</div>' +
               '<div class="source-card-desc">' + escapeHTML(source.summary || '') + '</div>' +
             '</button>' +
-            toggle +
-            children +
           '</div>';
         }).join('') + '</div>';
       }
 
-      function bindSourceTree(container, sources, expandedSet, rerender) {
+      function bindSourceTree(container, sources, expandedSet, rerender, onOpenDetail) {
         if (!container) return;
         container.querySelectorAll('[data-source-toggle]').forEach(function (button) {
           button.addEventListener('click', function () {
@@ -5120,6 +5168,7 @@
         });
         container.querySelectorAll('[data-source-open]').forEach(function (button) {
           button.addEventListener('click', function () {
+            if (typeof onOpenDetail === 'function') onOpenDetail();
             openEventDetail(findSourceById(button.dataset.sourceOpen));
           });
         });
@@ -5168,7 +5217,8 @@
         document.getElementById('sourcesSheetCount').textContent = (count != null && count !== '') ? count : sources.length;
         function rerender() {
           body.innerHTML = renderSourceTree(capped, sheetSourceExpanded, '暂无来源');
-          bindSourceTree(body, capped, sheetSourceExpanded, rerender);
+          // 点击事项卡片：先关闭来源 sheet，再打开事件详情页
+          bindSourceTree(body, capped, sheetSourceExpanded, rerender, closeSourcesSheet);
         }
         rerender();
         document.getElementById('sourcesSheet').classList.add('show');
