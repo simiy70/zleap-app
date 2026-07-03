@@ -193,13 +193,13 @@
     }
     .agent-filter.show { display: flex; }
     .agent-filter::-webkit-scrollbar { display: none; }
-    .agent {
+    .agent-filter .agent {
       flex: 0 0 auto; width: 58px;
       border: none; background: transparent; padding: 0;
       display: flex; flex-direction: column; align-items: center; gap: 6px;
       transition: var(--transition);
     }
-    .agent:active { transform: scale(.94); }
+    .agent-filter .agent:active { transform: scale(.94); }
     .agent-avatar {
       width: 48px; height: 48px;
       border-radius: 50%;
@@ -207,7 +207,7 @@
       box-shadow: 0 0 0 3px rgba(255,139,33,.16), 0 0 16px rgba(255,139,33,.32);
       transition: var(--transition);
     }
-    .agent.active .agent-avatar {
+    .agent-filter .agent.active .agent-avatar {
       border-color: var(--accent);
       box-shadow: 0 0 0 4px var(--accent-light), 0 0 20px rgba(255,139,33,.45);
     }
@@ -218,7 +218,7 @@
       max-width: 56px; text-align: center;
       line-height: 1.2;
     }
-    .agent.active .agent-name { color: var(--accent); font-weight: 700; }
+    .agent-filter .agent.active .agent-name { color: var(--accent); font-weight: 700; }
 
     /* ═══════════════════ FEED ═══════════════════ */
     .feed { padding-bottom: calc(var(--nav-h) + 40px); }
@@ -805,6 +805,10 @@
     .sheet-handle { width: 40px; height: 4px; margin: 0 auto 18px; border-radius: 999px; background: var(--border-strong); }
     .sheet-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
     .sheet-title-row strong { font-size: 17px; font-weight: 900; }
+    .sources-sheet { max-height: 78vh; display: flex; flex-direction: column; }
+    .sources-sheet .sheet-title-row { margin-bottom: 14px; }
+    .sources-sheet-body { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
+    .sources-sheet-close { border: none; background: transparent; font-size: 22px; line-height: 1; color: var(--text-tertiary); padding: 4px; }
     .sheet-reset { border: none; background: transparent; color: var(--text-tertiary); font-size: 14px; font-weight: 600; }
     .filter-group { margin-bottom: 22px; }
     .filter-label { margin-bottom: 12px; color: var(--text-primary); font-size: 14px; font-weight: 800; }
@@ -831,7 +835,7 @@
       overflow-y: auto;
     }
     .detail-page.show { display: block; }
-    .detail-shell { max-width: 390px; min-height: 100dvh; margin: 0 auto; padding-bottom: 90px; }
+    .detail-shell { max-width: 390px; min-height: 100dvh; margin: 0 auto; padding-bottom: 140px; }
     .detail-top {
       position: sticky; top: 0; z-index: 20;
       height: 90px; display: flex; align-items: flex-end; gap: 14px;
@@ -903,11 +907,19 @@
       box-shadow: 0 2px 16px rgba(0,0,0,.08);
     }
     .detail-view-switch {
+      position: fixed;
+      left: 50%;
+      bottom: 84px;
+      transform: translateX(-50%);
+      z-index: 121;
       display: inline-flex;
       gap: 6px;
-      padding: 4px;
+      padding: 5px;
       border-radius: var(--radius-pill);
-      background: #f5f6f8;
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-float);
     }
     .detail-view-tab {
       border: none;
@@ -1464,27 +1476,43 @@
     #superTaskDetailWrap {
       padding: 16px 14px 30px;
     }
-    .super-setting-card,
     .super-task-card { margin-bottom: 12px; }
+    .super-setting-card {
+      margin-bottom: 12px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 16px 18px;
+      box-shadow: var(--shadow-card);
+    }
     .super-setting-head {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .super-setting-head strong {
-      font-size: 16px;
+      display: block;
+      font-size: 15px;
+      font-weight: 800;
       color: var(--text-primary);
     }
     .super-setting-head span {
+      display: block;
+      margin-top: 3px;
       color: var(--text-tertiary);
       font-size: 12px;
     }
     .super-setting-note {
       color: var(--text-secondary);
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.7;
+    }
+    .super-setting-card .super-inline-action {
+      margin-top: 14px;
+      height: 38px;
+      font-size: 13px;
     }
     .super-task-list-head {
       display: flex;
@@ -3961,6 +3989,18 @@
     </div>
   </section>
 
+  <!-- Sources Sheet (message page) -->
+  <div class="sheet-backdrop" id="sourcesSheet">
+    <div class="bottom-sheet sources-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title-row">
+        <strong>来源 · <span id="sourcesSheetCount">0</span></strong>
+        <button class="sources-sheet-close" data-close="sources-sheet" type="button" aria-label="关闭">×</button>
+      </div>
+      <div class="sources-sheet-body" id="sourcesSheetBody"></div>
+    </div>
+  </div>
+
   <!-- Toast container -->
   <div class="toast-wrap" id="toastWrap"></div>
 
@@ -4557,7 +4597,7 @@
         if (message.type === 'source-pill') {
           return '<div class="super-msg-row agent"><div class="super-msg-main">' +
             '<div class="super-msg-meta">' + escapeHTML(message.time || '') + '</div>' +
-            '<button class="super-source-pill" type="button" data-super-action="open-report" data-report-id="report-daily">' +
+            '<button class="super-source-pill" type="button" data-super-action="open-sources" data-source-count="' + escapeHTML(message.count) + '">' +
               '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"></path></svg>' +
               '<span>来源 · ' + escapeHTML(message.count) + '</span>' +
             '</button>' +
@@ -4920,6 +4960,7 @@
 
       var currentDetailMode = 'content';
       var articleSourceExpanded = new Set();
+      var sheetSourceExpanded = new Set();
       var currentEventSource = null;
 
       function cloneSourceNode(node) {
@@ -5093,6 +5134,27 @@
           bindSourceTree(pane, capped, articleSourceExpanded, rerender);
         }
         rerender();
+      }
+
+      /* ─── SOURCES SHEET (message page 来源 entry) ─── */
+      function openSourcesSheet(count) {
+        sheetSourceExpanded.clear();
+        var ids = (baseItems[0] && baseItems[0].sourceIds) || [];
+        var sources = ids.map(findSourceById).filter(Boolean);
+        var capped = truncateSources(sources, 100);
+        var body = document.getElementById('sourcesSheetBody');
+        document.getElementById('sourcesSheetCount').textContent = (count != null && count !== '') ? count : sources.length;
+        function rerender() {
+          body.innerHTML = renderSourceTree(capped, sheetSourceExpanded, '暂无来源');
+          bindSourceTree(body, capped, sheetSourceExpanded, rerender);
+        }
+        rerender();
+        document.getElementById('sourcesSheet').classList.add('show');
+      }
+
+      function closeSourcesSheet() {
+        document.getElementById('sourcesSheet').classList.remove('show');
+        sheetSourceExpanded.clear();
       }
 
       function renderDetailComments() {
@@ -5572,6 +5634,8 @@
         var action = actionEl.dataset.superAction;
         if (action === 'open-report') {
           openReportDetail();
+        } else if (action === 'open-sources') {
+          openSourcesSheet(actionEl.dataset.sourceCount);
         } else if (action === 'open-task-list') {
           switchPage('superTasks');
         }
@@ -5743,6 +5807,16 @@
         detailPage.classList.remove('show');
         document.body.style.overflow = '';
       });
+
+      /* ─── Sources sheet close ─── */
+      var sourcesSheetEl = document.getElementById('sourcesSheet');
+      if (sourcesSheetEl) {
+        sourcesSheetEl.addEventListener('click', function (event) {
+          if (event.target === sourcesSheetEl || event.target.closest('[data-close="sources-sheet"]')) {
+            closeSourcesSheet();
+          }
+        });
+      }
 
       detailContent.addEventListener('click', function (event) {
         var modeButton = event.target.closest('[data-detail-mode]');
