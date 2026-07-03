@@ -830,7 +830,7 @@
 
     /* ═══════════════════ DETAIL PAGE ═══════════════════ */
     .detail-page {
-      position: fixed; inset: 0; z-index: 100;
+      position: fixed; inset: 0; z-index: 140;
       display: none; background: var(--surface);
       overflow-y: auto;
     }
@@ -942,6 +942,26 @@
       margin-top: 16px;
     }
     .detail-view-pane.active { display: block; }
+    .detail-page.detail-page--sources .detail-cover,
+    .detail-page.detail-page--sources .detail-comments,
+    .detail-page.detail-page--sources .detail-actions,
+    .detail-page.detail-page--sources .detail-back-to-top,
+    .detail-page.detail-page--sources [data-detail-pane="content"] {
+      display: none !important;
+    }
+    .detail-page.detail-page--sources .detail-shell {
+      padding-bottom: 36px;
+    }
+    .detail-page.detail-page--sources .detail-view-section {
+      margin-top: 0;
+      padding-top: 12px;
+      box-shadow: none;
+      border-radius: 0;
+      background: transparent;
+    }
+    .detail-page.detail-page--sources .detail-view-pane {
+      margin-top: 8px;
+    }
     .source-tree {
       display: flex;
       flex-direction: column;
@@ -5115,12 +5135,14 @@
 
       function setDetailMode(mode) {
         currentDetailMode = mode === 'sources' ? 'sources' : 'content';
+        detailPage.classList.toggle('detail-page--sources', currentDetailMode === 'sources');
         detailContent.querySelectorAll('[data-detail-mode]').forEach(function (button) {
           button.classList.toggle('active', button.dataset.detailMode === currentDetailMode);
         });
         detailContent.querySelectorAll('[data-detail-pane]').forEach(function (pane) {
           pane.classList.toggle('active', pane.dataset.detailPane === currentDetailMode);
         });
+        if (currentDetailMode === 'sources') detailPage.scrollTop = 0;
       }
 
       function renderDetailSourcesPane(item) {
