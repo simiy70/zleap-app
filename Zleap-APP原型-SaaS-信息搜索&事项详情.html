@@ -1337,8 +1337,8 @@
       min-height: calc(100dvh - 44px);
       background: #f7f8fb;
     }
-    /* 聊天页：视口定高，会话区内部滚动，header 吸顶 */
-    #superAgentPage.screen-page {
+    /* 聊天页：视口定高，会话区内部滚动，header 吸顶（仅在显示态生效，避免覆盖 .screen-page 的 display:none） */
+    #superAgentPage.screen-page.show {
       height: 100dvh;
       min-height: 0;
       padding-bottom: 0;
