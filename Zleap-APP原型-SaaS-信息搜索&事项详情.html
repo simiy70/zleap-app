@@ -1130,19 +1130,24 @@
     .sr-clear-input { flex: 0 0 auto; border: none; background: var(--border-strong); color: #fff; width: 18px; height: 18px; border-radius: 50%; font-size: 13px; line-height: 1; cursor: pointer; }
     .sr-body { flex: 1; min-height: 0; overflow-y: auto; padding: 14px 16px 40px; -webkit-overflow-scrolling: touch; }
     .search-result-page.multi .sr-body { padding-bottom: 96px; }
-    /* 推理路径 */
-    .sr-path { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); margin-bottom: 14px; overflow: hidden; }
-    .sr-path-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; }
-    .sr-path-head-title { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: var(--text-primary); }
-    .sr-path-badge { padding: 2px 8px; border-radius: 999px; background: var(--accent-light); color: var(--accent); font-size: 10px; font-weight: 800; }
-    .sr-path .chev { transition: transform .2s; color: var(--text-tertiary); }
-    .sr-path.open .chev { transform: rotate(180deg); }
-    .sr-path-body { display: none; padding: 0 14px 14px; }
-    .sr-path.open .sr-path-body { display: block; }
-    .sr-path-node { padding: 10px 12px; border-radius: 10px; background: var(--bg); font-size: 12.5px; color: var(--text-primary); }
-    .sr-path-node .lbl { display: block; font-size: 11px; color: var(--text-tertiary); font-weight: 700; margin-bottom: 3px; }
-    .sr-path-node.final { background: var(--accent-light); }
-    .sr-path-arrow { display: grid; place-items: center; color: var(--border-strong); padding: 4px 0; }
+    /* 推理路径：详情里的紧凑入口 */
+    .event-path-entry {
+      display: flex; align-items: center; gap: 8px; width: 100%;
+      margin-top: 14px; padding: 11px 14px;
+      border: 1px solid var(--border); border-radius: 12px; background: var(--surface);
+      cursor: pointer; transition: var(--transition);
+    }
+    .event-path-entry:active { background: var(--bg); }
+    .event-path-entry-text { flex: 1; text-align: left; font-size: 12.5px; font-weight: 700; color: var(--text-secondary); }
+    .event-path-entry .chev { flex: 0 0 auto; color: var(--text-tertiary); }
+    .event-path-badge { flex: 0 0 auto; padding: 3px 9px; border-radius: 999px; background: var(--accent-light); color: var(--accent); font-size: 10px; font-weight: 800; }
+    /* 推理路径：sheet 内的流程 */
+    #pathSheet { z-index: 200; }
+    .event-path { margin: 0; }
+    .event-path-node { padding: 12px 14px; border-radius: 10px; background: var(--bg); font-size: 13px; line-height: 1.6; color: var(--text-primary); }
+    .event-path-node .lbl { display: block; font-size: 11px; color: var(--text-tertiary); font-weight: 700; margin-bottom: 4px; }
+    .event-path-node.final { background: var(--accent-light); }
+    .event-path-arrow { display: grid; place-items: center; color: var(--border-strong); padding: 4px 0; }
     /* AI 总结 */
     .sr-summary { border: 1px solid var(--border); border-radius: 16px; background: var(--surface); padding: 14px 16px; margin-bottom: 14px; }
     .sr-summary-text { font-size: 13.5px; line-height: 1.85; color: var(--text-primary); }
@@ -3547,7 +3552,6 @@
         </div>
       </div>
       <div class="sr-body" id="searchResultBody">
-        <div class="sr-path" id="srPath"></div>
         <div class="sr-summary" id="srSummary"></div>
         <div class="sr-controls">
           <button class="sr-ctrl" type="button" data-sr-ctrl="sort">
@@ -4283,6 +4287,18 @@
       <div class="event-detail-body" id="eventDetailBody"></div>
     </div>
   </section>
+
+  <!-- 推理路径 Sheet -->
+  <div class="sheet-backdrop" id="pathSheet">
+    <div class="bottom-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title-row">
+        <strong>推理路径</strong>
+        <button class="sources-sheet-close" data-close="path-sheet" type="button" aria-label="关闭">×</button>
+      </div>
+      <div class="event-path" id="pathSheetBody"></div>
+    </div>
+  </div>
 
   <!-- 搜索范围 Sheet -->
   <div class="sheet-backdrop" id="searchRangeSheet">
@@ -5375,15 +5391,20 @@
       function openSearchResults(query) {
         searchResultState.query = query;
         searchResultState.events = buildResultEvents();
+        // 给每条结果事项挂上「推理路径」——说明该事项是怎么被检索到的
+        searchResultState.events.forEach(function (ev) {
+          ev.path = { query: query, source: ev.source, via: '关键词 + 语义相似度检索', hit: ev.title };
+          (ev.children || []).forEach(function (c) {
+            c.path = { query: query, source: ev.source, via: '命中「' + ev.title + '」后展开子事项', hit: c.title };
+          });
+        });
         searchResultState.selected.clear();
         searchResultState.resultExpanded.clear();
         searchResultState.multi = false;
         searchResultState.summaryExpanded = false;
-        searchResultState.pathOpen = false;
         searchResultPage.classList.remove('multi');
         var input = document.getElementById('searchResultInput');
         if (input) input.value = query;
-        renderResultPath();
         renderResultSummary();
         renderResultControls();
         renderResultList();
@@ -5395,23 +5416,6 @@
       function closeSearchResults() {
         searchResultPage.classList.remove('show');
         if (searchPage && searchPage.classList.contains('show')) bottomNav.classList.remove('hide');
-      }
-
-      function renderResultPath() {
-        var el = document.getElementById('srPath');
-        el.className = 'sr-path' + (searchResultState.pathOpen ? ' open' : '');
-        el.innerHTML =
-          '<div class="sr-path-head" data-path-toggle>' +
-            '<span class="sr-path-head-title"><span class="sr-path-badge">推理路径</span></span>' +
-            '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
-          '</div>' +
-          '<div class="sr-path-body">' +
-            '<div class="sr-path-node"><span class="lbl">原始问题</span>' + escapeHTML(searchResultState.query) + '</div>' +
-            '<div class="sr-path-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="6 13 12 19 18 13"></polyline></svg></div>' +
-            '<div class="sr-path-node final"><span class="lbl">最终结果</span>已从 ' + searchResultState.events.length + ' 条来源事项中汇总，生成 AI 总结与结果列表。</div>' +
-          '</div>';
-        var head = el.querySelector('[data-path-toggle]');
-        if (head) head.onclick = function () { searchResultState.pathOpen = !searchResultState.pathOpen; renderResultPath(); };
       }
 
       function renderResultSummary() {
@@ -5750,16 +5754,34 @@
         var refBody = reference
           ? '<div class="event-detail-ref-body">' + escapeHTML(reference) + '</div>'
           : '';
+        var pathHTML = source.path
+          ? '<button class="event-path-entry" type="button" data-open-path>' +
+              '<span class="event-path-badge">推理路径</span>' +
+              '<span class="event-path-entry-text">该事项是如何被检索到的</span>' +
+              '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>' +
+            '</button>'
+          : '';
         return '<div class="event-detail-card">' +
           '<h2 class="event-detail-item-title">' + escapeHTML(source.title || '未命名事项') + '</h2>' +
           (tags ? '<div class="event-detail-tags">' + tags + '</div>' : '') +
           (source.summary ? '<div class="event-detail-summary">' + escapeHTML(source.summary) + '</div>' : '') +
-        '</div>' + refHead + refBody;
+        '</div>' + pathHTML + refHead + refBody;
       }
 
       function renderEventDetail(source) {
         currentEventSource = source || null;
         document.getElementById('eventDetailBody').innerHTML = eventDetailHTML(currentEventSource);
+      }
+
+      function openPathSheet() {
+        var p = currentEventSource && currentEventSource.path;
+        if (!p) return;
+        var arrow = '<div class="event-path-arrow"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="6 13 12 19 18 13"></polyline></svg></div>';
+        document.getElementById('pathSheetBody').innerHTML =
+          '<div class="event-path-node"><span class="lbl">原始问题</span>' + escapeHTML(p.query || '') + '</div>' + arrow +
+          '<div class="event-path-node"><span class="lbl">检索命中</span>' + escapeHTML(p.via || '关键词 + 语义相似度检索') + (p.source ? '，来自「' + escapeHTML(p.source) + '」' : '') + '</div>' + arrow +
+          '<div class="event-path-node final"><span class="lbl">最终结果</span>' + escapeHTML(p.hit || (currentEventSource && currentEventSource.title) || '') + '</div>';
+        document.getElementById('pathSheet').classList.add('show');
       }
 
       function openEventDetail(source) {
@@ -6357,6 +6379,13 @@
         if (e.target === publishSheetEl || e.target.closest('[data-close="publish-sheet"]')) closeSheet('publishSheet');
       });
       document.getElementById('publishStartBtn').addEventListener('click', startPublish);
+      document.getElementById('eventDetailBody').addEventListener('click', function (e) {
+        if (e.target.closest('[data-open-path]')) openPathSheet();
+      });
+      var pathSheetEl = document.getElementById('pathSheet');
+      pathSheetEl.addEventListener('click', function (e) {
+        if (e.target === pathSheetEl || e.target.closest('[data-close="path-sheet"]')) closeSheet('pathSheet');
+      });
 
       if (superAgentFab) {
         superAgentFab.addEventListener('click', function () {
