@@ -1153,15 +1153,15 @@
     .search-result-page.multi .sr-body { padding-bottom: 96px; }
     /* 推理路径：详情里的紧凑入口 */
     .event-path-entry {
-      display: flex; align-items: center; gap: 8px; width: 100%;
-      margin-top: 14px; padding: 11px 14px;
-      border: 1px solid var(--border); border-radius: 12px; background: var(--surface);
+      display: inline-flex; align-items: center; gap: 5px;
+      margin-top: 12px; padding: 6px 11px;
+      border: none; border-radius: 999px; background: var(--accent-light);
+      color: var(--accent); font-size: 12px; font-weight: 800;
       cursor: pointer; transition: var(--transition);
     }
-    .event-path-entry:active { background: var(--bg); }
-    .event-path-entry-text { flex: 1; text-align: left; font-size: 12.5px; font-weight: 700; color: var(--text-secondary); }
-    .event-path-entry .chev { flex: 0 0 auto; color: var(--text-tertiary); }
-    .event-path-badge { flex: 0 0 auto; padding: 3px 9px; border-radius: 999px; background: var(--accent-light); color: var(--accent); font-size: 10px; font-weight: 800; }
+    .event-path-entry:active { transform: scale(.97); }
+    .event-path-entry .ic { flex: 0 0 auto; }
+    .event-path-entry .chev { flex: 0 0 auto; opacity: .65; }
     /* 推理路径：sheet 内的流程 */
     #pathSheet { z-index: 200; }
     .event-path { margin: 0; }
@@ -5298,7 +5298,7 @@
       var dailyExpanded = new Set();
       var searchPhTimer = null;
 
-      var searchResultState = { query: '', events: [], selected: new Set(), multi: false, summaryExpanded: false, pathOpen: false, resultExpanded: new Set() };
+      var searchResultState = { query: '', events: [], selected: new Set(), multi: false, sortMode: 'smart', summaryExpanded: false, pathOpen: false, resultExpanded: new Set() };
       var publishAssistants = [
         { id: 'asst-report', name: '日报助手', sub: '擅长结构化汇总与要点提炼' },
         { id: 'asst-insight', name: '洞察助手', sub: '擅长趋势归纳与结论输出' },
@@ -5537,6 +5537,7 @@
         searchResultState.selected.clear();
         searchResultState.resultExpanded.clear();
         searchResultState.multi = false;
+        searchResultState.sortMode = 'smart';
         searchResultState.summaryExpanded = false;
         searchResultPage.classList.remove('multi');
         var input = document.getElementById('searchResultInput');
@@ -5569,6 +5570,14 @@
       function cite(n) { return '<span class="sr-cite">' + n + '</span>'; }
 
       function renderResultControls() {
+        var sortBtn = document.querySelector('[data-sr-ctrl="sort"]');
+        if (sortBtn) {
+          var isTime = searchResultState.sortMode === 'time';
+          var icon = isTime
+            ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>'
+            : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M7 12h10"></path><path d="M11 18h2"></path></svg>';
+          sortBtn.innerHTML = icon + (isTime ? '时间排序' : '智能排序');
+        }
         var multiBtn = document.querySelector('[data-sr-ctrl="multi"]');
         if (multiBtn) multiBtn.classList.toggle('active', searchResultState.multi);
       }
@@ -5599,6 +5608,9 @@
       function renderResultList() {
         var el = document.getElementById('searchResultList');
         var events = searchResultState.events;
+        if (searchResultState.sortMode === 'time') {
+          events = events.slice().sort(function (a, b) { return (b.time || '').localeCompare(a.time || ''); });
+        }
         if (!events.length) { el.innerHTML = '<div class="sr-empty">暂无搜索结果</div>'; updateSelBar(); return; }
         el.innerHTML = events.map(resultCardHTML).join('');
         el.querySelectorAll('[data-result-toggle]').forEach(function (b) {
@@ -5894,16 +5906,17 @@
           : '';
         var pathHTML = source.path
           ? '<button class="event-path-entry" type="button" data-open-path>' +
-              '<span class="event-path-badge">推理路径</span>' +
-              '<span class="event-path-entry-text">该事项是如何被检索到的</span>' +
-              '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>' +
+              '<svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.4"></circle><circle cx="18" cy="18" r="2.4"></circle><path d="M8.4 6H16a2 2 0 0 1 2 2v7.6"></path></svg>' +
+              '<span>推理路径</span>' +
+              '<svg class="chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>' +
             '</button>'
           : '';
         return '<div class="event-detail-card">' +
           '<h2 class="event-detail-item-title">' + escapeHTML(source.title || '未命名事项') + '</h2>' +
           (tags ? '<div class="event-detail-tags">' + tags + '</div>' : '') +
           (source.summary ? '<div class="event-detail-summary">' + escapeHTML(source.summary) + '</div>' : '') +
-        '</div>' + pathHTML + refHead + refBody;
+          pathHTML +
+        '</div>' + refHead + refBody;
       }
 
       function renderEventDetail(source) {
@@ -6510,7 +6523,12 @@
         if (e.key === 'Enter') { e.preventDefault(); var v = this.value.trim(); if (v) openSearchResults(v); }
       });
       document.querySelector('[data-sr-ctrl="multi"]').addEventListener('click', toggleMulti);
-      document.querySelector('[data-sr-ctrl="sort"]').addEventListener('click', function () { showToast('已按智能排序'); });
+      document.querySelector('[data-sr-ctrl="sort"]').addEventListener('click', function () {
+        searchResultState.sortMode = searchResultState.sortMode === 'time' ? 'smart' : 'time';
+        renderResultControls();
+        renderResultList();
+        showToast(searchResultState.sortMode === 'time' ? '已按时间排序' : '已按智能排序');
+      });
       document.getElementById('searchSelBar').addEventListener('click', function (e) {
         var b = e.target.closest('[data-sr-action]'); if (!b) return;
         if (b.dataset.srAction === 'clear') { searchResultState.selected.clear(); renderResultList(); }
