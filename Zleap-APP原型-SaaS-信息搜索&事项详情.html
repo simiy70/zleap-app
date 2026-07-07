@@ -1119,6 +1119,27 @@
     .range-check-box { flex: 0 0 auto; width: 18px; height: 18px; border-radius: 6px; border: 2px solid var(--border-strong); display: grid; place-items: center; }
     .range-check.checked .range-check-box { background: var(--accent); border-color: var(--accent); position: relative; }
     .range-check.checked .range-check-box::after { content: ""; position: absolute; left: 4px; top: 3px; width: 8px; height: 4px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg); }
+    .range-subtabs { display: inline-flex; gap: 4px; margin: 10px 0 8px 30px; padding: 3px; background: #f0f1f4; border-radius: 999px; }
+    .range-subtab { border: none; background: transparent; padding: 6px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 700; color: var(--text-secondary); cursor: pointer; }
+    .range-subtab.active { background: #fff; color: var(--text-primary); box-shadow: 0 1px 6px rgba(15,23,42,.08); }
+    .range-sub-empty { padding: 16px 12px; text-align: center; color: var(--text-tertiary); font-size: 12.5px; }
+    /* 日期选择（日历） */
+    .date-pick-list { padding-bottom: 4px; }
+    .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .cal-title { font-size: 15px; font-weight: 800; color: var(--text-primary); }
+    .cal-nav { width: 32px; height: 32px; border: none; background: transparent; border-radius: 8px; display: grid; place-items: center; color: var(--text-secondary); cursor: pointer; }
+    .cal-nav:disabled { color: var(--border-strong); cursor: default; }
+    .cal-nav:not(:disabled):active { background: var(--bg); }
+    .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 6px; }
+    .cal-wd { text-align: center; font-size: 12px; color: var(--text-tertiary); font-weight: 700; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+    .cal-cell { height: 40px; border: none; background: transparent; border-radius: 10px; font-size: 14px; font-weight: 600; color: var(--text-primary); cursor: pointer; display: grid; place-items: center; }
+    .cal-cell.empty { visibility: hidden; }
+    .cal-cell:not(.empty):not(.disabled):active { background: var(--bg); }
+    .cal-cell.disabled { color: var(--border-strong); cursor: default; }
+    .cal-cell.today { color: var(--accent); font-weight: 800; }
+    .cal-cell.selected { background: var(--accent); color: #fff; }
+    .cal-cell.selected.today { color: #fff; }
 
     /* 搜索结果页 */
     .search-result-page { position: fixed; inset: 0; max-width: 390px; margin: 0 auto; z-index: 116; display: none; flex-direction: column; background: var(--bg); }
@@ -1709,43 +1730,32 @@
       padding: 16px 14px 30px;
     }
     .super-task-card { margin-bottom: 12px; }
-    .super-setting-card {
-      margin-bottom: 12px;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px 16px 18px;
-      box-shadow: var(--shadow-card);
-    }
-    .super-setting-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-    .super-setting-head strong {
-      display: block;
-      font-size: 15px;
-      font-weight: 800;
-      color: var(--text-primary);
-    }
-    .super-setting-head span {
-      display: block;
-      margin-top: 3px;
-      color: var(--text-tertiary);
-      font-size: 12px;
-    }
-    .super-setting-note {
-      color: var(--text-secondary);
-      font-size: 13px;
-      line-height: 1.7;
-    }
-    .super-setting-card .super-inline-action {
-      margin-top: 14px;
-      height: 38px;
-      font-size: 13px;
-    }
+    /* Super Agent 设置：iOS 分组列表 */
+    .setting-profile { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 8px 0 24px; }
+    .setting-profile-avatar { width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, #fff7ed, #ffd49d); color: #9a3412; font-size: 30px; font-weight: 900; font-style: italic; box-shadow: var(--shadow-card); }
+    .setting-profile-name { font-size: 18px; font-weight: 800; color: var(--text-primary); }
+    .setting-group { background: #fff; border-radius: 14px; overflow: hidden; margin: 0 0 18px; box-shadow: var(--shadow-card); }
+    .setting-row { position: relative; display: flex; align-items: center; gap: 10px; width: 100%; padding: 15px 16px; border: none; background: transparent; text-align: left; cursor: pointer; }
+    .setting-row:active { background: var(--bg); }
+    .setting-row + .setting-row::before { content: ""; position: absolute; top: 0; left: 16px; right: 0; height: 1px; background: var(--border); }
+    .setting-row-label { flex: 1; font-size: 15px; font-weight: 600; color: var(--text-primary); }
+    .setting-row-value { font-size: 13px; color: var(--text-tertiary); }
+    .setting-row-chev { flex: 0 0 auto; color: var(--text-tertiary); }
+    .setting-row.destructive .setting-row-label { color: #e5484d; font-weight: 700; }
+    .setting-toggle { flex: 0 0 auto; width: 46px; height: 28px; border-radius: 999px; border: none; background: var(--border-strong); position: relative; cursor: pointer; transition: background .2s; }
+    .setting-toggle.on { background: var(--accent); }
+    .setting-toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.2); transition: transform .2s; }
+    .setting-toggle.on::after { transform: translateX(18px); }
+    /* 角色定义 二级页 */
+    .super-role-save { border: none; background: transparent; color: var(--accent); font-size: 15px; font-weight: 800; cursor: pointer; padding: 0 4px; }
+    .super-role-body { padding: 16px 16px 40px; }
+    .super-role-label { font-size: 13px; font-weight: 800; color: var(--text-primary); margin-bottom: 10px; }
+    .super-role-input { width: 100%; min-height: 200px; border: 1px solid var(--border-strong); border-radius: 14px; background: #fff; padding: 14px; font: inherit; font-size: 14px; line-height: 1.7; color: var(--text-primary); resize: vertical; outline: none; }
+    .super-role-input:focus { border-color: var(--accent); }
+    .super-role-tools { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .super-role-tool { border: 1px solid var(--border-strong); background: var(--surface); border-radius: 999px; padding: 7px 14px; font-size: 12.5px; font-weight: 700; color: var(--text-secondary); cursor: pointer; }
+    .super-role-tool:active { background: var(--bg); }
+    .super-role-hint { margin-top: 14px; font-size: 12px; color: var(--text-tertiary); }
     .super-task-list-head {
       display: flex;
       align-items: center;
@@ -3437,6 +3447,30 @@
       </div>
     </section>
 
+    <!-- 角色定义 二级页 -->
+    <section class="screen-page" id="superAgentRolePage">
+      <div class="mini-status"><span style="font-weight:700">MS</span><span style="font-weight:700">9:41</span><span style="font-weight:700">100%</span></div>
+      <div class="super-shell">
+        <div class="super-page-bar">
+          <button class="icon-btn" id="superRoleBack" type="button" aria-label="返回">
+            <svg class="icon" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg>
+          </button>
+          <div class="super-page-title">角色定义</div>
+          <button class="super-role-save" id="superRoleSave" type="button">保存</button>
+        </div>
+        <div class="super-role-body">
+          <div class="super-role-label">角色提示词（支持 Markdown）</div>
+          <textarea class="super-role-input" id="superRoleInput" placeholder="描述这个 Agent 的角色、职责与说话风格…"></textarea>
+          <div class="super-role-tools">
+            <button class="super-role-tool" type="button" data-role-tool="copy">复制助手</button>
+            <button class="super-role-tool" type="button" data-role-tool="import">导入 .md</button>
+            <button class="super-role-tool" type="button" data-role-tool="polish">一键完善</button>
+          </div>
+          <p class="super-role-hint">保存后仅对新请求生效。</p>
+        </div>
+      </div>
+    </section>
+
     <!-- Audio Page (sub-page of 消息) -->
     <section class="screen-page" id="audioPage" style="padding-bottom:80px">
       <div class="mini-status"><span style="font-weight:700">MS</span><span style="font-weight:700">9:41</span><span style="font-weight:700">100%</span></div>
@@ -4288,6 +4322,18 @@
     </div>
   </section>
 
+  <!-- 往期事件 · 日期选择 Sheet -->
+  <div class="sheet-backdrop" id="datePickerSheet">
+    <div class="bottom-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title-row">
+        <strong>选择日期</strong>
+        <button class="sources-sheet-close" data-close="date-picker-sheet" type="button" aria-label="关闭">×</button>
+      </div>
+      <div class="date-pick-list" id="datePickerList"></div>
+    </div>
+  </div>
+
   <!-- 推理路径 Sheet -->
   <div class="sheet-backdrop" id="pathSheet">
     <div class="bottom-sheet">
@@ -4392,6 +4438,7 @@
       const superAgentPage = document.getElementById('superAgentPage');
       const superAgentSettingsPage = document.getElementById('superAgentSettingsPage');
       const superAgentTasksPage = document.getElementById('superAgentTasksPage');
+      const superAgentRolePage = document.getElementById('superAgentRolePage');
       const superAgentFab = document.getElementById('superAgentFab');
       const superAgentPageBody = document.getElementById('superAgentPageBody');
       if (eventDetailBack && eventDetailPage) {
@@ -4962,21 +5009,35 @@
         if (input) input.value = superAgentState.draft || '';
       }
 
+      var superPinned = false;
       function renderSuperSettings() {
         var wrap = document.getElementById('superSettingList');
         if (!wrap) return;
-        wrap.innerHTML = superAgentState.settings.map(function (item) {
-          var action = item.action === 'open-task-list'
-            ? '<button class="super-inline-action" type="button" data-super-action="open-task-list">进入管理</button>'
-            : item.action === 'clear-chat'
-              ? '<button class="super-inline-action" type="button" data-super-action="clear-chat">清空聊天记录</button>'
-              : '';
-          return '<div class="super-setting-card">' +
-            '<div class="super-setting-head"><div><strong>' + escapeHTML(item.title) + '</strong><span>' + escapeHTML(item.subtitle) + '</span></div></div>' +
-            '<div class="super-setting-note">' + escapeHTML(item.note) + '</div>' +
-            action +
+        var chev = '<svg class="setting-row-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>';
+        wrap.innerHTML =
+          '<div class="setting-profile">' +
+            '<div class="setting-profile-avatar">z</div>' +
+            '<div class="setting-profile-name">我的 agent</div>' +
+          '</div>' +
+          '<div class="setting-group">' +
+            '<button class="setting-row" type="button" data-super-action="open-role">' +
+              '<span class="setting-row-label">角色定义</span><span class="setting-row-value">Markdown 提示词</span>' + chev +
+            '</button>' +
+            '<button class="setting-row" type="button" data-super-action="open-task-list">' +
+              '<span class="setting-row-label">自动化任务管理</span><span class="setting-row-value">任务与推送</span>' + chev +
+            '</button>' +
+          '</div>' +
+          '<div class="setting-group">' +
+            '<div class="setting-row">' +
+              '<span class="setting-row-label">置顶到消息列表</span>' +
+              '<button class="setting-toggle ' + (superPinned ? 'on' : '') + '" type="button" data-super-action="toggle-pin" aria-label="置顶到消息列表"></button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="setting-group">' +
+            '<button class="setting-row destructive" type="button" data-super-action="clear-chat">' +
+              '<span class="setting-row-label">清空聊天记录</span>' +
+            '</button>' +
           '</div>';
-        }).join('');
       }
 
       function renderSuperTasks() {
@@ -5177,10 +5238,12 @@
       /* ═══════════════════ 信息源搜索 ═══════════════════ */
       var searchState = {
         range: 'public',
+        dailyDate: '7/6',
+        // group: own = 我的信息源；shared = 与我共享（仅企业版）
         mySources: [
-          { id: 'ms1', name: '团队周报' }, { id: 'ms2', name: '客户情报库' },
-          { id: 'ms3', name: '市场竞品' }, { id: 'ms4', name: '财务动态' },
-          { id: 'ms5', name: '产品需求池' }, { id: 'ms6', name: '组织人事' }
+          { id: 'ms1', name: '团队周报', group: 'own' }, { id: 'ms2', name: '客户情报库', group: 'own' },
+          { id: 'ms3', name: '市场竞品', group: 'own' }, { id: 'ms4', name: '财务动态', group: 'own' },
+          { id: 'ms5', name: '产品需求池', group: 'shared' }, { id: 'ms6', name: '组织人事', group: 'shared' }
         ],
         selectedSources: new Set(['ms1', 'ms2', 'ms3']),
         placeholders: [
@@ -5243,7 +5306,7 @@
       ];
       var lastUsedAssistant = 'asst-report';
       var selectedAssistant = lastUsedAssistant;
-      var rangeDraft = { range: 'public', selected: new Set() };
+      var rangeDraft = { range: 'public', sub: 'own', selected: new Set() };
 
       function updateRangeButton() {
         var el = document.getElementById('searchRangeText');
@@ -5256,8 +5319,67 @@
       function renderSearchHome() {
         var input = document.getElementById('searchInput');
         if (input) input.placeholder = searchState.placeholders[searchState.phIdx];
+        var dateEl = document.getElementById('searchDailyDate');
+        if (dateEl) dateEl.textContent = searchState.dailyDate;
         updateRangeButton();
         renderDailyTimeline();
+      }
+
+      /* ── 往期事件：日期选择 ── */
+      var calState = null;
+
+      function openDatePicker() {
+        var now = new Date();
+        var parts = (searchState.dailyDate || (now.getMonth() + 1) + '/' + now.getDate()).split('/');
+        var selM = parseInt(parts[0], 10) - 1, selD = parseInt(parts[1], 10);
+        calState = { viewYear: now.getFullYear(), viewMonth: selM, selY: now.getFullYear(), selM: selM, selD: selD };
+        renderCalendar();
+        document.getElementById('datePickerSheet').classList.add('show');
+      }
+
+      function renderCalendar() {
+        var el = document.getElementById('datePickerList');
+        var now = new Date();
+        var y = calState.viewYear, m = calState.viewMonth;
+        var startWeekday = new Date(y, m, 1).getDay();
+        var daysInMonth = new Date(y, m + 1, 0).getDate();
+        var tY = now.getFullYear(), tM = now.getMonth(), tD = now.getDate();
+        var canNext = (y < tY) || (y === tY && m < tM); // 往期事件：不可翻到未来月
+        var chevL = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 6 9 12 15 18"></polyline></svg>';
+        var chevR = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>';
+        var head = '<div class="cal-head">' +
+          '<button class="cal-nav" type="button" data-cal-prev aria-label="上个月">' + chevL + '</button>' +
+          '<span class="cal-title">' + y + '年' + (m + 1) + '月</span>' +
+          '<button class="cal-nav" type="button" data-cal-next' + (canNext ? '' : ' disabled') + ' aria-label="下个月">' + chevR + '</button>' +
+        '</div>';
+        var weekdays = ['日', '一', '二', '三', '四', '五', '六'].map(function (w) { return '<span class="cal-wd">' + w + '</span>'; }).join('');
+        var cells = '';
+        for (var i = 0; i < startWeekday; i++) cells += '<span class="cal-cell empty"></span>';
+        for (var d = 1; d <= daysInMonth; d++) {
+          var isToday = (y === tY && m === tM && d === tD);
+          var isSel = (y === calState.selY && m === calState.selM && d === calState.selD);
+          var isFuture = (y > tY) || (y === tY && (m > tM || (m === tM && d > tD)));
+          var cls = 'cal-cell' + (isSel ? ' selected' : '') + (isToday ? ' today' : '') + (isFuture ? ' disabled' : '');
+          cells += isFuture
+            ? '<span class="' + cls + '">' + d + '</span>'
+            : '<button class="' + cls + '" type="button" data-cal-day="' + d + '">' + d + '</button>';
+        }
+        el.innerHTML = head + '<div class="cal-weekdays">' + weekdays + '</div><div class="cal-grid">' + cells + '</div>';
+        var prev = el.querySelector('[data-cal-prev]');
+        if (prev) prev.onclick = function () { calState.viewMonth--; if (calState.viewMonth < 0) { calState.viewMonth = 11; calState.viewYear--; } renderCalendar(); };
+        var next = el.querySelector('[data-cal-next]');
+        if (next && !next.disabled) next.onclick = function () { calState.viewMonth++; if (calState.viewMonth > 11) { calState.viewMonth = 0; calState.viewYear++; } renderCalendar(); };
+        el.querySelectorAll('[data-cal-day]').forEach(function (b) {
+          b.onclick = function () {
+            var d = parseInt(b.dataset.calDay, 10);
+            calState.selY = calState.viewYear; calState.selM = calState.viewMonth; calState.selD = d;
+            searchState.dailyDate = (calState.viewMonth + 1) + '/' + d;
+            var lbl = document.getElementById('searchDailyDate');
+            if (lbl) lbl.textContent = searchState.dailyDate;
+            renderDailyTimeline();
+            closeSheet('datePickerSheet');
+          };
+        });
       }
 
       function timelineCardHTML(ev) {
@@ -5332,6 +5454,7 @@
       /* ── 搜索范围 sheet ── */
       function openRangeSheet() {
         rangeDraft.range = searchState.range;
+        rangeDraft.sub = 'own';
         rangeDraft.selected = new Set(searchState.selectedSources);
         renderRangeOptions();
         document.getElementById('searchRangeSheet').classList.add('show');
@@ -5339,11 +5462,21 @@
 
       function renderRangeOptions() {
         var el = document.getElementById('rangeOptions');
-        var checklist = rangeDraft.range === 'mine'
-          ? '<div class="range-checklist">' + searchState.mySources.map(function (s) {
-              return '<div class="range-check ' + (rangeDraft.selected.has(s.id) ? 'checked' : '') + '" data-range-src="' + escapeHTML(s.id) + '"><span class="range-check-box"></span><span>' + escapeHTML(s.name) + '</span></div>';
-            }).join('') + '</div>'
-          : '';
+        var checklist = '';
+        if (rangeDraft.range === 'mine') {
+          // 个人信息源二级筛选：我的信息源 / 与我共享（与我共享仅企业版）
+          var subTabs = '<div class="range-subtabs">' +
+            '<button type="button" class="range-subtab ' + (rangeDraft.sub === 'own' ? 'active' : '') + '" data-range-sub="own">我的信息源</button>' +
+            '<button type="button" class="range-subtab ' + (rangeDraft.sub === 'shared' ? 'active' : '') + '" data-range-sub="shared">与我共享</button>' +
+          '</div>';
+          var list = searchState.mySources.filter(function (s) { return s.group === rangeDraft.sub; });
+          var listHTML = list.length
+            ? list.map(function (s) {
+                return '<div class="range-check ' + (rangeDraft.selected.has(s.id) ? 'checked' : '') + '" data-range-src="' + escapeHTML(s.id) + '"><span class="range-check-box"></span><span>' + escapeHTML(s.name) + '</span></div>';
+              }).join('')
+            : '<div class="range-sub-empty">' + (rangeDraft.sub === 'shared' ? '暂无共享给你的信息源' : '暂无自建信息源') + '</div>';
+          checklist = subTabs + '<div class="range-checklist">' + listHTML + '</div>';
+        }
         el.innerHTML =
           '<div class="range-opt ' + (rangeDraft.range === 'public' ? 'selected' : '') + '" data-range-opt="public">' +
             '<span class="range-opt-radio"></span><div class="range-opt-main"><div class="range-opt-name">公共信息源</div><div class="range-opt-sub">默认包含全部公共信息</div></div>' +
@@ -5354,6 +5487,9 @@
           checklist;
         el.querySelectorAll('[data-range-opt]').forEach(function (opt) {
           opt.onclick = function () { rangeDraft.range = opt.dataset.rangeOpt; renderRangeOptions(); };
+        });
+        el.querySelectorAll('[data-range-sub]').forEach(function (t) {
+          t.onclick = function () { rangeDraft.sub = t.dataset.rangeSub; renderRangeOptions(); };
         });
         el.querySelectorAll('[data-range-src]').forEach(function (c) {
           c.onclick = function () {
@@ -5546,7 +5682,7 @@
       }
 
       function switchPage(page, options) {
-        currentPage = ['profile', 'agent', 'message', 'search', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks'].includes(page) ? page : 'home';
+        currentPage = ['profile', 'agent', 'message', 'search', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole'].includes(page) ? page : 'home';
         app.classList.toggle('profile-mode', currentPage === 'profile');
         app.classList.toggle('alt-mode', currentPage !== 'home' && currentPage !== 'profile');
         profilePage.classList.toggle('show', currentPage === 'profile');
@@ -5556,6 +5692,7 @@
         if (superAgentPage) superAgentPage.classList.toggle('show', currentPage === 'superAgent');
         if (superAgentSettingsPage) superAgentSettingsPage.classList.toggle('show', currentPage === 'superSettings');
         if (superAgentTasksPage) superAgentTasksPage.classList.toggle('show', currentPage === 'superTasks');
+        if (superAgentRolePage) superAgentRolePage.classList.toggle('show', currentPage === 'superRole');
         audioPage.classList.toggle('show', currentPage === 'audio');
         audioSearchPage.classList.toggle('show', currentPage === 'audioSearch');
         if (!options || !options.skipHistory) {
@@ -5563,7 +5700,7 @@
         }
         // Nav active: audio & audioSearch both highlight "message" since audio is sub-page of message
         var navActive = currentPage;
-        if (navActive === 'audio' || navActive === 'audioSearch' || navActive === 'superAgent' || navActive === 'superSettings' || navActive === 'superTasks') navActive = 'message';
+        if (navActive === 'audio' || navActive === 'audioSearch' || navActive === 'superAgent' || navActive === 'superSettings' || navActive === 'superTasks' || navActive === 'superRole') navActive = 'message';
         if (navActive === 'agent') navActive = 'profile';
         document.querySelectorAll('.nav-item').forEach(function (item) {
           item.classList.toggle('active', item.dataset.nav === navActive);
@@ -5575,6 +5712,7 @@
         else if (currentPage === 'superAgent') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSuperAgent(); markSuperAgentRead(); }
         else if (currentPage === 'superSettings') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSuperSettings(); }
         else if (currentPage === 'superTasks') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSuperTasks(); }
+        else if (currentPage === 'superRole') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); }
         else if (currentPage === 'audio') { bottomNav.classList.add('hide'); audioFabBar.classList.add('visible'); renderAudioList(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'audioSearch') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderAudioSearch(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else { audioFabBar.classList.remove('visible'); renderFeed(getVisibleItems()); }
@@ -6355,7 +6493,11 @@
       document.getElementById('searchInput').addEventListener('keydown', function (e) {
         if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); runSearch(); }
       });
-      document.getElementById('searchHistoryBtn').addEventListener('click', function () { showToast('查看往期事件'); });
+      document.getElementById('searchHistoryBtn').addEventListener('click', openDatePicker);
+      var datePickerSheetEl = document.getElementById('datePickerSheet');
+      datePickerSheetEl.addEventListener('click', function (e) {
+        if (e.target === datePickerSheetEl || e.target.closest('[data-close="date-picker-sheet"]')) closeSheet('datePickerSheet');
+      });
       searchPhTimer = setInterval(rotateSearchPlaceholder, 3200);
       var rangeSheetEl = document.getElementById('searchRangeSheet');
       rangeSheetEl.addEventListener('click', function (e) {
@@ -6430,13 +6572,28 @@
       document.getElementById('superSettingList').addEventListener('click', function (event) {
         var actionEl = event.target.closest('[data-super-action]');
         if (!actionEl) return;
-        if (actionEl.dataset.superAction === 'open-task-list') {
+        var act = actionEl.dataset.superAction;
+        if (act === 'open-task-list') {
           switchPage('superTasks');
-        } else if (actionEl.dataset.superAction === 'clear-chat') {
+        } else if (act === 'open-role') {
+          switchPage('superRole');
+        } else if (act === 'toggle-pin') {
+          superPinned = !superPinned;
+          renderSuperSettings();
+          showToast(superPinned ? '已置顶到消息列表' : '已取消置顶');
+        } else if (act === 'clear-chat') {
           superAgentState.messages = [{ role: 'agent', text: '聊天记录已清空。你可以从这里重新开始。', time: '刚刚', recs: ['开启新话题', '创建一个新的自动化任务'] }];
           renderSuperAgent();
           switchPage('superAgent');
         }
+      });
+      document.getElementById('superRoleBack').addEventListener('click', function () { switchPage('superSettings'); });
+      document.getElementById('superRoleSave').addEventListener('click', function () { showToast('角色定义已保存'); switchPage('superSettings'); });
+      document.querySelectorAll('#superAgentRolePage [data-role-tool]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var t = b.dataset.roleTool;
+          showToast(t === 'copy' ? '已复制助手角色' : t === 'import' ? '导入 .md 文件' : '已一键完善提示词');
+        });
       });
       document.getElementById('superTaskList').addEventListener('click', function (event) {
         var toggle = event.target.closest('[data-super-action="toggle-task"]');
