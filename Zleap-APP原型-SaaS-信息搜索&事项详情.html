@@ -3231,6 +3231,20 @@
       line-height: 1.65;
       white-space: pre-wrap;
     }
+    /* 长文本折叠（AI 摘要 / 原文参考） */
+    .event-detail-summary.clamped, .event-detail-ref-body.clamped { position: relative; overflow: hidden; }
+    .event-detail-summary.clamped { max-height: 86px; }
+    .event-detail-ref-body.clamped { max-height: 150px; }
+    .event-detail-summary.clamped::after, .event-detail-ref-body.clamped::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 30px;
+      background: linear-gradient(transparent, #fff); pointer-events: none;
+    }
+    .event-detail-more {
+      display: inline-block; border: none; background: transparent;
+      color: var(--accent); font-size: 12.5px; font-weight: 700;
+      padding: 8px 2px 0; cursor: pointer;
+    }
+    .event-detail-more[hidden] { display: none; }
     .event-detail-empty {
       padding: 36px 16px;
       color: var(--text-tertiary);
@@ -5513,7 +5527,7 @@
       /* ── 搜索结果 ── */
       function buildResultEvents() {
         return [
-          { id: 'r1', title: '湘潭大学与江西财经大学并列第 106 名', summary: '湘潭大学在 2026 年 ABC 中国大学排名中位列第 106 名，总分 68.53；江西财经大学同分并列第 106 名（带星号）。', source: '小木虫', avatar: '木', time: '01-23 12:40', tags: ['地点-湖南', '指标-68.53', '话题-综合类'], reference: '数据来源：ABC 排名官微、中国大学排行榜（CNUR）。\n湘潭大学：综合类，湖南湘潭，总分 68.53。\n江西财经大学：财经类，江西南昌，68.53（带星号）。', link: 'https://example.com/rank', children: [
+          { id: 'r1', title: '湘潭大学与江西财经大学并列第 106 名', summary: '湘潭大学在 2026 年 ABC 中国大学排名中位列第 106 名，总分 68.53；江西财经大学同分并列第 106 名（带星号）。综合来看，两校在学科结构上差异明显：湘潭大学为综合类高校，法学、数学等学科较强；江西财经大学以财经类见长，其带星号排名表示按财经类高校折算得出。评价体系上，该榜单综合了科研产出、师资规模、生源质量与社会声誉等多维指标，两校总分接近但优势领域不同，考生择校时应结合专业方向、地域偏好与就业去向综合判断，而非只看综合排名的名次高低。', source: '小木虫', avatar: '木', time: '01-23 12:40', tags: ['地点-湖南', '指标-68.53', '话题-综合类'], reference: '数据来源：ABC 排名官微、中国大学排行榜（CNUR）网站。\n湘潭大学：综合类，湖南省湘潭市，总分 68.53，位列第 106 名。\n江西财经大学：财经类，江西省南昌市，总分 68.53，并列第 106 名（带星号）。\n星号说明：带星号表示该校排名为按其所属类别（财经类）折算后的参考排名，与综合类高校不完全可比。\n指标构成：综合得分由科研（论文、项目、奖项）、师资（规模与结构）、生源（录取分数）、声誉（学界与用人单位评价）等维度加权得出。\n更新时间：2026 年 1 月发布，数据以当年官方公示为准。\n备注：不同榜单口径存在差异，建议交叉核对多个来源后再做结论。', link: 'https://example.com/rank', children: [
               { id: 'r1-1', title: '1、湘潭大学 68.53 分位列第 106', summary: '综合类高校，位于湖南省湘潭市。', tags: ['学校-湘潭大学'], reference: '湘潭大学 68.53…', link: '#' },
               { id: 'r1-2', title: '2、江西财经大学同分并列', summary: '财经类高校，位于江西省南昌市，带星号表示折算排名。', tags: ['学校-江西财经'], reference: '江西财经 68.53（带星）…', link: '#' }
             ] },
@@ -5902,7 +5916,8 @@
             '</div>'
           : '';
         var refBody = reference
-          ? '<div class="event-detail-ref-body">' + escapeHTML(reference) + '</div>'
+          ? '<div class="event-detail-ref-body clamped" data-clamp>' + escapeHTML(reference) + '</div>' +
+            '<button class="event-detail-more" type="button" data-clamp-toggle hidden>展开</button>'
           : '';
         var pathHTML = source.path
           ? '<button class="event-path-entry" type="button" data-open-path>' +
@@ -5914,14 +5929,27 @@
         return '<div class="event-detail-card">' +
           '<h2 class="event-detail-item-title">' + escapeHTML(source.title || '未命名事项') + '</h2>' +
           (tags ? '<div class="event-detail-tags">' + tags + '</div>' : '') +
-          (source.summary ? '<div class="event-detail-summary">' + escapeHTML(source.summary) + '</div>' : '') +
+          (source.summary ? '<div class="event-detail-summary clamped" data-clamp>' + escapeHTML(source.summary) + '</div><button class="event-detail-more" type="button" data-clamp-toggle hidden>展开</button>' : '') +
           pathHTML +
         '</div>' + refHead + refBody;
       }
 
       function renderEventDetail(source) {
         currentEventSource = source || null;
-        document.getElementById('eventDetailBody').innerHTML = eventDetailHTML(currentEventSource);
+        var body = document.getElementById('eventDetailBody');
+        body.innerHTML = eventDetailHTML(currentEventSource);
+        // 长文本（AI 摘要 / 原文参考）超出时才显示 展开/收起
+        body.querySelectorAll('[data-clamp]').forEach(function (el) {
+          var toggle = el.nextElementSibling;
+          if (!toggle || !toggle.hasAttribute('data-clamp-toggle')) return;
+          if (el.scrollHeight > el.clientHeight + 2) {
+            toggle.hidden = false;
+            toggle.onclick = function () {
+              var clamped = el.classList.toggle('clamped');
+              toggle.textContent = clamped ? '展开' : '收起';
+            };
+          }
+        });
       }
 
       function openPathSheet() {
@@ -5936,8 +5964,9 @@
       }
 
       function openEventDetail(source) {
+        eventDetailPage.classList.add('show'); // 先显示，renderEventDetail 内测量折叠需要真实布局
+        eventDetailPage.scrollTop = 0;
         renderEventDetail(source);
-        eventDetailPage.classList.add('show');
       }
 
       function renderSourceTree(sources, expandedSet, emptyText) {
