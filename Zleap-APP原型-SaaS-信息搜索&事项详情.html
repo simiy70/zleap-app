@@ -1047,53 +1047,34 @@
 
     /* ═══════════════════ 信息搜索 ═══════════════════ */
     /* 信息源搜索 首页 */
-    #searchPage .search-home { padding: 14px 18px 120px; }
-    .search-home-head { display: flex; align-items: center; gap: 12px; padding: 4px 0 28px; }
-    .search-home-back { display: none; }
-    .search-home-title { display: none; }
+    #searchPage .search-home { padding: 4px 18px 120px; }
+    .search-home-title { text-align: center; font-size: 22px; font-weight: 900; letter-spacing: -.4px; color: var(--text-primary); padding: 10px 0 20px; }
     .search-card {
-      flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0;
-      border: 1px solid var(--border-strong); border-radius: 22px;
-      background: var(--surface); padding: 0 14px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.85);
+      border: 1.5px solid var(--accent); border-radius: 20px;
+      background: var(--surface); padding: 14px 16px 10px;
+      box-shadow: 0 6px 22px rgba(255,139,33,.10); margin-bottom: 22px;
     }
-    .search-card-icon { flex: 0 0 auto; color: #7b8192; }
     .search-input {
       width: 100%; border: none; outline: none; resize: none; background: transparent;
-      font: inherit; font-size: 17px; line-height: 44px; color: var(--text-primary); height: 44px; min-height: 44px;
-      overflow: hidden;
+      font: inherit; font-size: 15px; line-height: 1.6; color: var(--text-primary); min-height: 46px;
     }
     .search-input::placeholder { color: var(--text-tertiary); }
-    .search-cancel { flex: 0 0 auto; border: none; background: transparent; color: var(--text-primary); font-size: 16px; font-weight: 700; cursor: pointer; }
-    .search-card-foot { margin: 0 0 24px; border-bottom: 1px solid var(--border); }
-    .ai-search-entry {
-      width: 100%; display: flex; align-items: center; gap: 14px; border: none; background: transparent;
-      padding: 18px 6px 20px; color: var(--text-primary);
-      font-size: 17px; font-weight: 800; cursor: pointer;
-      transition: var(--transition);
-    }
-    .ai-search-entry:active { transform: scale(.96); }
-    .ai-search-entry .spark { color: var(--accent); }
-    .ai-search-entry .chev { margin-left: auto; color: var(--text-tertiary); }
+    .search-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 6px; }
     .search-range {
       display: inline-flex; align-items: center; gap: 3px; border: none; background: transparent;
       padding: 4px 0; color: var(--accent); font-size: 13px; font-weight: 700; cursor: pointer;
     }
     .search-range b { font-weight: 800; }
+    .search-submit {
+      flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%; border: none;
+      background: var(--accent); color: #fff; display: grid; place-items: center; cursor: pointer;
+      box-shadow: 0 6px 16px rgba(255,139,33,.35); transition: var(--transition);
+    }
+    .search-submit:active { transform: scale(.92); }
     .search-daily-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
     .search-daily-title { font-size: 16px; font-weight: 900; color: var(--text-primary); }
     .search-daily-title b { color: var(--accent); font-weight: 900; margin-right: 4px; }
     .search-daily-history { display: inline-flex; align-items: center; gap: 4px; border: none; background: transparent; cursor: pointer; color: var(--text-tertiary); font-size: 12.5px; font-weight: 700; }
-    .search-history { margin: 0 0 26px; }
-    .search-history-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-    .search-section-label { font-size: 17px; font-weight: 900; color: var(--text-primary); }
-    .search-clear-history { display: inline-flex; align-items: center; gap: 4px; border: none; background: transparent; color: var(--text-tertiary); font-size: 14px; font-weight: 700; cursor: pointer; }
-    .search-history-list { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
-    .search-history-list::-webkit-scrollbar { display: none; }
-    .search-history-chip {
-      flex: 0 0 auto; border: 1px solid var(--border); border-radius: 999px; background: var(--surface);
-      padding: 9px 15px; color: var(--text-primary); font-size: 14px; font-weight: 700; cursor: pointer;
-    }
     /* 每日事件时间轴 */
     .search-timeline { display: flex; flex-direction: column; }
     .tl-item { display: flex; gap: 12px; }
@@ -1168,11 +1149,6 @@
     .sr-searchbox { flex: 1; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border-radius: 12px; background: var(--bg); border: 1px solid var(--border-strong); color: var(--text-tertiary); }
     .sr-searchbox input { flex: 1; border: none; background: transparent; outline: none; font-size: 14px; color: var(--text-primary); }
     .sr-clear-input { flex: 0 0 auto; border: none; background: var(--border-strong); color: #fff; width: 18px; height: 18px; border-radius: 50%; font-size: 13px; line-height: 1; cursor: pointer; }
-    .sr-tabs { flex: 0 0 auto; display: flex; gap: 20px; overflow-x: auto; padding: 0 16px; background: var(--surface); border-bottom: 1px solid var(--border); scrollbar-width: none; }
-    .sr-tabs::-webkit-scrollbar { display: none; }
-    .sr-tab { flex: 0 0 auto; height: 44px; border: none; background: transparent; color: var(--text-tertiary); font-size: 14px; font-weight: 800; cursor: pointer; position: relative; }
-    .sr-tab.active { color: var(--text-primary); }
-    .sr-tab.active::after { content: ""; position: absolute; left: 50%; bottom: 7px; width: 20px; height: 3px; border-radius: 999px; background: var(--accent); transform: translateX(-50%); }
     .sr-body { flex: 1; min-height: 0; overflow-y: auto; padding: 14px 16px 40px; -webkit-overflow-scrolling: touch; }
     .search-result-page.multi .sr-body { padding-bottom: 96px; }
     /* 推理路径：详情里的紧凑入口 */
@@ -1217,7 +1193,6 @@
     .sr-result-title { font-size: 14px; font-weight: 800; color: var(--text-primary); line-height: 1.45; }
     .sr-result-desc { margin-top: 5px; font-size: 12px; color: var(--text-secondary); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .sr-result-foot { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
-    .sr-result-kind { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border-radius: 999px; background: var(--bg); color: var(--text-tertiary); font-size: 10.5px; font-weight: 800; }
     .sr-result-source { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--text-tertiary); font-weight: 700; }
     .sr-result-source-avatar { width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center; font-size: 8px; font-weight: 900; color: #fff; background: linear-gradient(135deg,#ffd36d,#ff8d21); }
     .sr-result-time { font-size: 11px; color: var(--text-tertiary); }
@@ -3322,7 +3297,7 @@
             <button class="top-tab" data-tab="following">关注</button>
           </div>
           <div class="header-actions">
-            <button class="icon-btn" id="homeSearchBtn" type="button" aria-label="搜索">
+            <button class="icon-btn" aria-label="搜索">
               <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg>
             </button>
           </div>
@@ -3587,36 +3562,21 @@
     <section class="screen-page" id="searchPage">
       <div class="mini-status"><span style="font-weight:700">MS</span><span style="font-weight:700">9:41</span><span style="font-weight:700">100%</span></div>
       <div class="search-home">
-        <div class="search-home-head">
-          <button class="icon-btn search-home-back" id="searchPageBack" type="button" aria-label="返回">
-            <svg class="icon" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg>
-          </button>
-          <div class="search-home-title">全局搜索</div>
-          <div class="search-card" id="searchCard">
-            <svg class="search-card-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg>
-            <textarea id="searchInput" class="search-input" rows="1" placeholder="输入关键词查找"></textarea>
-          </div>
-          <button class="search-cancel" id="searchCancelBtn" type="button">取消</button>
-        </div>
-        <div class="search-card-foot">
-          <button class="ai-search-entry" id="searchGoBtn" type="button" aria-label="AI 搜索">
-            <svg class="spark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"></path><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"></path></svg>
-            <span>AI 搜索</span>
-            <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
-          </button>
-        </div>
-        <div class="search-history">
-          <div class="search-history-head">
-            <div class="search-section-label">历史记录</div>
-            <button class="search-clear-history" id="searchClearHistory" type="button">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5"></path><path d="M14 11v5"></path></svg>
-              清空
+        <div class="search-home-title">信息源搜索</div>
+        <div class="search-card" id="searchCard">
+          <textarea id="searchInput" class="search-input" rows="2" placeholder="假婆婆纳属包含哪两个物种？"></textarea>
+          <div class="search-card-foot">
+            <button class="search-range" id="searchRangeBtn" type="button">
+              搜索范围：<b id="searchRangeText">公共信息</b>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <button class="search-submit" id="searchGoBtn" type="button" aria-label="搜索">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             </button>
           </div>
-          <div class="search-history-list" id="searchHistoryList"></div>
         </div>
         <div class="search-daily-head">
-          <div class="search-daily-title"><b id="searchDailyDate">7/3</b> 信息源发现</div>
+          <div class="search-daily-title"><b id="searchDailyDate">7/3</b> 每日事件</div>
           <button class="search-daily-history" type="button" id="searchHistoryBtn">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"></path><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"></path><path d="M12 7v5l4 2"></path></svg>
             往期事件
@@ -3639,7 +3599,6 @@
           <button class="sr-clear-input" id="searchResultClear" type="button" aria-label="清除">×</button>
         </div>
       </div>
-      <div class="sr-tabs" id="searchResultTabs"></div>
       <div class="sr-body" id="searchResultBody">
         <div class="sr-summary" id="srSummary"></div>
         <div class="sr-controls">
@@ -3669,6 +3628,10 @@
         <button class="nav-item active" data-nav="home">
           <svg class="icon" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 10v10h14V10"></path><path d="M9.5 20v-6h5v6"></path></svg>
           <span>首页</span>
+        </button>
+        <button class="nav-item" data-nav="search">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg>
+          <span>搜索</span>
         </button>
         <button class="nav-item" data-nav="message">
           <svg class="icon" viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 4V5Z"></path><path d="M8 9h8"></path><path d="M8 13h5"></path></svg>
@@ -5288,15 +5251,6 @@
       /* ─── PAGE SWITCH ─── */
       /* ═══════════════════ 信息源搜索 ═══════════════════ */
       var searchState = {
-        scope: 'all',
-        scopes: [
-          { id: 'all', label: '全部' },
-          { id: 'report', label: '报告' },
-          { id: 'assistant', label: '助手' },
-          { id: 'chat', label: '聊天' },
-          { id: 'source', label: '信息源' }
-        ],
-        history: ['客户 A 风险信号', 'CFO 预算表态', 'AI 科研工具', 'ARR 续费策略'],
         range: 'public',
         dailyDate: '7/6',
         // group: own = 我的信息源；shared = 与我共享（仅企业版）
@@ -5307,7 +5261,7 @@
         ],
         selectedSources: new Set(['ms1', 'ms2', 'ms3']),
         placeholders: [
-          '输入关键词查找',
+          '假婆婆纳属包含哪两个物种？',
           '客户 A 最近有哪些风险信号？',
           '汇总本周 CFO 的预算相关表态',
           '竞品在 AI 方向的最新动作'
@@ -5358,7 +5312,7 @@
       var dailyExpanded = new Set();
       var searchPhTimer = null;
 
-      var searchResultState = { query: '', mode: 'all', events: [], selected: new Set(), multi: false, sortMode: 'smart', summaryExpanded: false, pathOpen: false, resultExpanded: new Set() };
+      var searchResultState = { query: '', events: [], selected: new Set(), multi: false, sortMode: 'smart', summaryExpanded: false, pathOpen: false, resultExpanded: new Set() };
       var publishAssistants = [
         { id: 'asst-report', name: '日报助手', sub: '擅长结构化汇总与要点提炼' },
         { id: 'asst-insight', name: '洞察助手', sub: '擅长趋势归纳与结论输出' },
@@ -5368,23 +5322,20 @@
       var selectedAssistant = lastUsedAssistant;
       var rangeDraft = { range: 'public', sub: 'own', selected: new Set() };
 
-      function renderSearchHistory() {
-        var el = document.getElementById('searchHistoryList');
+      function updateRangeButton() {
+        var el = document.getElementById('searchRangeText');
         if (!el) return;
-        el.innerHTML = searchState.history.map(function (text) {
-          return '<button class="search-history-chip" type="button" data-history-query="' + escapeHTML(text) + '">' + escapeHTML(text) + '</button>';
-        }).join('');
-        el.querySelectorAll('[data-history-query]').forEach(function (btn) {
-          btn.onclick = function () { runSearch(btn.dataset.historyQuery); };
-        });
+        el.textContent = searchState.range === 'public'
+          ? '公共信息'
+          : '个人信息·' + searchState.selectedSources.size + '个';
       }
 
       function renderSearchHome() {
         var input = document.getElementById('searchInput');
-        if (input) input.placeholder = '输入关键词查找';
+        if (input) input.placeholder = searchState.placeholders[searchState.phIdx];
         var dateEl = document.getElementById('searchDailyDate');
         if (dateEl) dateEl.textContent = searchState.dailyDate;
-        renderSearchHistory();
+        updateRangeButton();
         renderDailyTimeline();
       }
 
@@ -5463,7 +5414,6 @@
             '</div>' +
             '<div class="tl-card-foot">' +
               '<span class="tl-card-source"><span class="tl-card-source-avatar">' + escapeHTML((ev.avatar || ev.source || '·').slice(0, 1)) + '</span><span class="tl-card-source-name">' + escapeHTML(ev.source || '') + '</span></span>' +
-              '<button class="tl-card-sub" type="button" data-daily-search="' + escapeHTML(ev.title) + '">带词搜索</button>' +
               (kids.length ? '<button class="tl-card-sub ' + (expanded ? 'expanded' : '') + '" type="button" data-daily-toggle="' + escapeHTML(ev.id) + '">' + kids.length + ' 个相关子事项 <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>' : '') +
             '</div>' +
             childrenHTML +
@@ -5481,12 +5431,6 @@
             var id = btn.dataset.dailyToggle;
             if (dailyExpanded.has(id)) dailyExpanded.delete(id); else dailyExpanded.add(id);
             renderDailyTimeline();
-          };
-        });
-        el.querySelectorAll('[data-daily-search]').forEach(function (btn) {
-          btn.onclick = function (e) {
-            e.stopPropagation();
-            runSearch(btn.dataset.dailySearch);
           };
         });
         el.querySelectorAll('[data-daily-open]').forEach(function (node) {
@@ -5517,7 +5461,8 @@
         if (!searchPage || !searchPage.classList.contains('show')) return;
         var input = document.getElementById('searchInput');
         if (!input || input.value) return;
-        input.placeholder = '输入关键词查找';
+        searchState.phIdx = (searchState.phIdx + 1) % searchState.placeholders.length;
+        input.placeholder = searchState.placeholders[searchState.phIdx];
       }
 
       /* ── 搜索范围 sheet ── */
@@ -5573,31 +5518,13 @@
         if (rangeDraft.range === 'mine' && !rangeDraft.selected.size) { showToast('请至少选择一个信息源'); return; }
         searchState.range = rangeDraft.range;
         searchState.selectedSources = new Set(rangeDraft.selected);
+        updateRangeButton();
         closeSheet('searchRangeSheet');
       }
 
       function closeSheet(id) { var el = document.getElementById(id); if (el) el.classList.remove('show'); }
 
       /* ── 搜索结果 ── */
-      function resultModeLabel(mode) {
-        var match = searchState.scopes.find(function (s) { return s.id === mode; });
-        return match ? match.label : '全部';
-      }
-
-      function buildGlobalResults(mode, query) {
-        var all = [
-          { id: 'g-report-1', resultType: 'report', resultLabel: '报告', title: '今日速览：客户风险与预算变化', summary: '覆盖客户 A SSO 阻塞、CFO 预算收紧、ARR 续费策略重排三类重点信号。', source: '日报助手', avatar: '报', time: '今天 09:00', tags: ['类型-报告', '关键词-' + query], reference: '今日速览自动汇总了企业关键动态和下一步动作建议。', link: '#' },
-          { id: 'g-feed-1', resultType: 'feed', resultLabel: '动态', title: 'RAG vs. 微调：核心优化路径选型指南', summary: '在大语言模型应用落地中，检索增强生成与微调是两条不同技术路线。', source: '技术宅', avatar: '技', time: '2小时前', tags: ['类型-动态', '主题-AI'], reference: '动态正文：理解适用边界，才能真正提升推理效果与成本效率。', link: '#' },
-          { id: 'g-agent-1', resultType: 'assistant', resultLabel: '助手', title: '洞察助手', summary: '擅长趋势归纳、结论输出和跨来源证据整理，可用于继续追问搜索结果。', source: '助手库', avatar: '助', time: '常用', tags: ['类型-助手'], reference: '助手说明：擅长趋势归纳与结论输出。', link: '#' },
-          { id: 'g-chat-1', resultType: 'chat', resultLabel: '聊天记录', title: 'Super Agent 关于预算风险的回复', summary: '建议 CS/销售先统一节奏，优先保护高续费概率账户，并同步财务侧预算下修预期。', source: 'Super Agent', avatar: 'S', time: '昨天 18:20', tags: ['类型-聊天记录'], reference: '聊天记录：CFO 已释放预算下修预期，需要同步 CS/销售节奏。', link: '#' },
-          { id: 'g-source-1', resultType: 'source', resultLabel: '信息源', title: 'CFO 抛出“预算再砍 15%”信号', summary: '预算进一步收紧已成高概率事件，CS 与销售节奏需要同步下修。', source: '财务动态', avatar: '财', time: '07-01', tags: ['类型-信息源', '角色-CFO'], reference: 'CFO 在 Slack 中表示：若本月回款继续承压，预算需要再砍 15%。', link: '#' }
-        ];
-        if (mode === 'all') return all;
-        var typeMap = { report: 'report', assistant: 'assistant', chat: 'chat', source: 'source' };
-        if (mode === 'feed') return all.filter(function (item) { return item.resultType === 'feed'; });
-        return all.filter(function (item) { return item.resultType === typeMap[mode]; });
-      }
-
       function buildResultEvents() {
         return [
           { id: 'r1', title: '湘潭大学与江西财经大学并列第 106 名', summary: '湘潭大学在 2026 年 ABC 中国大学排名中位列第 106 名，总分 68.53；江西财经大学同分并列第 106 名（带星号）。综合来看，两校在学科结构上差异明显：湘潭大学为综合类高校，法学、数学等学科较强；江西财经大学以财经类见长，其带星号排名表示按财经类高校折算得出。评价体系上，该榜单综合了科研产出、师资规模、生源质量与社会声誉等多维指标，两校总分接近但优势领域不同，考生择校时应结合专业方向、地域偏好与就业去向综合判断，而非只看综合排名的名次高低。', source: '小木虫', avatar: '木', time: '01-23 12:40', tags: ['地点-湖南', '指标-68.53', '话题-综合类'], reference: '数据来源：ABC 排名官微、中国大学排行榜（CNUR）网站。\n湘潭大学：综合类，湖南省湘潭市，总分 68.53，位列第 106 名。\n江西财经大学：财经类，江西省南昌市，总分 68.53，并列第 106 名（带星号）。\n星号说明：带星号表示该校排名为按其所属类别（财经类）折算后的参考排名，与综合类高校不完全可比。\n指标构成：综合得分由科研（论文、项目、奖项）、师资（规模与结构）、生源（录取分数）、声誉（学界与用人单位评价）等维度加权得出。\n更新时间：2026 年 1 月发布，数据以当年官方公示为准。\n备注：不同榜单口径存在差异，建议交叉核对多个来源后再做结论。', link: 'https://example.com/rank', children: [
@@ -5611,11 +5538,9 @@
         ];
       }
 
-      function openSearchResults(query, mode) {
-        var resultMode = mode || searchState.scope || 'all';
+      function openSearchResults(query) {
         searchResultState.query = query;
-        searchResultState.mode = resultMode;
-        searchResultState.events = resultMode === 'source' ? buildResultEvents() : buildGlobalResults(resultMode, query);
+        searchResultState.events = buildResultEvents();
         // 给每条结果事项挂上「推理路径」——说明该事项是怎么被检索到的
         searchResultState.events.forEach(function (ev) {
           ev.path = { query: query, source: ev.source, via: '关键词 + 语义相似度检索', hit: ev.title };
@@ -5631,7 +5556,6 @@
         searchResultPage.classList.remove('multi');
         var input = document.getElementById('searchResultInput');
         if (input) input.value = query;
-        renderResultTabs();
         renderResultSummary();
         renderResultControls();
         renderResultList();
@@ -5642,54 +5566,24 @@
 
       function closeSearchResults() {
         searchResultPage.classList.remove('show');
-        if (searchPage && searchPage.classList.contains('show')) bottomNav.classList.add('hide');
-      }
-
-      function renderResultTabs() {
-        var el = document.getElementById('searchResultTabs');
-        if (!el) return;
-        var activeMode = searchResultState.mode === 'report' ? 'all' : searchResultState.mode;
-        var tabs = [
-          { id: 'all', label: '全部' },
-          { id: 'feed', label: '动态' },
-          { id: 'assistant', label: '助手' },
-          { id: 'chat', label: '聊天记录' },
-          { id: 'source', label: '信息源' }
-        ];
-        el.innerHTML = tabs.map(function (tab) {
-          return '<button class="sr-tab ' + (activeMode === tab.id ? 'active' : '') + '" type="button" data-result-mode="' + tab.id + '">' + escapeHTML(tab.label) + '</button>';
-        }).join('');
-        el.querySelectorAll('[data-result-mode]').forEach(function (btn) {
-          btn.onclick = function () {
-            openSearchResults(searchResultState.query, btn.dataset.resultMode);
-          };
-        });
+        if (searchPage && searchPage.classList.contains('show')) bottomNav.classList.remove('hide');
       }
 
       function renderResultSummary() {
         var el = document.getElementById('srSummary');
         var q = escapeHTML(searchResultState.query);
         var n = searchResultState.events.length;
-        var text = searchResultState.mode === 'source'
-          ? '围绕「' + q + '」共汇总 ' + n + ' 条来源事项' + cite(1) + '。综合来看，相关信息主要集中在排名、学科建设与招生动态三个方面' + cite(3) + '；其中并列排名与学科评估结论的置信度较高' + cite(2) + '，招生与考情类信息更新较为频繁，建议结合原文参考进一步核对' + cite(6) + '。'
-          : '已在「' + resultModeLabel(searchResultState.mode) + '」范围内检索「' + q + '」，共找到 ' + n + ' 条相关内容。可继续切换上方分类查看动态、助手、聊天记录或信息源结果。';
+        var text = '围绕「' + q + '」共汇总 ' + n + ' 条来源事项' + cite(1) + '。综合来看，相关信息主要集中在排名、学科建设与招生动态三个方面' + cite(3) + '；其中并列排名与学科评估结论的置信度较高' + cite(2) + '，招生与考情类信息更新较为频繁，建议结合原文参考进一步核对' + cite(6) + '。';
         el.innerHTML =
           '<div class="sr-summary-text ' + (searchResultState.summaryExpanded ? '' : 'clamped') + '">' + text + '</div>' +
           '<button class="sr-summary-toggle" type="button" data-summary-toggle>' + (searchResultState.summaryExpanded ? '收起' : '展开') + '</button>' +
-          '<div class="sr-summary-foot"><span class="ai-badge">Ai</span>' + (searchResultState.mode === 'source' ? 'AI 总结 · 参考以下前 ' + n + ' 个数据' : '全局搜索 · ' + resultModeLabel(searchResultState.mode) + '结果') + '</div>';
+          '<div class="sr-summary-foot"><span class="ai-badge">Ai</span>AI 总结 · 参考以下前 ' + n + ' 个数据</div>';
         var t = el.querySelector('[data-summary-toggle]');
         if (t) t.onclick = function () { searchResultState.summaryExpanded = !searchResultState.summaryExpanded; renderResultSummary(); };
       }
       function cite(n) { return '<span class="sr-cite">' + n + '</span>'; }
 
       function renderResultControls() {
-        var controls = document.querySelector('.sr-controls');
-        if (controls) controls.style.display = searchResultState.mode === 'source' ? 'flex' : 'none';
-        if (searchResultState.mode !== 'source') {
-          searchResultState.multi = false;
-          searchResultState.selected.clear();
-          searchResultPage.classList.remove('multi');
-        }
         var sortBtn = document.querySelector('[data-sr-ctrl="sort"]');
         if (sortBtn) {
           var isTime = searchResultState.sortMode === 'time';
@@ -5716,7 +5610,6 @@
               (ev.summary ? '<div class="sr-result-desc">' + escapeHTML(ev.summary) + '</div>' : '') +
             '</div>' +
             '<div class="sr-result-foot">' +
-              (ev.resultLabel ? '<span class="sr-result-kind">' + escapeHTML(ev.resultLabel) + '</span>' : '') +
               '<span class="sr-result-source"><span class="sr-result-source-avatar">' + escapeHTML((ev.avatar || ev.source || '·').slice(0, 1)) + '</span>' + escapeHTML(ev.source || '') + '</span>' +
               '<span class="sr-result-time">' + escapeHTML(ev.time || '') + '</span>' +
               (kids.length ? '<button class="tl-card-sub ' + (expanded ? 'expanded' : '') + '" type="button" data-result-toggle="' + escapeHTML(ev.id) + '" style="margin-left:auto">' + kids.length + ' 个相关子事项 <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>' : '') +
@@ -5765,7 +5658,6 @@
       }
 
       function toggleMulti() {
-        if (searchResultState.mode !== 'source') return;
         searchResultState.multi = !searchResultState.multi;
         if (!searchResultState.multi) searchResultState.selected.clear();
         searchResultPage.classList.toggle('multi', searchResultState.multi);
@@ -5776,16 +5668,9 @@
       function runSearch(query) {
         var input = document.getElementById('searchInput');
         var q = (query != null ? query : (input ? input.value : '')).trim();
-        if (!q) q = '客户 A 最近有哪些风险信号？';
-        searchState.history = [q].concat(searchState.history.filter(function (item) { return item !== q; })).slice(0, 6);
+        if (!q) q = searchState.placeholders[searchState.phIdx];
+        if (searchState.range === 'mine' && !searchState.selectedSources.size) { showToast('请先选择信息源'); return; }
         openSearchResults(q);
-      }
-
-      function openAISearchEntry() {
-        var input = document.getElementById('searchInput');
-        var q = (input ? input.value : '').trim() || '客户 A 最近有哪些风险信号？';
-        searchState.history = [q].concat(searchState.history.filter(function (item) { return item !== q; })).slice(0, 6);
-        openSearchResults(q, 'source');
       }
 
       /* ── 发布帖子 ── */
@@ -5841,7 +5726,6 @@
         }
         // Nav active: audio & audioSearch both highlight "message" since audio is sub-page of message
         var navActive = currentPage;
-        if (navActive === 'search') navActive = 'home';
         if (navActive === 'audio' || navActive === 'audioSearch' || navActive === 'superAgent' || navActive === 'superSettings' || navActive === 'superTasks' || navActive === 'superRole') navActive = 'message';
         if (navActive === 'agent') navActive = 'profile';
         document.querySelectorAll('.nav-item').forEach(function (item) {
@@ -5850,7 +5734,7 @@
         if (currentPage === 'profile') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderProfileFeed(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'agent') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderAgentFeed(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'message') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderConvList(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        else if (currentPage === 'search') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSearchHome(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        else if (currentPage === 'search') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderSearchHome(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'superAgent') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSuperAgent(); markSuperAgentRead(); }
         else if (currentPage === 'superSettings') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSuperSettings(); }
         else if (currentPage === 'superTasks') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSuperTasks(); }
@@ -6646,16 +6530,8 @@
       });
 
       /* ─── 信息源搜索 wiring ─── */
-      document.getElementById('homeSearchBtn').addEventListener('click', function () { switchPage('search'); });
-      document.getElementById('searchPageBack').addEventListener('click', function () { switchPage('home'); });
-      document.getElementById('searchCancelBtn').addEventListener('click', function () { switchPage('home'); });
-      var searchRangeBtn = document.getElementById('searchRangeBtn');
-      if (searchRangeBtn) searchRangeBtn.addEventListener('click', openRangeSheet);
-      document.getElementById('searchGoBtn').addEventListener('click', openAISearchEntry);
-      document.getElementById('searchClearHistory').addEventListener('click', function () {
-        searchState.history = [];
-        renderSearchHistory();
-      });
+      document.getElementById('searchRangeBtn').addEventListener('click', openRangeSheet);
+      document.getElementById('searchGoBtn').addEventListener('click', function () { runSearch(); });
       document.getElementById('searchInput').addEventListener('keydown', function (e) {
         if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); runSearch(); }
       });
@@ -6673,7 +6549,7 @@
       document.getElementById('searchResultBack').addEventListener('click', closeSearchResults);
       document.getElementById('searchResultClear').addEventListener('click', function () { var i = document.getElementById('searchResultInput'); i.value = ''; i.focus(); });
       document.getElementById('searchResultInput').addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') { e.preventDefault(); var v = this.value.trim(); if (v) openSearchResults(v, searchResultState.mode); }
+        if (e.key === 'Enter') { e.preventDefault(); var v = this.value.trim(); if (v) openSearchResults(v); }
       });
       document.querySelector('[data-sr-ctrl="multi"]').addEventListener('click', toggleMulti);
       document.querySelector('[data-sr-ctrl="sort"]').addEventListener('click', function () {
