@@ -1243,7 +1243,7 @@
       z-index: 118;
       display: none;
       flex-direction: column;
-      background: var(--bg);
+      background: var(--surface);
     }
     .gs-page.show { display: flex; }
     .gs-page .mini-status { flex: 0 0 auto; background: var(--surface); }
@@ -1299,7 +1299,7 @@
     .gs-entry {
       flex: 1; min-height: 0;
       overflow-y: auto;
-      padding: 4px 16px 40px;
+      padding: 4px 20px 40px;
       -webkit-overflow-scrolling: touch;
     }
     .gs-shortcut-row {
@@ -1317,30 +1317,58 @@
     }
     .gs-shortcut:active { opacity: .6; }
     .gs-shortcut-icon { color: var(--accent); }
-    .gs-discovery { margin-top: 20px; }
+    .gs-discovery { margin-top: 22px; }
     .gs-discovery-head {
       display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
     }
-    .gs-discovery-title { font-size: 16px; font-weight: 900; color: var(--text-primary); }
+    .gs-discovery-title { font-size: 17px; font-weight: 900; color: var(--text-primary); letter-spacing: -.2px; }
     .gs-discovery-more {
       display: inline-flex; align-items: center; gap: 2px;
       border: none; background: transparent;
       color: var(--text-tertiary);
-      font-size: 13px; font-weight: 500;
+      font-size: 13.5px; font-weight: 500;
       cursor: pointer;
     }
-    .gs-discovery-sub {
-      margin-bottom: 14px;
-      font-size: 13px; color: var(--text-tertiary);
+    .gs-discovery-sub { margin: 2px 2px 16px; font-size: 13px; color: var(--text-tertiary); }
+    .gs-discovery-sub b { color: var(--text-tertiary); font-weight: 500; margin-right: 4px; }
+    #gsTimeline { margin-top: 4px; }
+    #gsTimeline .tl-item { gap: 14px; }
+    #gsTimeline .tl-rail { width: 32px; align-items: flex-start; position: relative; padding-top: 22px; }
+    #gsTimeline .tl-time { padding-top: 0; font-size: 11.5px; color: var(--text-tertiary); font-weight: 500; margin-bottom: 4px; }
+    #gsTimeline .tl-rail::before {
+      content: "";
+      position: absolute; top: 26px; right: -6px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #d1d5db;
+      box-shadow: 0 0 0 3px var(--surface);
+      z-index: 1;
     }
-    .gs-discovery-sub b { color: var(--text-tertiary); font-weight: 500; }
-    #gsTimeline .tl-card { border-radius: 14px; }
+    #gsTimeline .tl-line { width: 1.5px; background: var(--border); margin-top: 6px; }
+    #gsTimeline .tl-card {
+      padding: 16px 16px 14px;
+      margin-bottom: 22px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: none;
+    }
+    #gsTimeline .tl-card-title { font-size: 16px; font-weight: 800; line-height: 1.5; color: var(--text-primary); }
+    #gsTimeline .tl-card-desc { margin-top: 8px; font-size: 13.5px; line-height: 1.7; color: var(--text-secondary); -webkit-line-clamp: 3; }
+    #gsTimeline .tl-card-foot { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+    #gsTimeline .tl-card-source { font-size: 13px; color: var(--text-secondary); font-weight: 600; }
+    #gsTimeline .tl-card-source-avatar { width: 22px; height: 22px; font-size: 10px; }
+    #gsTimeline .tl-card-sub { font-size: 12.5px; font-weight: 600; }
+    #gsTimeline .tl-children { margin-top: 12px; padding: 12px 4px 4px; border-left: none; border-top: 1px dashed var(--border); gap: 14px; }
+    #gsTimeline .tl-child { padding: 0; border-bottom: none; }
+    #gsTimeline .tl-child-title { font-size: 14px; font-weight: 700; color: var(--text-primary); line-height: 1.5; }
+    #gsTimeline .tl-child-desc { margin-top: 4px; font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
+
     .gs-section-head {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 2px 12px;
+      padding: 18px 2px 14px;
     }
-    .gs-section-title { font-size: 16px; font-weight: 900; color: var(--text-primary); }
+    .gs-section-title { font-size: 17px; font-weight: 900; color: var(--text-primary); letter-spacing: -.2px; }
     .gs-section-btn {
       border: none; background: transparent;
       color: var(--text-tertiary);
@@ -1349,7 +1377,9 @@
       cursor: pointer;
     }
     .gs-section-btn:active { background: var(--bg); }
-    .gs-history-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .gs-history-wrap { position: relative; }
+    .gs-history-chips { display: flex; flex-wrap: wrap; gap: 8px; overflow: hidden; }
+    .gs-history-chips.collapsed { max-height: 32px; padding-right: 36px; }
     .gs-chip {
       border: none;
       border-radius: 999px;
@@ -1359,8 +1389,23 @@
       font-size: 13px; font-weight: 500;
       cursor: pointer;
       transition: var(--transition);
+      line-height: 1;
+      white-space: nowrap;
     }
     .gs-chip:active { background: var(--border); }
+    .gs-history-toggle {
+      position: absolute;
+      right: 0; top: 0;
+      width: 28px; height: 32px;
+      display: grid; place-items: center;
+      border: none; background: transparent;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    .gs-history-toggle:active { background: var(--bg); }
+    .gs-history-toggle svg { transition: transform .2s; }
+    .gs-history-toggle.expanded svg { transform: rotate(180deg); }
     .gs-history-empty {
       padding: 6px 2px 2px;
       color: var(--text-tertiary);
@@ -3914,7 +3959,12 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>
           </button>
         </div>
-        <div class="gs-history-chips" id="gsHistoryChips"></div>
+        <div class="gs-history-wrap">
+          <div class="gs-history-chips" id="gsHistoryChips"></div>
+          <button class="gs-history-toggle" id="gsHistoryToggle" type="button" aria-label="展开历史" style="display:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+        </div>
         <div class="gs-discovery">
           <div class="gs-discovery-head">
             <div class="gs-discovery-title">信息源发现</div>
@@ -6878,7 +6928,8 @@
 
       /* ─── 全局搜索（顶部图标入口） ─── */
       var gsState = {
-        history: ['文件传输', '开源', '荣耀'],
+        history: ['文件传输', '开源', '荣耀', '客户 A 风险信号', 'CFO 预算表态', 'ARR 续费策略', 'AI 科研工具', 'Super Agent 使用记录', '多模态大模型', 'Anthropic Claude 3.7'],
+        historyExpanded: false,
         tabs: [
           { id: 'all', label: '全部' },
           { id: 'feed', label: '动态' },
@@ -6900,21 +6951,40 @@
       var gsTimelineEl = document.getElementById('gsTimeline');
 
       function gsRenderHistory() {
+        var toggle = document.getElementById('gsHistoryToggle');
         if (!gsState.history.length) {
+          gsHistoryChipsEl.classList.remove('collapsed');
           gsHistoryChipsEl.innerHTML = '<div class="gs-history-empty">暂无历史记录</div>';
+          if (toggle) toggle.style.display = 'none';
           return;
         }
-        gsHistoryChipsEl.innerHTML = gsState.history.map(function (text) {
+        var items = gsState.history.slice(0, 10);
+        gsHistoryChipsEl.innerHTML = items.map(function (text) {
           return '<button class="gs-chip" type="button" data-gs-history="' + escapeHTML(text) + '">' + escapeHTML(text) + '</button>';
         }).join('');
         gsHistoryChipsEl.querySelectorAll('[data-gs-history]').forEach(function (btn) {
           btn.onclick = function () { gsRunSearch(btn.dataset.gsHistory); };
         });
+        // Measure to decide whether toggle is needed
+        gsHistoryChipsEl.classList.remove('collapsed');
+        var natural = gsHistoryChipsEl.scrollHeight;
+        var overflows = natural > 40;
+        if (!overflows) {
+          if (toggle) toggle.style.display = 'none';
+          return;
+        }
+        if (toggle) {
+          toggle.style.display = 'grid';
+          toggle.classList.toggle('expanded', gsState.historyExpanded);
+        }
+        gsHistoryChipsEl.classList.toggle('collapsed', !gsState.historyExpanded);
       }
 
       function gsRenderTimeline() {
         if (!gsTimelineEl) return;
         gsTimelineEl.innerHTML = searchState.dailyEvents.map(timelineCardHTML).join('');
+        var dateEl = document.getElementById('gsDiscoveryDate');
+        if (dateEl) dateEl.textContent = searchState.dailyDate;
         gsTimelineEl.querySelectorAll('[data-daily-toggle]').forEach(function (btn) {
           btn.onclick = function (e) {
             e.stopPropagation();
@@ -6930,8 +7000,6 @@
             openEventDetail(findDailyEvent(node.dataset.dailyOpen));
           };
         });
-        var dateEl = document.getElementById('gsDiscoveryDate');
-        if (dateEl) dateEl.textContent = searchState.dailyDate;
       }
 
       function gsRenderTabs() {
@@ -7061,10 +7129,10 @@
         gsState.query = '';
         gsState.summaryExpanded = false;
         gsUpdateClearBtn();
-        gsRenderHistory();
-        gsRenderTimeline();
         gsShowEntry();
         globalSearchPage.classList.add('show');
+        gsRenderHistory();
+        gsRenderTimeline();
         setTimeout(function () { gsInput.focus(); }, 40);
       }
 
@@ -7089,6 +7157,10 @@
       gsInput.addEventListener('input', gsUpdateClearBtn);
       gsInput.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') { e.preventDefault(); gsRunSearch(); }
+      });
+      document.getElementById('gsHistoryToggle').addEventListener('click', function () {
+        gsState.historyExpanded = !gsState.historyExpanded;
+        gsRenderHistory();
       });
       document.getElementById('gsSourceEntry').addEventListener('click', function () {
         closeGlobalSearch();
