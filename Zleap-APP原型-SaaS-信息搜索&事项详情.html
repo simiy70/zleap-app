@@ -3576,10 +3576,15 @@
       white-space: pre-wrap;
     }
     /* 长文本折叠（AI 摘要 / 原文参考） */
-    .event-detail-summary.clamped, .event-detail-ref-body.clamped { position: relative; overflow: hidden; }
-    .event-detail-summary.clamped { max-height: 86px; }
+    .event-detail-summary.clamped {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+    .event-detail-ref-body.clamped { position: relative; overflow: hidden; }
     .event-detail-ref-body.clamped { max-height: 150px; }
-    .event-detail-summary.clamped::after, .event-detail-ref-body.clamped::after {
+    .event-detail-ref-body.clamped::after {
       content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 30px;
       background: linear-gradient(transparent, #fff); pointer-events: none;
     }
