@@ -1236,6 +1236,306 @@
     .publish-start { height: 46px; border: none; border-radius: 14px; background: var(--accent); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
     .publish-start:active { transform: scale(.98); }
 
+    /* ═══════════════════ 全局搜索 (top-header icon) ═══════════════════ */
+    .gs-page {
+      position: fixed; inset: 0;
+      max-width: 390px; margin: 0 auto;
+      z-index: 118;
+      display: none;
+      flex-direction: column;
+      background: var(--bg);
+    }
+    .gs-page.show { display: flex; }
+    .gs-page .mini-status { flex: 0 0 auto; background: var(--surface); }
+    .gs-topbar {
+      flex: 0 0 auto;
+      display: flex; align-items: center; gap: 6px;
+      padding: 4px 12px 10px;
+      background: var(--surface);
+    }
+    .gs-back {
+      flex: 0 0 auto;
+      width: 32px; height: 32px;
+      border: none; background: transparent;
+      color: var(--text-primary);
+      display: grid; place-items: center;
+      border-radius: 50%; cursor: pointer;
+    }
+    .gs-back:active { background: var(--bg); }
+    .gs-searchbox {
+      flex: 1;
+      display: flex; align-items: center; gap: 8px;
+      height: 40px; padding: 0 14px;
+      border-radius: 999px;
+      background: var(--bg);
+      border: 1px solid transparent;
+      color: var(--text-tertiary);
+    }
+    .gs-searchbox-icon { flex: 0 0 auto; color: var(--text-tertiary); }
+    .gs-searchbox input {
+      flex: 1; min-width: 0;
+      border: none; background: transparent; outline: none;
+      font: inherit; font-size: 14px; color: var(--text-primary);
+    }
+    .gs-searchbox input::placeholder { color: var(--text-tertiary); }
+    .gs-clear {
+      flex: 0 0 auto;
+      width: 18px; height: 18px; border-radius: 50%;
+      border: none; background: var(--border-strong); color: #fff;
+      font-size: 13px; line-height: 1; cursor: pointer;
+      display: none; align-items: center; justify-content: center;
+    }
+    .gs-clear.show { display: inline-flex; }
+    .gs-cancel {
+      flex: 0 0 auto;
+      border: none; background: transparent;
+      color: var(--text-primary);
+      font-size: 15px; font-weight: 600;
+      cursor: pointer;
+    }
+    .gs-cancel:active { opacity: .6; }
+
+    /* 引导页 */
+    .gs-entry {
+      flex: 1; min-height: 0;
+      overflow-y: auto;
+      padding: 4px 16px 40px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .gs-shortcut-row {
+      display: flex; justify-content: flex-end;
+      padding: 12px 2px 2px;
+    }
+    .gs-shortcut {
+      display: inline-flex; align-items: center; gap: 5px;
+      border: none; background: transparent;
+      padding: 4px 2px;
+      color: var(--accent);
+      font-size: 14px; font-weight: 700;
+      cursor: pointer;
+      font: inherit;
+    }
+    .gs-shortcut:active { opacity: .6; }
+    .gs-shortcut-icon { color: var(--accent); }
+    .gs-discovery { margin-top: 20px; }
+    .gs-discovery-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .gs-discovery-title { font-size: 16px; font-weight: 900; color: var(--text-primary); }
+    .gs-discovery-more {
+      display: inline-flex; align-items: center; gap: 2px;
+      border: none; background: transparent;
+      color: var(--text-tertiary);
+      font-size: 13px; font-weight: 500;
+      cursor: pointer;
+    }
+    .gs-discovery-sub {
+      margin-bottom: 14px;
+      font-size: 13px; color: var(--text-tertiary);
+    }
+    .gs-discovery-sub b { color: var(--text-tertiary); font-weight: 500; }
+    #gsTimeline .tl-card { border-radius: 14px; }
+    .gs-section-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 2px 12px;
+    }
+    .gs-section-title { font-size: 16px; font-weight: 900; color: var(--text-primary); }
+    .gs-section-btn {
+      border: none; background: transparent;
+      color: var(--text-tertiary);
+      display: grid; place-items: center;
+      width: 28px; height: 28px; border-radius: 50%;
+      cursor: pointer;
+    }
+    .gs-section-btn:active { background: var(--bg); }
+    .gs-history-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .gs-chip {
+      border: none;
+      border-radius: 999px;
+      background: var(--bg);
+      padding: 8px 14px;
+      color: var(--text-secondary);
+      font-size: 13px; font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .gs-chip:active { background: var(--border); }
+    .gs-history-empty {
+      padding: 6px 2px 2px;
+      color: var(--text-tertiary);
+      font-size: 12.5px;
+    }
+    /* 猜你想搜 card */
+    .gs-guess {
+      margin-top: 6px;
+      border-radius: 18px;
+      padding: 4px 4px 6px;
+      background: linear-gradient(155deg, #fff5e2 0%, #fff9ea 45%, #eaf7ff 100%);
+      box-shadow: 0 4px 18px rgba(255,171,74,.14);
+    }
+    .gs-guess-head {
+      padding: 14px 16px 8px;
+      font-size: 14px; font-weight: 800;
+      color: var(--accent);
+    }
+    .gs-guess-card {
+      background: var(--surface);
+      border-radius: 14px;
+      margin: 0 6px 6px;
+      padding: 6px 12px;
+    }
+    .gs-guess-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 4px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .gs-guess-row:last-child { border-bottom: none; }
+    .gs-guess-row:active { background: var(--bg); }
+    .gs-guess-idx {
+      flex: 0 0 auto;
+      width: 20px; text-align: center;
+      font-size: 13px; font-weight: 700;
+      color: var(--text-tertiary);
+    }
+    .gs-guess-row.hot .gs-guess-idx { color: var(--accent); }
+    .gs-guess-text {
+      flex: 1; min-width: 0;
+      font-size: 14px; color: var(--text-primary);
+      line-height: 1.45;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    /* 结果页 */
+    .gs-tabs {
+      flex: 0 0 auto;
+      display: flex; gap: 24px;
+      padding: 0 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .gs-tabs::-webkit-scrollbar { display: none; }
+    .gs-tab {
+      flex: 0 0 auto;
+      height: 44px;
+      border: none; background: transparent;
+      color: var(--text-tertiary);
+      font-size: 14px; font-weight: 500;
+      cursor: pointer;
+      position: relative;
+    }
+    .gs-tab.active {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+    .gs-tab.active::after {
+      content: "";
+      position: absolute;
+      left: 50%; bottom: 6px;
+      width: 20px; height: 3px;
+      border-radius: 999px;
+      background: var(--accent);
+      transform: translateX(-50%);
+    }
+    .gs-results {
+      flex: 1; min-height: 0;
+      overflow-y: auto;
+      padding: 12px 12px 40px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .gs-ai-card {
+      border-radius: 14px;
+      background: var(--surface);
+      padding: 14px 14px 12px;
+      margin-bottom: 10px;
+      border: 1px solid var(--border);
+    }
+    .gs-ai-text {
+      font-size: 14px; line-height: 1.7;
+      color: var(--text-primary);
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .gs-ai-text.expanded { -webkit-line-clamp: unset; }
+    .gs-ai-foot {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+    .gs-ai-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12.5px; color: var(--text-tertiary);
+      font-weight: 600;
+    }
+    .gs-ai-badge {
+      display: inline-grid; place-items: center;
+      width: 22px; height: 16px;
+      border-radius: 5px;
+      background: linear-gradient(135deg,#ffb36b,#ff8b21);
+      color: #fff;
+      font-size: 10px; font-weight: 900;
+      letter-spacing: -.5px;
+      font-family: "Noto Serif SC", serif;
+    }
+    .gs-ai-more {
+      display: inline-flex; align-items: center; gap: 2px;
+      border: none; background: transparent;
+      color: var(--text-tertiary);
+      font-size: 12.5px; font-weight: 500;
+      cursor: pointer;
+    }
+    .gs-result-card {
+      border-radius: 14px;
+      background: var(--surface);
+      padding: 14px 14px 12px;
+      margin-bottom: 10px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .gs-result-card:active { transform: scale(.99); background: var(--bg); }
+    .gs-result-title {
+      font-size: 14.5px; font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.45;
+      display: flex; gap: 8px;
+    }
+    .gs-result-idx {
+      flex: 0 0 auto;
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+    .gs-result-desc {
+      margin-top: 6px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .gs-result-meta {
+      margin-top: 10px;
+      font-size: 11.5px;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+    .gs-empty {
+      padding: 80px 24px;
+      text-align: center;
+      color: var(--text-tertiary);
+    }
+    .gs-empty-icon { font-size: 40px; margin-bottom: 10px; }
+    .gs-empty-title { font-size: 15px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; }
+    .gs-empty-sub { font-size: 12.5px; }
+
     /* Detail page comments */
     .detail-comments {
       max-width: 390px; margin: 0 auto;
@@ -3297,7 +3597,7 @@
             <button class="top-tab" data-tab="following">关注</button>
           </div>
           <div class="header-actions">
-            <button class="icon-btn" aria-label="搜索">
+            <button class="icon-btn" id="globalSearchBtn" type="button" aria-label="搜索">
               <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg>
             </button>
           </div>
@@ -3584,6 +3884,53 @@
         </div>
         <div class="search-timeline" id="searchTimeline"></div>
       </div>
+    </section>
+
+    <!-- 全局搜索（顶部图标入口） -->
+    <section class="gs-page" id="globalSearchPage">
+      <div class="mini-status"><span style="font-weight:700">MS</span><span style="font-weight:700">9:41</span><span style="font-weight:700">100%</span></div>
+      <div class="gs-topbar">
+        <button class="gs-back" id="gsBack" type="button" aria-label="返回">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="gs-searchbox">
+          <svg class="gs-searchbox-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg>
+          <input id="gsInput" type="text" placeholder="输入关键词查找" autocomplete="off" />
+          <button class="gs-clear" id="gsClear" type="button" aria-label="清除">×</button>
+        </div>
+        <button class="gs-cancel" id="gsCancel" type="button">取消</button>
+      </div>
+      <!-- 引导页 -->
+      <div class="gs-entry" id="gsEntry">
+        <div class="gs-shortcut-row">
+          <button class="gs-shortcut" id="gsSourceEntry" type="button">
+            <svg class="gs-shortcut-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.6 4.6L18 9.5l-4.4 1.9L12 16l-1.6-4.6L6 9.5l4.4-1.9L12 3Z"></path></svg>
+            <span>信息源搜索</span>
+          </button>
+        </div>
+        <div class="gs-section-head">
+          <div class="gs-section-title">历史记录</div>
+          <button class="gs-section-btn" id="gsClearHistory" type="button" aria-label="清空历史">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>
+          </button>
+        </div>
+        <div class="gs-history-chips" id="gsHistoryChips"></div>
+        <div class="gs-discovery">
+          <div class="gs-discovery-head">
+            <div class="gs-discovery-title">信息源发现</div>
+            <button class="gs-discovery-more" id="gsDiscoveryMore" type="button">
+              查看更多
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+          </div>
+          <div class="gs-discovery-sub"><b id="gsDiscoveryDate">7/6</b> 每日事件</div>
+          <div class="search-timeline" id="gsTimeline"></div>
+        </div>
+      </div>
+      <!-- 结果页 tabs -->
+      <div class="gs-tabs" id="gsTabs" style="display:none"></div>
+      <!-- 结果页 body -->
+      <div class="gs-results" id="gsResults" style="display:none"></div>
     </section>
 
     <!-- 搜索结果页 -->
@@ -6527,6 +6874,231 @@
         const nav = event.target.closest('.nav-item');
         if (!nav) return;
         switchPage(nav.dataset.nav);
+      });
+
+      /* ─── 全局搜索（顶部图标入口） ─── */
+      var gsState = {
+        history: ['文件传输', '开源', '荣耀'],
+        tabs: [
+          { id: 'all', label: '全部' },
+          { id: 'feed', label: '动态' },
+          { id: 'assistant', label: '助手' },
+          { id: 'chat', label: '聊天记录' }
+        ],
+        activeTab: 'all',
+        query: '',
+        summaryExpanded: false
+      };
+      var globalSearchPage = document.getElementById('globalSearchPage');
+      var gsInput = document.getElementById('gsInput');
+      var gsClearBtn = document.getElementById('gsClear');
+      var gsCancelBtn = document.getElementById('gsCancel');
+      var gsEntryEl = document.getElementById('gsEntry');
+      var gsTabsEl = document.getElementById('gsTabs');
+      var gsResultsEl = document.getElementById('gsResults');
+      var gsHistoryChipsEl = document.getElementById('gsHistoryChips');
+      var gsTimelineEl = document.getElementById('gsTimeline');
+
+      function gsRenderHistory() {
+        if (!gsState.history.length) {
+          gsHistoryChipsEl.innerHTML = '<div class="gs-history-empty">暂无历史记录</div>';
+          return;
+        }
+        gsHistoryChipsEl.innerHTML = gsState.history.map(function (text) {
+          return '<button class="gs-chip" type="button" data-gs-history="' + escapeHTML(text) + '">' + escapeHTML(text) + '</button>';
+        }).join('');
+        gsHistoryChipsEl.querySelectorAll('[data-gs-history]').forEach(function (btn) {
+          btn.onclick = function () { gsRunSearch(btn.dataset.gsHistory); };
+        });
+      }
+
+      function gsRenderTimeline() {
+        if (!gsTimelineEl) return;
+        gsTimelineEl.innerHTML = searchState.dailyEvents.map(timelineCardHTML).join('');
+        gsTimelineEl.querySelectorAll('[data-daily-toggle]').forEach(function (btn) {
+          btn.onclick = function (e) {
+            e.stopPropagation();
+            var id = btn.dataset.dailyToggle;
+            if (dailyExpanded.has(id)) dailyExpanded.delete(id); else dailyExpanded.add(id);
+            gsRenderTimeline();
+          };
+        });
+        gsTimelineEl.querySelectorAll('[data-daily-open]').forEach(function (node) {
+          node.onclick = function (e) {
+            e.stopPropagation();
+            closeGlobalSearch();
+            openEventDetail(findDailyEvent(node.dataset.dailyOpen));
+          };
+        });
+        var dateEl = document.getElementById('gsDiscoveryDate');
+        if (dateEl) dateEl.textContent = searchState.dailyDate;
+      }
+
+      function gsRenderTabs() {
+        gsTabsEl.innerHTML = gsState.tabs.map(function (t) {
+          return '<button class="gs-tab ' + (gsState.activeTab === t.id ? 'active' : '') + '" type="button" data-gs-tab="' + t.id + '">' + escapeHTML(t.label) + '</button>';
+        }).join('');
+        gsTabsEl.querySelectorAll('[data-gs-tab]').forEach(function (btn) {
+          btn.onclick = function () {
+            gsState.activeTab = btn.dataset.gsTab;
+            gsState.summaryExpanded = false;
+            gsRenderTabs();
+            gsRenderResults();
+            gsResultsEl.scrollTop = 0;
+          };
+        });
+      }
+
+      function gsBuildResults(tab, query) {
+        var q = query || '';
+        var pool = {
+          feed: [
+            { title: '相关动态：' + q + ' 的最新讨论', desc: '社区正在围绕该话题进行讨论，已聚合 8 条高热度动态和 3 条深度分析。', meta: '动态 · 今天' },
+            { title: '「' + q + '」历史脉络梳理', desc: '来自技术宅的图文长贴，从起因、经过、结果三个维度还原来龙去脉。', meta: '动态 · 昨天' }
+          ],
+          assistant: [
+            { title: '洞察助手', desc: '擅长趋势归纳与结论输出，可以基于「' + q + '」拉齐多方观点。', meta: '助手 · 常用' },
+            { title: '战史助手', desc: '专注军事史与关键人物档案，能给出年表、伤亡、地图等结构化答复。', meta: '助手 · 推荐' }
+          ],
+          chat: [
+            { title: 'Super Agent · 昨天 21:14', desc: '关于「' + q + '」，我们上次讨论到父子二人被围于隘口，Super Agent 已保存对话摘要。', meta: '聊天记录' },
+            { title: '产品观察 · 3 天前', desc: '把之前那份「' + q + '」相关的会议纪要再发一下，@我 需要回顾结论。', meta: '聊天记录' }
+          ],
+          public: [
+            { title: '阿涅利家族三代人的悲剧性死亡事件', desc: '阿涅利家族历史上接连遭遇悲剧：詹尼·阿涅利的侄子乔瓦尼·阿尔贝托·阿涅利因罕见胃癌于 1997 年去世，年仅 33 岁；其…', meta: '1-11 21:55' },
+            { title: '纳斯卡冠军车手格雷格·比弗尔坠机遇难', desc: '55 岁的美国纳斯卡冠军车手格雷格·比弗尔及其家人在一次私人飞机事故中不幸遇难。当地时间 12 月 19 日上午约 10 点 15 分…', meta: '1-20 5:39' },
+            { title: 'NASCAR 传奇车手格雷格·比弗尔坠机遇难', desc: '经证实，传奇 NASCAR 车手格雷格·比弗尔、其妻子克里斯蒂娜·比弗尔、女儿艾玛以及两岁的儿子莱德，在一架塞斯纳 C…', meta: '1-20 3:21' },
+            { title: '拉里贾尼之子及随行人员一同遇害', desc: '阿里·拉里贾尼之子莫尔塔扎·拉里贾尼、最高国家安全委员会秘书处安全事务副手阿里礼萨·巴亚特及多名随行人员一同遇…', meta: '3-19 8:33' },
+            { title: '钱凯人在硝石战争中奇袭智利炮舰', desc: '1879 年，智利与玻利维亚因阿塔卡玛沙漠的鸟粪和硝石资源爆发"硝石战争"，秘鲁作为盟国参战并遭重创…', meta: '5-04 10:12' }
+          ]
+        };
+        if (tab === 'all') {
+          return [].concat(pool.public.slice(0, 2), pool.feed.slice(0, 1), pool.assistant.slice(0, 1), pool.chat.slice(0, 1), pool.public.slice(2));
+        }
+        return pool[tab] || [];
+      }
+
+      function gsSummaryFor(tab, query) {
+        var q = query || '';
+        var texts = {
+          all: '已围绕「' + q + '」聚合动态、助手、聊天记录三类共 ' + gsCurrentResults().length + ' 条结果，可切换上方分类查看不同来源；若想在公开数据里进一步检索，请使用引导页顶部的「信息源搜索」入口。',
+          feed: '社区围绕「' + q + '」形成了 2 条主线讨论：一是最新事件梳理，二是历史脉络回顾，均带有明确观点与来源引用。',
+          assistant: '洞察助手与战史助手可以就「' + q + '」继续追问：前者偏结论汇总，后者擅长时间线与人物档案。',
+          chat: '你与助手、同事的对话记录中出现过与「' + q + '」相关的上下文，可直接点击回到当时的对话线。',
+          public: '经核查，提供的结构化事项数据中不包含关于"' + q + '"的相关信息。现有数据主要涵盖以下几类事件：\n1. 体育界空难：NASCAR 传奇车手格雷格·比弗尔及其家人在私人飞机事故中遇难。\n2. 家族悲剧：阿涅利家族三代成员先后因意外与疾病离世。\n3. 政治人物遇害：拉里贾尼之子及随行人员在一次袭击中身亡。\n4. 战争事件：1879 年硝石战争期间秘鲁海军曾奇袭智利炮舰。'
+        };
+        return texts[tab] || texts.all;
+      }
+
+      function gsCurrentResults() {
+        return gsBuildResults(gsState.activeTab, gsState.query);
+      }
+
+      function gsRenderResults() {
+        var results = gsCurrentResults();
+        var summary = gsSummaryFor(gsState.activeTab, gsState.query);
+        var summaryHTML =
+          '<div class="gs-ai-card">' +
+            '<div class="gs-ai-text ' + (gsState.summaryExpanded ? 'expanded' : '') + '">' + escapeHTML(summary).replace(/\n/g, '<br>') + '</div>' +
+            '<div class="gs-ai-foot">' +
+              '<span class="gs-ai-tag"><span class="gs-ai-badge">Ai</span>总结参考以下前 ' + Math.min(10, results.length) + ' 个数据</span>' +
+              '<button class="gs-ai-more" type="button" id="gsSummaryToggle">' + (gsState.summaryExpanded ? '收起' : '更多') +
+                '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>' +
+              '</button>' +
+            '</div>' +
+          '</div>';
+        var listHTML = results.length
+          ? results.map(function (r, i) {
+              return '<div class="gs-result-card" data-gs-result="' + i + '">' +
+                '<div class="gs-result-title"><span class="gs-result-idx">' + (i + 1) + '、</span><span>' + escapeHTML(r.title) + '</span></div>' +
+                '<div class="gs-result-desc">' + escapeHTML(r.desc) + '</div>' +
+                '<div class="gs-result-meta">' + escapeHTML(r.meta) + '</div>' +
+              '</div>';
+            }).join('')
+          : '<div class="gs-empty"><div class="gs-empty-icon">🔍</div><div class="gs-empty-title">暂无相关结果</div><div class="gs-empty-sub">换个关键词试试</div></div>';
+        gsResultsEl.innerHTML = summaryHTML + listHTML;
+        var toggle = document.getElementById('gsSummaryToggle');
+        if (toggle) toggle.onclick = function () { gsState.summaryExpanded = !gsState.summaryExpanded; gsRenderResults(); };
+        gsResultsEl.querySelectorAll('[data-gs-result]').forEach(function (card) {
+          card.onclick = function () { showToast('打开结果详情'); };
+        });
+      }
+
+      function gsShowEntry() {
+        gsEntryEl.style.display = 'block';
+        gsTabsEl.style.display = 'none';
+        gsResultsEl.style.display = 'none';
+      }
+
+      function gsShowResults() {
+        gsEntryEl.style.display = 'none';
+        gsTabsEl.style.display = 'flex';
+        gsResultsEl.style.display = 'block';
+      }
+
+      function gsUpdateClearBtn() {
+        gsClearBtn.classList.toggle('show', !!gsInput.value.length);
+      }
+
+      function gsRunSearch(query) {
+        var q = (query != null ? query : gsInput.value).trim();
+        if (!q) { showToast('请输入搜索内容'); return; }
+        gsInput.value = q;
+        gsUpdateClearBtn();
+        gsState.history = [q].concat(gsState.history.filter(function (t) { return t !== q; })).slice(0, 10);
+        gsState.query = q;
+        gsState.activeTab = 'all';
+        gsState.summaryExpanded = false;
+        gsRenderTabs();
+        gsRenderResults();
+        gsShowResults();
+        gsResultsEl.scrollTop = 0;
+        if (gsInput.blur) gsInput.blur();
+      }
+
+      function openGlobalSearch() {
+        gsInput.value = '';
+        gsState.query = '';
+        gsState.summaryExpanded = false;
+        gsUpdateClearBtn();
+        gsRenderHistory();
+        gsRenderTimeline();
+        gsShowEntry();
+        globalSearchPage.classList.add('show');
+        setTimeout(function () { gsInput.focus(); }, 40);
+      }
+
+      function closeGlobalSearch() {
+        globalSearchPage.classList.remove('show');
+      }
+
+      var globalSearchBtnEl = document.getElementById('globalSearchBtn');
+      if (globalSearchBtnEl) globalSearchBtnEl.addEventListener('click', openGlobalSearch);
+      gsCancelBtn.addEventListener('click', closeGlobalSearch);
+      document.getElementById('gsBack').addEventListener('click', closeGlobalSearch);
+      document.getElementById('gsDiscoveryMore').addEventListener('click', function () {
+        closeGlobalSearch();
+        switchPage('search');
+      });
+      gsClearBtn.addEventListener('click', function () {
+        gsInput.value = '';
+        gsUpdateClearBtn();
+        gsShowEntry();
+        gsInput.focus();
+      });
+      gsInput.addEventListener('input', gsUpdateClearBtn);
+      gsInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); gsRunSearch(); }
+      });
+      document.getElementById('gsSourceEntry').addEventListener('click', function () {
+        closeGlobalSearch();
+        switchPage('search');
+      });
+      document.getElementById('gsClearHistory').addEventListener('click', function () {
+        if (!gsState.history.length) return;
+        gsState.history = [];
+        gsRenderHistory();
+        showToast('已清空历史记录');
       });
 
       /* ─── 信息源搜索 wiring ─── */
