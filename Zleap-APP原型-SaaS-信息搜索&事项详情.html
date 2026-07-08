@@ -468,7 +468,7 @@
       border-radius: 16px;
       transition: var(--transition);
     }
-    .nav-item span { font-size: 10.5px; line-height: 1; font-weight: 700; }
+    .nav-item span { display: none; }
     .nav-item .icon { width: 22px; height: 22px; }
     .nav-item.active { color: var(--accent); }
     .nav-item.active .icon { stroke: var(--accent); }
@@ -1253,15 +1253,6 @@
       padding: 4px 12px 10px;
       background: var(--surface);
     }
-    .gs-back {
-      flex: 0 0 auto;
-      width: 32px; height: 32px;
-      border: none; background: transparent;
-      color: var(--text-primary);
-      display: grid; place-items: center;
-      border-radius: 50%; cursor: pointer;
-    }
-    .gs-back:active { background: var(--bg); }
     .gs-searchbox {
       flex: 1;
       display: flex; align-items: center; gap: 8px;
@@ -1302,10 +1293,6 @@
       padding: 4px 20px 40px;
       -webkit-overflow-scrolling: touch;
     }
-    .gs-shortcut-row {
-      display: flex; justify-content: flex-end;
-      padding: 12px 2px 2px;
-    }
     .gs-shortcut {
       display: inline-flex; align-items: center; gap: 5px;
       border: none; background: transparent;
@@ -1322,28 +1309,41 @@
       margin-bottom: 8px;
     }
     .gs-discovery-title { font-size: 17px; font-weight: 900; color: var(--text-primary); letter-spacing: -.2px; }
-    .gs-discovery-more {
-      display: inline-flex; align-items: center; gap: 2px;
-      border: none; background: transparent;
-      color: var(--text-tertiary);
-      font-size: 13.5px; font-weight: 500;
-      cursor: pointer;
-    }
-    .gs-discovery-sub { margin: 2px 2px 16px; font-size: 13px; color: var(--text-tertiary); }
-    .gs-discovery-sub b { color: var(--text-tertiary); font-weight: 500; margin-right: 4px; }
     #gsTimeline { margin-top: 4px; }
-    #gsTimeline .tl-item { gap: 14px; }
-    #gsTimeline .tl-rail { width: 32px; align-items: flex-start; position: relative; padding-top: 22px; }
-    #gsTimeline .tl-time { padding-top: 0; font-size: 11.5px; color: var(--text-tertiary); font-weight: 500; margin-bottom: 4px; }
+    #gsTimeline .tl-item { gap: 6px; }
+    #gsTimeline .tl-rail {
+      width: 54px; min-width: 54px;
+      display: block;
+      position: relative;
+      padding-top: 20px;
+      padding-right: 14px;
+    }
+    #gsTimeline .tl-time {
+      display: block;
+      padding: 0;
+      font-size: 11.5px; color: var(--text-tertiary); font-weight: 500;
+      white-space: nowrap;
+      text-align: left;
+    }
     #gsTimeline .tl-rail::before {
       content: "";
-      position: absolute; top: 26px; right: -6px;
+      position: absolute;
+      right: 2px; top: 22px;
       width: 8px; height: 8px; border-radius: 50%;
       background: #d1d5db;
       box-shadow: 0 0 0 3px var(--surface);
-      z-index: 1;
+      z-index: 2;
     }
-    #gsTimeline .tl-line { width: 1.5px; background: var(--border); margin-top: 6px; }
+    #gsTimeline .tl-line {
+      display: block;
+      position: absolute;
+      right: 5.25px;
+      top: 34px; bottom: -22px;
+      width: 1.5px;
+      background: var(--border);
+      margin: 0;
+    }
+    #gsTimeline .tl-item:last-child .tl-line { bottom: 0; }
     #gsTimeline .tl-card {
       padding: 16px 16px 14px;
       margin-bottom: 22px;
@@ -1455,13 +1455,17 @@
     /* 结果页 */
     .gs-tabs {
       flex: 0 0 auto;
-      display: flex; gap: 24px;
-      padding: 0 16px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 0 16px 0 14px;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
+    }
+    .gs-tabs-scroll {
+      display: flex; gap: 24px;
+      min-width: 0; flex: 1;
       overflow-x: auto; scrollbar-width: none;
     }
-    .gs-tabs::-webkit-scrollbar { display: none; }
+    .gs-tabs-scroll::-webkit-scrollbar { display: none; }
     .gs-tab {
       flex: 0 0 auto;
       height: 44px;
@@ -1484,6 +1488,19 @@
       background: var(--accent);
       transform: translateX(-50%);
     }
+    .gs-tab-source {
+      flex: 0 0 auto;
+      display: inline-flex; align-items: center; gap: 4px;
+      height: 32px;
+      padding: 0 2px;
+      border: none; background: transparent;
+      color: var(--accent);
+      font-size: 13px; font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .gs-tab-source:active { opacity: .7; }
+    .gs-tab-source .ic { flex: 0 0 auto; }
     .gs-results {
       flex: 1; min-height: 0;
       overflow-y: auto;
@@ -1534,6 +1551,47 @@
       font-size: 12.5px; font-weight: 500;
       cursor: pointer;
     }
+    /* 信息源检索 loading */
+    .search-loading {
+      position: absolute; inset: 0;
+      display: none;
+      align-items: center; justify-content: center;
+      background: rgba(255,255,255,.86);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 30;
+      padding: 40px 24px;
+    }
+    .search-loading.show { display: flex; }
+    #searchPage { position: relative; }
+    .search-loading-card {
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      padding: 22px 26px;
+      border-radius: 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(15,23,42,.08);
+      max-width: 300px;
+    }
+    .search-loading-spinner {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      border: 3px solid var(--accent-light);
+      border-top-color: var(--accent);
+      animation: gsspin 900ms linear infinite;
+    }
+    @keyframes gsspin { to { transform: rotate(360deg); } }
+    .search-loading-text {
+      font-size: 14.5px; font-weight: 800; color: var(--text-primary);
+      text-align: center;
+      line-height: 1.5;
+    }
+    .search-loading-sub {
+      font-size: 12.5px; color: var(--text-tertiary);
+      text-align: center;
+      line-height: 1.6;
+    }
+
     .gs-result-card {
       border-radius: 14px;
       background: var(--surface);
@@ -3933,15 +3991,19 @@
         </div>
         <div class="search-timeline" id="searchTimeline"></div>
       </div>
+      <div class="search-loading" id="searchLoading">
+        <div class="search-loading-card">
+          <div class="search-loading-spinner"></div>
+          <div class="search-loading-text">正在检索信息源</div>
+          <div class="search-loading-sub">AI 正在综合公共信息、来源事项与推理路径…</div>
+        </div>
+      </div>
     </section>
 
     <!-- 全局搜索（顶部图标入口） -->
     <section class="gs-page" id="globalSearchPage">
       <div class="mini-status"><span style="font-weight:700">MS</span><span style="font-weight:700">9:41</span><span style="font-weight:700">100%</span></div>
       <div class="gs-topbar">
-        <button class="gs-back" id="gsBack" type="button" aria-label="返回">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        </button>
         <div class="gs-searchbox">
           <svg class="gs-searchbox-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg>
           <input id="gsInput" type="text" placeholder="输入关键词查找" autocomplete="off" />
@@ -5956,7 +6018,7 @@
 
       function closeSearchResults() {
         searchResultPage.classList.remove('show');
-        if (searchPage && searchPage.classList.contains('show')) bottomNav.classList.remove('hide');
+        if (currentPage === 'search') bottomNav.classList.remove('hide');
       }
 
       function renderResultSummary() {
@@ -6996,9 +7058,16 @@
       }
 
       function gsRenderTabs() {
-        gsTabsEl.innerHTML = gsState.tabs.map(function (t) {
-          return '<button class="gs-tab ' + (gsState.activeTab === t.id ? 'active' : '') + '" type="button" data-gs-tab="' + t.id + '">' + escapeHTML(t.label) + '</button>';
-        }).join('');
+        gsTabsEl.innerHTML =
+          '<div class="gs-tabs-scroll">' +
+            gsState.tabs.map(function (t) {
+              return '<button class="gs-tab ' + (gsState.activeTab === t.id ? 'active' : '') + '" type="button" data-gs-tab="' + t.id + '">' + escapeHTML(t.label) + '</button>';
+            }).join('') +
+          '</div>' +
+          '<button class="gs-tab-source" type="button" id="gsSourceTabBtn">' +
+            '<svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.6 4.6L18 9.5l-4.4 1.9L12 16l-1.6-4.6L6 9.5l4.4-1.9L12 3Z"></path></svg>' +
+            '<span>信息源</span>' +
+          '</button>';
         gsTabsEl.querySelectorAll('[data-gs-tab]').forEach(function (btn) {
           btn.onclick = function () {
             gsState.activeTab = btn.dataset.gsTab;
@@ -7008,6 +7077,8 @@
             gsResultsEl.scrollTop = 0;
           };
         });
+        var sourceBtn = document.getElementById('gsSourceTabBtn');
+        if (sourceBtn) sourceBtn.onclick = gsGoSourceSearch;
       }
 
       function gsBuildResults(tab, query) {
@@ -7085,6 +7156,32 @@
         });
       }
 
+      function gsGoSourceSearch() {
+        var q = gsState.query || '';
+        if (!q) return;
+        closeGlobalSearch();
+        var input = document.getElementById('searchInput');
+        if (input) input.value = q;
+        switchPage('search');
+        showSourceLoading(q);
+        setTimeout(function () {
+          hideSourceLoading();
+          openSearchResults(q);
+        }, 1400);
+      }
+
+      function showSourceLoading(q) {
+        var el = document.getElementById('searchLoading');
+        if (!el) return;
+        var text = el.querySelector('.search-loading-text');
+        if (text) text.textContent = '正在检索信息源「' + q + '」';
+        el.classList.add('show');
+      }
+      function hideSourceLoading() {
+        var el = document.getElementById('searchLoading');
+        if (el) el.classList.remove('show');
+      }
+
       function gsShowEntry() {
         gsEntryEl.style.display = 'block';
         gsTabsEl.style.display = 'none';
@@ -7136,7 +7233,6 @@
       var globalSearchBtnEl = document.getElementById('globalSearchBtn');
       if (globalSearchBtnEl) globalSearchBtnEl.addEventListener('click', openGlobalSearch);
       gsCancelBtn.addEventListener('click', closeGlobalSearch);
-      document.getElementById('gsBack').addEventListener('click', closeGlobalSearch);
       gsClearBtn.addEventListener('click', function () {
         gsInput.value = '';
         gsUpdateClearBtn();
