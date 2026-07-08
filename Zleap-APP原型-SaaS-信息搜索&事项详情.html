@@ -1061,25 +1061,19 @@
       font: inherit; font-size: 15px; line-height: 1.6; color: var(--text-primary); min-height: 46px;
     }
     .search-input::placeholder { color: var(--text-tertiary); }
-    .search-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 6px; }
-    .search-scope-inline { display: flex; align-items: center; gap: 6px; min-width: 0; overflow-x: auto; scrollbar-width: none; }
-    .search-scope-inline::-webkit-scrollbar { display: none; }
-    .search-scope-chip {
-      flex: 0 0 auto; border: none; border-radius: 999px; padding: 7px 11px;
-      background: var(--bg); color: var(--text-secondary); font-size: 12.5px; font-weight: 800; cursor: pointer;
+    .search-card-foot { display: flex; align-items: center; justify-content: flex-start; margin-top: 10px; }
+    .ai-search-entry {
+      display: inline-flex; align-items: center; gap: 7px; border: none; border-radius: 999px;
+      padding: 10px 16px; background: var(--accent); color: #fff;
+      font-size: 14px; font-weight: 900; cursor: pointer; box-shadow: 0 6px 16px rgba(255,139,33,.28);
+      transition: var(--transition);
     }
-    .search-scope-chip.active { background: var(--accent-light); color: var(--accent); }
+    .ai-search-entry:active { transform: scale(.96); }
     .search-range {
       display: inline-flex; align-items: center; gap: 3px; border: none; background: transparent;
       padding: 4px 0; color: var(--accent); font-size: 13px; font-weight: 700; cursor: pointer;
     }
     .search-range b { font-weight: 800; }
-    .search-submit {
-      flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%; border: none;
-      background: var(--accent); color: #fff; display: grid; place-items: center; cursor: pointer;
-      box-shadow: 0 6px 16px rgba(255,139,33,.35); transition: var(--transition);
-    }
-    .search-submit:active { transform: scale(.92); }
     .search-daily-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
     .search-daily-title { font-size: 16px; font-weight: 900; color: var(--text-primary); }
     .search-daily-title b { color: var(--accent); font-weight: 900; margin-right: 4px; }
@@ -3594,9 +3588,9 @@
         <div class="search-card" id="searchCard">
           <textarea id="searchInput" class="search-input" rows="2" placeholder="搜索动态、助手、聊天记录和信息源"></textarea>
           <div class="search-card-foot">
-            <div class="search-scope-inline" id="searchScopeChips"></div>
-            <button class="search-submit" id="searchGoBtn" type="button" aria-label="搜索">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            <button class="ai-search-entry" id="searchGoBtn" type="button" aria-label="AI 搜索">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"></path><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"></path></svg>
+              AI 搜索
             </button>
           </div>
         </div>
@@ -5357,20 +5351,6 @@
       var selectedAssistant = lastUsedAssistant;
       var rangeDraft = { range: 'public', sub: 'own', selected: new Set() };
 
-      function renderSearchScopeChips() {
-        var el = document.getElementById('searchScopeChips');
-        if (!el) return;
-        el.innerHTML = searchState.scopes.map(function (s) {
-          return '<button class="search-scope-chip ' + (searchState.scope === s.id ? 'active' : '') + '" type="button" data-search-scope="' + s.id + '">' + escapeHTML(s.label) + '</button>';
-        }).join('');
-        el.querySelectorAll('[data-search-scope]').forEach(function (btn) {
-          btn.onclick = function () {
-            searchState.scope = btn.dataset.searchScope;
-            renderSearchScopeChips();
-          };
-        });
-      }
-
       function renderSearchHistory() {
         var el = document.getElementById('searchHistoryList');
         if (!el) return;
@@ -5387,7 +5367,6 @@
         if (input) input.placeholder = searchState.placeholders[searchState.phIdx];
         var dateEl = document.getElementById('searchDailyDate');
         if (dateEl) dateEl.textContent = searchState.dailyDate;
-        renderSearchScopeChips();
         renderSearchHistory();
         renderDailyTimeline();
       }
@@ -5578,7 +5557,6 @@
         if (rangeDraft.range === 'mine' && !rangeDraft.selected.size) { showToast('请至少选择一个信息源'); return; }
         searchState.range = rangeDraft.range;
         searchState.selectedSources = new Set(rangeDraft.selected);
-        renderSearchScopeChips();
         closeSheet('searchRangeSheet');
       }
 
