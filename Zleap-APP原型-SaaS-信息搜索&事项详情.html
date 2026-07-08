@@ -1311,9 +1311,8 @@
       border: none; background: transparent;
       padding: 4px 2px;
       color: var(--accent);
-      font-size: 14px; font-weight: 700;
+      font-size: 14px; font-weight: 700; line-height: 1;
       cursor: pointer;
-      font: inherit;
     }
     .gs-shortcut:active { opacity: .6; }
     .gs-shortcut-icon { color: var(--accent); }
@@ -3947,12 +3946,6 @@
       </div>
       <!-- 引导页 -->
       <div class="gs-entry" id="gsEntry">
-        <div class="gs-shortcut-row">
-          <button class="gs-shortcut" id="gsSourceEntry" type="button">
-            <svg class="gs-shortcut-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.6 4.6L18 9.5l-4.4 1.9L12 16l-1.6-4.6L6 9.5l4.4-1.9L12 3Z"></path></svg>
-            <span>信息源搜索</span>
-          </button>
-        </div>
         <div class="gs-section-head">
           <div class="gs-section-title">历史记录</div>
           <button class="gs-section-btn" id="gsClearHistory" type="button" aria-label="清空历史">
@@ -3967,13 +3960,12 @@
         </div>
         <div class="gs-discovery">
           <div class="gs-discovery-head">
-            <div class="gs-discovery-title">信息源发现</div>
-            <button class="gs-discovery-more" id="gsDiscoveryMore" type="button">
-              查看更多
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <div class="gs-discovery-title">每日事件</div>
+            <button class="gs-shortcut" id="gsSourceEntry" type="button">
+              <svg class="gs-shortcut-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.6 4.6L18 9.5l-4.4 1.9L12 16l-1.6-4.6L6 9.5l4.4-1.9L12 3Z"></path></svg>
+              <span>信息源搜索 &gt;</span>
             </button>
           </div>
-          <div class="gs-discovery-sub"><b id="gsDiscoveryDate">7/6</b> 每日事件</div>
           <div class="search-timeline" id="gsTimeline"></div>
         </div>
       </div>
@@ -7140,10 +7132,6 @@
       if (globalSearchBtnEl) globalSearchBtnEl.addEventListener('click', openGlobalSearch);
       gsCancelBtn.addEventListener('click', closeGlobalSearch);
       document.getElementById('gsBack').addEventListener('click', closeGlobalSearch);
-      document.getElementById('gsDiscoveryMore').addEventListener('click', function () {
-        closeGlobalSearch();
-        switchPage('search');
-      });
       gsClearBtn.addEventListener('click', function () {
         gsInput.value = '';
         gsUpdateClearBtn();
