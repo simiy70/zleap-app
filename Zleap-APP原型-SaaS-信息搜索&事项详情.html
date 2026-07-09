@@ -1155,7 +1155,6 @@
     .sr-searchbox input { flex: 1; border: none; background: transparent; outline: none; font-size: 14px; color: var(--text-primary); }
     .sr-clear-input { flex: 0 0 auto; border: none; background: var(--border-strong); color: #fff; width: 18px; height: 18px; border-radius: 50%; font-size: 13px; line-height: 1; cursor: pointer; }
     .sr-body { flex: 1; min-height: 0; overflow-y: auto; padding: 14px 16px 40px; -webkit-overflow-scrolling: touch; }
-    .search-result-page.multi .sr-body { padding-bottom: 96px; }
     .sr-loading {
       flex: 1; min-height: 0;
       display: none;
@@ -1206,9 +1205,16 @@
     .sr-summary-text { font-size: 13.5px; line-height: 1.85; color: var(--text-primary); }
     .sr-summary-text.clamped { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
     .sr-cite { display: inline-grid; place-items: center; min-width: 16px; height: 16px; padding: 0 4px; margin: 0 2px; border-radius: 5px; background: var(--accent-light); color: var(--accent); font-size: 10px; font-weight: 800; vertical-align: middle; }
-    .sr-summary-toggle { margin-top: 8px; border: none; background: transparent; padding: 0; color: var(--accent); font-size: 12.5px; font-weight: 700; cursor: pointer; }
-    .sr-summary-foot { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text-tertiary); }
+    .sr-summary-foot { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 11.5px; color: var(--text-tertiary); }
+    .sr-summary-tag { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
     .sr-summary-foot .ai-badge { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 6px; background: linear-gradient(135deg,#ffd36d,#ff8d21); color: #fff; font-size: 10px; font-weight: 900; }
+    .sr-summary-more { display: inline-flex; align-items: center; gap: 2px; border: none; background: transparent; padding: 0; color: var(--text-tertiary); font-size: 12.5px; font-weight: 600; cursor: pointer; }
+    .sr-summary-more:active { opacity: .7; }
+    /* AI 总结 sheet */
+    .ai-summary-sheet { min-height: 50vh; display: flex; flex-direction: column; }
+    .ai-summary-sheet .sheet-title-row strong { flex: 1; text-align: center; margin-left: 24px; font-size: 15px; }
+    .ai-summary-sheet-body { flex: 1; overflow-y: auto; padding-top: 4px; }
+    .ai-summary-body { font-size: 14px; line-height: 1.9; color: var(--text-primary); }
     /* controls */
     .sr-controls { display: flex; align-items: center; gap: 18px; margin-bottom: 12px; padding: 0 2px; }
     .sr-ctrl { display: inline-flex; align-items: center; gap: 5px; border: none; background: transparent; cursor: pointer; color: var(--text-secondary); font-size: 13px; font-weight: 700; }
@@ -1216,11 +1222,6 @@
     /* 结果卡 */
     .sr-results { display: flex; flex-direction: column; gap: 10px; }
     .sr-result { display: flex; gap: 10px; align-items: flex-start; padding: 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(15,23,42,.05); transition: var(--transition); }
-    .sr-result.selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-    .sr-result-check { display: none; flex: 0 0 auto; width: 22px; height: 22px; margin-top: 1px; border-radius: 7px; border: 2px solid var(--border-strong); position: relative; }
-    .search-result-page.multi .sr-result-check { display: block; }
-    .sr-result.selected .sr-result-check { background: var(--accent); border-color: var(--accent); }
-    .sr-result.selected .sr-result-check::after { content: ""; position: absolute; left: 5px; top: 4px; width: 10px; height: 5px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg); }
     .sr-result-main { flex: 1; min-width: 0; cursor: pointer; }
     .sr-result-title { font-size: 14px; font-weight: 800; color: var(--text-primary); line-height: 1.45; }
     .sr-result-desc { margin-top: 5px; font-size: 12px; color: var(--text-secondary); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -1229,40 +1230,7 @@
     .sr-result-source-avatar { width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center; font-size: 8px; font-weight: 900; color: #fff; background: linear-gradient(135deg,#ffd36d,#ff8d21); }
     .sr-result-time { font-size: 11px; color: var(--text-tertiary); }
     .sr-empty { padding: 60px 16px; text-align: center; color: var(--text-tertiary); font-size: 13px; }
-    /* 已选栏 */
-    .sr-selbar { flex: 0 0 auto; display: none; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 0px)); background: rgba(255,255,255,.96); backdrop-filter: blur(14px); border-top: 1px solid var(--border); }
-    .search-result-page.multi .sr-selbar { display: flex; }
-    .sr-selinfo { font-size: 13px; color: var(--text-secondary); }
-    .sr-selinfo b { color: var(--accent); font-weight: 900; }
-    .sr-selactions { display: flex; align-items: center; gap: 10px; }
-    .sr-clear { border: none; background: transparent; color: var(--text-tertiary); font-size: 13px; font-weight: 700; cursor: pointer; }
-    .sr-publish { border: none; border-radius: 999px; padding: 10px 20px; background: var(--accent); color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; transition: var(--transition); }
-    .sr-publish:disabled { background: var(--border-strong); color: #fff; cursor: not-allowed; }
-    .sr-publish:not(:disabled):active { transform: scale(.96); }
 
-    /* 发布帖子 sheet */
-    .publish-sheet { max-height: 82vh; display: flex; flex-direction: column; }
-    .publish-body { overflow-y: auto; }
-    .publish-field { margin-bottom: 18px; }
-    .publish-field-label { font-size: 13px; font-weight: 800; color: var(--text-primary); margin-bottom: 10px; }
-    .publish-assistants { display: flex; flex-direction: column; gap: 8px; }
-    .publish-assistant {
-      display: flex; align-items: center; gap: 10px;
-      padding: 12px 14px; border-radius: 12px;
-      border: 1px solid var(--border); background: var(--surface);
-      cursor: pointer; transition: var(--transition);
-    }
-    .publish-assistant.selected { border-color: var(--accent); background: var(--accent-light); }
-    .publish-assistant-radio {
-      flex: 0 0 auto; width: 18px; height: 18px; border-radius: 50%;
-      border: 2px solid var(--border-strong); display: grid; place-items: center;
-    }
-    .publish-assistant.selected .publish-assistant-radio { border-color: var(--accent); }
-    .publish-assistant.selected .publish-assistant-radio::after { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
-    .publish-assistant-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
-    .publish-assistant-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
-    .publish-info { padding: 12px 14px; border-radius: 12px; background: #fff7ec; font-size: 12.5px; line-height: 1.7; color: var(--text-secondary); }
-    .publish-info b { color: var(--accent); font-weight: 800; }
     .publish-actions { display: grid; grid-template-columns: 1fr 1.6fr; gap: 10px; margin-top: 8px; padding-top: 14px; }
     .publish-cancel { height: 46px; border: 1px solid var(--border-strong); border-radius: 14px; background: var(--surface); color: var(--text-secondary); font-size: 15px; font-weight: 700; cursor: pointer; }
     .publish-start { height: 46px; border: none; border-radius: 14px; background: var(--accent); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
@@ -1741,6 +1709,44 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+    }
+    .gs-feed-actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .gs-feed-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 32px;
+      border: none;
+      background: transparent;
+      color: #7c808a;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 999px;
+      transition: var(--transition);
+    }
+    .gs-feed-action .icon {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2;
+    }
+    .gs-feed-action:active {
+      background: var(--bg);
+      transform: scale(.96);
+    }
+    .gs-feed-action.active {
+      color: var(--accent);
+    }
+    .gs-feed-action.active .icon {
+      stroke: var(--accent);
     }
     .gs-asst-grid {
       display: grid;
@@ -3720,28 +3726,59 @@
       border-radius: 14px;
       background: #fff;
     }
+    .event-detail-tags-wrap {
+      position: relative;
+      margin-bottom: 8px;
+    }
     .event-detail-tags {
-      width: 300px;
-      height: 25px;
       display: flex;
-      align-items: center;
+      flex-wrap: wrap;
       gap: 6px;
-      margin-bottom: 6px;
+      min-height: 28px;
+      max-height: 28px;
       overflow: hidden;
+      transition: max-height .25s ease;
+    }
+    .event-detail-tags.expanded {
+      max-height: 276px;
+      min-height: 60px;
+      overflow-y: auto;
     }
     .event-tag {
       flex: 0 0 auto;
-      max-width: 94px;
-      height: 20px;
-      padding: 0 7px;
+      max-width: none;
+      height: 24px;
+      padding: 0 9px;
       border-radius: var(--radius-pill);
       background: #f5f6f8;
       color: var(--text-secondary);
-      font-size: 10px;
-      line-height: 20px;
+      font-size: 11.5px;
+      line-height: 24px;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    }
+    .event-detail-tags-toggle {
+      position: absolute;
+      right: 0;
+      top: 2px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: #e8852c;
+      padding: 0;
+      z-index: 1;
+    }
+    .event-detail-tags-toggle svg {
+      width: 14px;
+      height: 14px;
+      transition: transform .25s ease;
+    }
+    .event-detail-tags.expanded ~ .event-detail-tags-toggle svg {
+      transform: rotate(180deg);
     }
     .event-detail-item-title {
       margin: 0 0 8px;
@@ -3787,20 +3824,12 @@
       line-height: 1.65;
       white-space: pre-wrap;
     }
-    /* 长文本折叠（AI 摘要 / 原文参考） */
-    .event-detail-summary.clamped {
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      overflow: hidden;
+    .event-detail-refinfo {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      font-weight: 600;
     }
-    /* 原文参考：全文展示，不再折叠 */
-    .event-detail-more {
-      display: inline-block; border: none; background: transparent;
-      color: var(--accent); font-size: 12.5px; font-weight: 700;
-      padding: 8px 2px 0; cursor: pointer;
-    }
-    .event-detail-more[hidden] { display: none; }
     .event-detail-empty {
       padding: 36px 16px;
       color: var(--text-tertiary);
@@ -4209,23 +4238,12 @@
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M7 12h10"></path><path d="M11 18h2"></path></svg>
             智能排序
           </button>
-          <button class="sr-ctrl" type="button" data-sr-ctrl="multi">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="7" rx="1.5"></rect><path d="m14 5 2 2 4-4"></path><path d="M14 12h6"></path><path d="M14 17h6"></path><path d="M3 15h7v5H3z"></path></svg>
-            多选
-          </button>
         </div>
         <div class="sr-results" id="searchResultList"></div>
       </div>
       <div class="sr-loading" id="searchResultLoading">
         <div class="sr-loading-dots"><span></span><span></span><span></span></div>
         <div class="sr-loading-text">结果整理中</div>
-      </div>
-      <div class="sr-selbar" id="searchSelBar">
-        <div class="sr-selinfo">已选 <b id="searchSelCount">0</b> / 100</div>
-        <div class="sr-selactions">
-          <button class="sr-clear" type="button" data-sr-action="clear">清空</button>
-          <button class="sr-publish" type="button" data-sr-action="publish">发布帖子</button>
-        </div>
       </div>
     </section>
 
@@ -4951,6 +4969,18 @@
     </div>
   </div>
 
+  <!-- AI 总结 Sheet -->
+  <div class="sheet-backdrop" id="aiSummarySheet">
+    <div class="bottom-sheet ai-summary-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title-row">
+        <strong>AI 总结</strong>
+        <button class="sources-sheet-close" data-close="ai-summary-sheet" type="button" aria-label="关闭">×</button>
+      </div>
+      <div class="ai-summary-sheet-body" id="aiSummarySheetBody"></div>
+    </div>
+  </div>
+
   <!-- 推理路径 Sheet -->
   <div class="sheet-backdrop" id="pathSheet">
     <div class="bottom-sheet">
@@ -4979,21 +5009,6 @@
     </div>
   </div>
 
-  <!-- 发布帖子 Sheet -->
-  <div class="sheet-backdrop" id="publishSheet">
-    <div class="bottom-sheet publish-sheet">
-      <div class="sheet-handle"></div>
-      <div class="sheet-title-row">
-        <strong>发布帖子</strong>
-        <button class="sources-sheet-close" data-close="publish-sheet" type="button" aria-label="关闭">×</button>
-      </div>
-      <div class="publish-body" id="publishBody"></div>
-      <div class="publish-actions">
-        <button class="publish-cancel" type="button" data-close="publish-sheet">取消</button>
-        <button class="publish-start" id="publishStartBtn" type="button">开始创作</button>
-      </div>
-    </div>
-  </div>
 
   <!-- Sources Sheet (message page) -->
   <div class="sheet-backdrop" id="sourcesSheet">
@@ -5919,14 +5934,7 @@
       var dailyExpanded = new Set();
       var searchPhTimer = null;
 
-      var searchResultState = { query: '', events: [], selected: new Set(), multi: false, sortMode: 'smart', summaryExpanded: false, pathOpen: false, resultExpanded: new Set() };
-      var publishAssistants = [
-        { id: 'asst-report', name: '日报助手', sub: '擅长结构化汇总与要点提炼' },
-        { id: 'asst-insight', name: '洞察助手', sub: '擅长趋势归纳与结论输出' },
-        { id: 'asst-brief', name: '简报助手', sub: '擅长精炼摘要与快讯' }
-      ];
-      var lastUsedAssistant = 'asst-report';
-      var selectedAssistant = lastUsedAssistant;
+      var searchResultState = { query: '', events: [], sortMode: 'smart', pathOpen: false };
       var rangeDraft = { range: 'public', sub: 'own', selected: new Set() };
 
       function updateRangeButton() {
@@ -6134,14 +6142,11 @@
       /* ── 搜索结果 ── */
       function buildResultEvents() {
         return [
-          { id: 'r1', title: '湘潭大学与江西财经大学并列第 106 名', summary: '湘潭大学在 2026 年 ABC 中国大学排名中位列第 106 名，总分 68.53；江西财经大学同分并列第 106 名（带星号）。综合来看，两校在学科结构上差异明显：湘潭大学为综合类高校，法学、数学等学科较强；江西财经大学以财经类见长，其带星号排名表示按财经类高校折算得出。评价体系上，该榜单综合了科研产出、师资规模、生源质量与社会声誉等多维指标，两校总分接近但优势领域不同，考生择校时应结合专业方向、地域偏好与就业去向综合判断，而非只看综合排名的名次高低。', source: '小木虫', avatar: '木', time: '01-23 12:40', tags: ['地点-湖南', '指标-68.53', '话题-综合类'], reference: '数据来源：ABC 排名官微、中国大学排行榜（CNUR）网站。\n湘潭大学：综合类，湖南省湘潭市，总分 68.53，位列第 106 名。\n江西财经大学：财经类，江西省南昌市，总分 68.53，并列第 106 名（带星号）。\n星号说明：带星号表示该校排名为按其所属类别（财经类）折算后的参考排名，与综合类高校不完全可比。\n指标构成：综合得分由科研（论文、项目、奖项）、师资（规模与结构）、生源（录取分数）、声誉（学界与用人单位评价）等维度加权得出。\n更新时间：2026 年 1 月发布，数据以当年官方公示为准。\n备注：不同榜单口径存在差异，建议交叉核对多个来源后再做结论。', link: 'https://example.com/rank', children: [
-              { id: 'r1-1', title: '1、湘潭大学 68.53 分位列第 106', summary: '综合类高校，位于湖南省湘潭市。', tags: ['学校-湘潭大学'], reference: '湘潭大学 68.53…', link: '#' },
-              { id: 'r1-2', title: '2、江西财经大学同分并列', summary: '财经类高校，位于江西省南昌市，带星号表示折算排名。', tags: ['学校-江西财经'], reference: '江西财经 68.53（带星）…', link: '#' }
-            ] },
-          { id: 'r2', title: '湘潭理工学院概况与发展历程', summary: '湘潭理工学院地处湘潭市九华经开区，是湖南省首个完成独立学院转设的民办本科高校，前身为湖南工商大学北津学院。', source: '募格学术', avatar: '募', time: '04-24 12:23', tags: ['地点-湖南', '类型-民办本科'], reference: '湘潭理工学院：2018 年完成转设，人社部博士后科研工作站联合培养单位。', link: '#', children: [] },
-          { id: 'r3', title: '湘潭大学法学学部学科评估获 B+', summary: '法学学部历史悠久，拥有本硕博完整培养体系及博士后流动站，学科评估获 B+，师资规模居省内前列。', source: '考研帮', avatar: '研', time: '03-11 09:12', tags: ['学科-法学', '评估-B+'], reference: '法学学部：本硕博 + 博士后流动站，与最高检共建检察公益诉讼研究基地。', link: '#', children: [] },
-          { id: 'r4', title: '2026 博士研究生招生简章发布', summary: '学校发布 2026 年博士研究生招生简章及多个暑期学校项目，研究生招生与培养工作稳步推进。', source: '研招网', avatar: '招', time: '02-28 15:40', tags: ['时间-2026', '类型-招生'], reference: '2026 博士招生简章：多学科招生，含暑期学校项目。', link: '#', children: [] },
-          { id: 'r5', title: '计算机等学科考情：吸引力持续增强', summary: '考研方面，计算机等学科考情分析显示其吸引力持续增强，部分学员成功上岸。', source: '小木虫', avatar: '木', time: '04-02 20:15', tags: ['学科-计算机', '话题-考研'], reference: '考情：计算机学科报考热度上升…', link: '#', children: [] }
+          { id: 'r1', title: '湘潭大学与江西财经大学并列第 106 名', summary: '湘潭大学在 2026 年 ABC 中国大学排名中位列第 106 名，总分 68.53；江西财经大学同分并列第 106 名（带星号）。综合来看，两校在学科结构上差异明显：湘潭大学为综合类高校，法学、数学等学科较强；江西财经大学以财经类见长，其带星号排名表示按财经类高校折算得出。评价体系上，该榜单综合了科研产出、师资规模、生源质量与社会声誉等多维指标，两校总分接近但优势领域不同，考生择校时应结合专业方向、地域偏好与就业去向综合判断，而非只看综合排名的名次高低。', source: '小木虫', avatar: '木', time: '01-23 12:40', tags: ['地点-湖南', '指标-68.53', '话题-综合类'], reference: '数据来源：ABC 排名官微、中国大学排行榜（CNUR）网站。\n湘潭大学：综合类，湖南省湘潭市，总分 68.53，位列第 106 名。\n江西财经大学：财经类，江西省南昌市，总分 68.53，并列第 106 名（带星号）。\n星号说明：带星号表示该校排名为按其所属类别（财经类）折算后的参考排名，与综合类高校不完全可比。\n指标构成：综合得分由科研（论文、项目、奖项）、师资（规模与结构）、生源（录取分数）、声誉（学界与用人单位评价）等维度加权得出。\n更新时间：2026 年 1 月发布，数据以当年官方公示为准。\n备注：不同榜单口径存在差异，建议交叉核对多个来源后再做结论。', link: 'https://example.com/rank' },
+          { id: 'r2', title: '湘潭理工学院概况与发展历程', summary: '湘潭理工学院地处湘潭市九华经开区，是湖南省首个完成独立学院转设的民办本科高校，前身为湖南工商大学北津学院。', source: '募格学术', avatar: '募', time: '04-24 12:23', tags: ['地点-湖南', '类型-民办本科'], reference: '湘潭理工学院：2018 年完成转设，人社部博士后科研工作站联合培养单位。', link: '#' },
+          { id: 'r3', title: '湘潭大学法学学部学科评估获 B+', summary: '法学学部历史悠久，拥有本硕博完整培养体系及博士后流动站，学科评估获 B+，师资规模居省内前列。', source: '考研帮', avatar: '研', time: '03-11 09:12', tags: ['学科-法学', '评估-B+'], reference: '法学学部：本硕博 + 博士后流动站，与最高检共建检察公益诉讼研究基地。', link: '#' },
+          { id: 'r4', title: '2026 博士研究生招生简章发布', summary: '学校发布 2026 年博士研究生招生简章及多个暑期学校项目，研究生招生与培养工作稳步推进。', source: '研招网', avatar: '招', time: '02-28 15:40', tags: ['时间-2026', '类型-招生'], reference: '2026 博士招生简章：多学科招生，含暑期学校项目。', link: '#' },
+          { id: 'r5', title: '计算机等学科考情：吸引力持续增强', summary: '考研方面，计算机等学科考情分析显示其吸引力持续增强，部分学员成功上岸。', source: '小木虫', avatar: '木', time: '04-02 20:15', tags: ['学科-计算机', '话题-考研'], reference: '考情：计算机学科报考热度上升…', link: '#' }
         ];
       }
 
@@ -6150,7 +6155,6 @@
         var loading = !!(options && options.loading);
         var input = document.getElementById('searchResultInput');
         if (input) input.value = query;
-        searchResultPage.classList.remove('multi');
         bottomNav.classList.add('hide');
         searchResultPage.classList.add('show');
         if (loading) {
@@ -6174,16 +6178,8 @@
         // 给每条结果事项挂上「推理路径」——说明该事项是怎么被检索到的
         searchResultState.events.forEach(function (ev) {
           ev.path = { query: query, source: ev.source, via: '关键词 + 语义相似度检索', hit: ev.title };
-          (ev.children || []).forEach(function (c) {
-            c.path = { query: query, source: ev.source, via: '命中「' + ev.title + '」后展开子事项', hit: c.title };
-          });
         });
-        searchResultState.selected.clear();
-        searchResultState.resultExpanded.clear();
-        searchResultState.multi = false;
         searchResultState.sortMode = 'smart';
-        searchResultState.summaryExpanded = false;
-        searchResultPage.classList.remove('multi');
         renderResultSummary();
         renderResultControls();
         renderResultList();
@@ -6195,41 +6191,45 @@
         if (currentPage === 'search') bottomNav.classList.remove('hide');
       }
 
-      function renderResultSummary() {
-        var el = document.getElementById('srSummary');
+      function buildResultSummaryText() {
         var q = escapeHTML(searchResultState.query);
         var n = searchResultState.events.length;
-        var text = '围绕「' + q + '」共汇总 ' + n + ' 条来源事项' + cite(1) + '。综合来看，相关信息主要集中在排名、学科建设与招生动态三个方面' + cite(3) + '；其中并列排名与学科评估结论的置信度较高' + cite(2) + '，招生与考情类信息更新较为频繁，建议结合原文参考进一步核对' + cite(6) + '。';
+        return '围绕「' + q + '」共汇总 ' + n + ' 条来源事项' + cite(1) + '。综合来看，相关信息主要集中在排名、学科建设与招生动态三个方面' + cite(3) + '；其中并列排名与学科评估结论的置信度较高' + cite(2) + '，招生与考情类信息更新较为频繁，建议结合原文参考进一步核对' + cite(6) + '。';
+      }
+      function renderResultSummary() {
+        var el = document.getElementById('srSummary');
+        var n = searchResultState.events.length;
         el.innerHTML =
-          '<div class="sr-summary-text ' + (searchResultState.summaryExpanded ? '' : 'clamped') + '">' + text + '</div>' +
-          '<button class="sr-summary-toggle" type="button" data-summary-toggle>' + (searchResultState.summaryExpanded ? '收起' : '展开') + '</button>' +
-          '<div class="sr-summary-foot"><span class="ai-badge">Ai</span>AI 总结 · 参考以下前 ' + n + ' 个数据</div>';
-        var t = el.querySelector('[data-summary-toggle]');
-        if (t) t.onclick = function () { searchResultState.summaryExpanded = !searchResultState.summaryExpanded; renderResultSummary(); };
+          '<div class="sr-summary-text clamped">' + buildResultSummaryText() + '</div>' +
+          '<div class="sr-summary-foot">' +
+            '<span class="sr-summary-tag"><span class="ai-badge">Ai</span>总结参考以下前 ' + n + ' 个数据</span>' +
+            '<button class="sr-summary-more" type="button" id="srSummaryMore">更多' +
+              '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>' +
+            '</button>' +
+          '</div>';
+        var more = el.querySelector('#srSummaryMore');
+        if (more) more.onclick = openAiSummarySheet;
       }
       function cite(n) { return '<span class="sr-cite">' + n + '</span>'; }
 
+      function openAiSummarySheet() {
+        document.getElementById('aiSummarySheetBody').innerHTML =
+          '<div class="ai-summary-body">' + buildResultSummaryText() + '</div>';
+        document.getElementById('aiSummarySheet').classList.add('show');
+      }
+
       function renderResultControls() {
         var sortBtn = document.querySelector('[data-sr-ctrl="sort"]');
-        if (sortBtn) {
-          var isTime = searchResultState.sortMode === 'time';
-          var icon = isTime
-            ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>'
-            : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M7 12h10"></path><path d="M11 18h2"></path></svg>';
-          sortBtn.innerHTML = icon + (isTime ? '时间排序' : '智能排序');
-        }
-        var multiBtn = document.querySelector('[data-sr-ctrl="multi"]');
-        if (multiBtn) multiBtn.classList.toggle('active', searchResultState.multi);
+        if (!sortBtn) return;
+        var isTime = searchResultState.sortMode === 'time';
+        var icon = isTime
+          ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>'
+          : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M7 12h10"></path><path d="M11 18h2"></path></svg>';
+        sortBtn.innerHTML = icon + (isTime ? '时间排序' : '智能排序');
       }
 
       function resultCardHTML(ev, idx) {
-        var kids = ev.children || [];
-        var expanded = searchResultState.resultExpanded.has(ev.id);
-        var childrenHTML = expanded && kids.length ? '<div class="tl-children" style="margin-top:10px">' + kids.map(function (c) {
-          return '<div class="tl-child" data-result-open="' + escapeHTML(c.id) + '"><div class="tl-child-title">' + escapeHTML(c.title) + '</div>' + (c.summary ? '<div class="tl-child-desc">' + escapeHTML(c.summary) + '</div>' : '') + '</div>';
-        }).join('') + '</div>' : '';
-        return '<div class="sr-result ' + (searchResultState.selected.has(ev.id) ? 'selected' : '') + '" data-result-id="' + escapeHTML(ev.id) + '">' +
-          '<span class="sr-result-check" data-result-check="' + escapeHTML(ev.id) + '"></span>' +
+        return '<div class="sr-result" data-result-id="' + escapeHTML(ev.id) + '">' +
           '<div class="sr-result-body">' +
             '<div class="sr-result-main" data-result-open="' + escapeHTML(ev.id) + '">' +
               '<div class="sr-result-title">' + (idx + 1) + '、' + escapeHTML(ev.title) + '</div>' +
@@ -6238,9 +6238,7 @@
             '<div class="sr-result-foot">' +
               '<span class="sr-result-source"><span class="sr-result-source-avatar">' + escapeHTML((ev.avatar || ev.source || '·').slice(0, 1)) + '</span>' + escapeHTML(ev.source || '') + '</span>' +
               '<span class="sr-result-time">' + escapeHTML(ev.time || '') + '</span>' +
-              (kids.length ? '<button class="tl-card-sub ' + (expanded ? 'expanded' : '') + '" type="button" data-result-toggle="' + escapeHTML(ev.id) + '" style="margin-left:auto">' + kids.length + ' 个相关子事项 <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>' : '') +
             '</div>' +
-            childrenHTML +
           '</div>' +
         '</div>';
       }
@@ -6251,44 +6249,13 @@
         if (searchResultState.sortMode === 'time') {
           events = events.slice().sort(function (a, b) { return (b.time || '').localeCompare(a.time || ''); });
         }
-        if (!events.length) { el.innerHTML = '<div class="sr-empty">暂无搜索结果</div>'; updateSelBar(); return; }
+        if (!events.length) { el.innerHTML = '<div class="sr-empty">暂无搜索结果</div>'; return; }
         el.innerHTML = events.map(resultCardHTML).join('');
-        el.querySelectorAll('[data-result-toggle]').forEach(function (b) {
-          b.onclick = function (e) { e.stopPropagation(); var id = b.dataset.resultToggle; if (searchResultState.resultExpanded.has(id)) searchResultState.resultExpanded.delete(id); else searchResultState.resultExpanded.add(id); renderResultList(); };
-        });
         el.querySelectorAll('.sr-result').forEach(function (card) {
-          card.onclick = function (e) {
-            if (e.target.closest('[data-result-toggle]')) return;
-            var id = card.dataset.resultId;
-            if (searchResultState.multi) { toggleResultSelect(id); return; }
-            var openEl = e.target.closest('[data-result-open]');
-            openEventDetail(findDailyEvent(openEl ? openEl.dataset.resultOpen : id));
+          card.onclick = function () {
+            openEventDetail(findDailyEvent(card.dataset.resultId));
           };
         });
-        updateSelBar();
-      }
-
-      function toggleResultSelect(id) {
-        var sel = searchResultState.selected;
-        if (sel.has(id)) sel.delete(id);
-        else { if (sel.size >= 100) { showToast('最多选择 100 个事项'); return; } sel.add(id); }
-        renderResultList();
-      }
-
-      function updateSelBar() {
-        var n = searchResultState.selected.size;
-        var c = document.getElementById('searchSelCount');
-        if (c) c.textContent = n;
-        var pub = document.querySelector('[data-sr-action="publish"]');
-        if (pub) pub.disabled = n === 0;
-      }
-
-      function toggleMulti() {
-        searchResultState.multi = !searchResultState.multi;
-        if (!searchResultState.multi) searchResultState.selected.clear();
-        searchResultPage.classList.toggle('multi', searchResultState.multi);
-        renderResultControls();
-        renderResultList();
       }
 
       function runSearch(query) {
@@ -6297,40 +6264,6 @@
         if (!q) q = searchState.placeholders[searchState.phIdx];
         if (searchState.range === 'mine' && !searchState.selectedSources.size) { showToast('请先选择信息源'); return; }
         openSearchResults(q);
-      }
-
-      /* ── 发布帖子 ── */
-      function contentTypeForCount(n) { return n <= 5 ? '帖子' : (n <= 30 ? '主题' : '总结'); }
-
-      function openPublishSheet() {
-        if (!searchResultState.selected.size) { showToast('请先选择事项'); return; }
-        selectedAssistant = lastUsedAssistant;
-        renderPublishBody();
-        document.getElementById('publishSheet').classList.add('show');
-      }
-
-      function renderPublishBody() {
-        var n = searchResultState.selected.size;
-        var type = contentTypeForCount(n);
-        document.getElementById('publishBody').innerHTML =
-          '<div class="publish-field"><div class="publish-field-label">选择发布助手</div><div class="publish-assistants">' +
-            publishAssistants.map(function (a) {
-              return '<button class="publish-assistant ' + (selectedAssistant === a.id ? 'selected' : '') + '" type="button" data-publish-asst="' + a.id + '"><span class="publish-assistant-radio"></span><span><span class="publish-assistant-name">' + escapeHTML(a.name) + '</span><span class="publish-assistant-sub">' + escapeHTML(a.sub) + '</span></span></button>';
-            }).join('') + '</div></div>' +
-          '<div class="publish-field"><div class="publish-field-label">生成内容</div><div class="publish-info">已选 <b>' + n + '</b> 个事项，将按数量自动生成<b>' + type + '</b>（内容字数上限 <b>1000</b> 字）。<br>开始创作后需等待几分钟，完成后将通知你。</div></div>';
-        document.querySelectorAll('#publishBody [data-publish-asst]').forEach(function (b) {
-          b.onclick = function () { selectedAssistant = b.dataset.publishAsst; renderPublishBody(); };
-        });
-      }
-
-      function startPublish() {
-        lastUsedAssistant = selectedAssistant;
-        closeSheet('publishSheet');
-        closeSearchResults();
-        searchResultState.selected.clear();
-        searchResultState.multi = false;
-        searchResultPage.classList.remove('multi');
-        showToast('创作已开始，完成后将通知你');
       }
 
       function switchPage(page, options) {
@@ -6551,10 +6484,14 @@
               '<svg class="chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>' +
             '</button>'
           : '';
+        var refInfo = source.source
+          ? '<div class="event-detail-refinfo">参考信息：' + escapeHTML(source.source) + '</div>'
+          : '';
         return '<div class="event-detail-card">' +
           '<h2 class="event-detail-item-title">' + escapeHTML(source.title || '未命名事件') + '</h2>' +
-          (tags ? '<div class="event-detail-tags">' + tags + '</div>' : '') +
-          (source.summary ? '<div class="event-detail-summary clamped" data-clamp>' + escapeHTML(source.summary) + '</div><button class="event-detail-more" type="button" data-clamp-toggle hidden>展开</button>' : '') +
+          (tags ? '<div class="event-detail-tags-wrap"><div class="event-detail-tags" data-tag-list>' + tags + '</div><button class="event-detail-tags-toggle" type="button" data-tag-toggle hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div>' : '') +
+          (source.summary ? '<div class="event-detail-summary">' + escapeHTML(source.summary) + '</div>' : '') +
+          refInfo +
           pathHTML +
         '</div>' + refHead + refBody;
       }
@@ -6563,18 +6500,34 @@
         currentEventSource = source || null;
         var body = document.getElementById('eventDetailBody');
         body.innerHTML = eventDetailHTML(currentEventSource);
-        // 长文本（AI 摘要 / 原文参考）超出时才显示 展开/收起
-        body.querySelectorAll('[data-clamp]').forEach(function (el) {
-          var toggle = el.nextElementSibling;
-          if (!toggle || !toggle.hasAttribute('data-clamp-toggle')) return;
-          if (el.scrollHeight > el.clientHeight + 2) {
+        // 标签展开/收起逻辑
+        var tagList = body.querySelector('[data-tag-list]');
+        if (tagList) {
+          var toggle = body.querySelector('[data-tag-toggle]');
+          // 检测标签是否溢出一行
+          var isOverflow = tagList.scrollHeight > tagList.clientHeight + 2;
+          if (toggle && isOverflow) {
             toggle.hidden = false;
             toggle.onclick = function () {
-              var clamped = el.classList.toggle('clamped');
-              toggle.textContent = clamped ? '展开' : '收起';
+              var expanded = tagList.classList.toggle('expanded');
+              if (expanded) {
+                // 展开后点击外部区域可收起
+                setTimeout(function () {
+                  function onDocClick(e) {
+                    var wrap = e.target.closest('.event-detail-tags-wrap');
+                    if (!wrap) {
+                      tagList.classList.remove('expanded');
+                      document.removeEventListener('click', onDocClick);
+                    }
+                  }
+                  document.addEventListener('click', onDocClick);
+                }, 0);
+              }
             };
+          } else if (toggle) {
+            toggle.hidden = true;
           }
-        });
+        }
       }
 
       function openPathSheet() {
@@ -7316,11 +7269,23 @@
         return safe.replace(new RegExp(pattern, 'g'), '<span class="gs-hi">' + escapeHTML(q) + '</span>');
       }
 
+      function gsFeedActionsHTML(item) {
+        var liked = !!item.liked;
+        var favorited = !!item.favorited;
+        return '<div class="gs-feed-actions">' +
+          '<button class="gs-feed-action ' + (liked ? 'active' : '') + '" type="button" data-gs-action="like" data-gs-id="' + escapeHTML(item.id) + '">' + icon('heart') + '<span>点赞</span></button>' +
+          '<button class="gs-feed-action ' + (favorited ? 'active' : '') + '" type="button" data-gs-action="favorite" data-gs-id="' + escapeHTML(item.id) + '">' + icon('star') + '<span>收藏</span></button>' +
+          '<button class="gs-feed-action" type="button" data-gs-action="comment" data-gs-id="' + escapeHTML(item.id) + '">' + icon('comment') + '<span>评论</span></button>' +
+          '<button class="gs-feed-action" type="button" data-gs-action="share" data-gs-id="' + escapeHTML(item.id) + '">' + icon('share') + '<span>分享</span></button>' +
+        '</div>';
+      }
+
       function gsFeedCardHTML(item, q) {
         var followed = !!item.followed;
         var textHTML = item.text ? '<div class="gs-feed-text">' + gsHighlight(item.text, q) + '</div>' : '';
         var summaryHTML = item.summary ? '<div class="gs-feed-summary">' + escapeHTML(item.summary) + '</div>' : '';
         var imageHTML = item.image ? '<img class="gs-feed-image" src="' + escapeHTML(item.image) + '" alt="">' : '';
+        var actionsHTML = gsFeedActionsHTML(item);
         var avatarStyle = item.avatar ? ' style="background-image:url(\'' + escapeHTML(item.avatar) + '\')"' : '';
         return '<div class="gs-feed-card" data-gs-feed="' + escapeHTML(item.id) + '">' +
           '<div class="gs-feed-head">' +
@@ -7334,6 +7299,7 @@
           textHTML +
           summaryHTML +
           imageHTML +
+          actionsHTML +
         '</div>';
       }
 
@@ -7408,6 +7374,34 @@
             item.followed = !item.followed;
             btn.textContent = item.followed ? '已关注' : '关注';
             btn.classList.toggle('followed', item.followed);
+          };
+        });
+        gsResultsEl.querySelectorAll('[data-gs-action]').forEach(function (btn) {
+          btn.onclick = function (e) {
+            e.stopPropagation();
+            var id = btn.dataset.gsId;
+            var action = btn.dataset.gsAction;
+            var item = gsPool.feed.filter(function (f) { return f.id === id; })[0];
+            if (!item) return;
+            if (action === 'like') {
+              item.liked = !item.liked;
+              btn.classList.toggle('active', item.liked);
+              showToast(item.liked ? '已点赞 ❤' : '已取消点赞');
+              return;
+            }
+            if (action === 'favorite') {
+              item.favorited = !item.favorited;
+              btn.classList.toggle('active', item.favorited);
+              showToast(item.favorited ? '收藏成功 ★' : '已取消收藏');
+              return;
+            }
+            if (action === 'comment') {
+              showToast('打开评论');
+              return;
+            }
+            if (action === 'share') {
+              showToast('已唤起分享');
+            }
           };
         });
         gsResultsEl.querySelectorAll('[data-gs-feed]').forEach(function (card) {
@@ -7558,29 +7552,22 @@
           switchPage('search');
         }
       });
-      document.querySelector('[data-sr-ctrl="multi"]').addEventListener('click', toggleMulti);
       document.querySelector('[data-sr-ctrl="sort"]').addEventListener('click', function () {
         searchResultState.sortMode = searchResultState.sortMode === 'time' ? 'smart' : 'time';
         renderResultControls();
         renderResultList();
         showToast(searchResultState.sortMode === 'time' ? '已按时间排序' : '已按智能排序');
       });
-      document.getElementById('searchSelBar').addEventListener('click', function (e) {
-        var b = e.target.closest('[data-sr-action]'); if (!b) return;
-        if (b.dataset.srAction === 'clear') { searchResultState.selected.clear(); renderResultList(); }
-        else if (b.dataset.srAction === 'publish') openPublishSheet();
-      });
-      var publishSheetEl = document.getElementById('publishSheet');
-      publishSheetEl.addEventListener('click', function (e) {
-        if (e.target === publishSheetEl || e.target.closest('[data-close="publish-sheet"]')) closeSheet('publishSheet');
-      });
-      document.getElementById('publishStartBtn').addEventListener('click', startPublish);
       document.getElementById('eventDetailBody').addEventListener('click', function (e) {
         if (e.target.closest('[data-open-path]')) openPathSheet();
       });
       var pathSheetEl = document.getElementById('pathSheet');
       pathSheetEl.addEventListener('click', function (e) {
         if (e.target === pathSheetEl || e.target.closest('[data-close="path-sheet"]')) closeSheet('pathSheet');
+      });
+      var aiSummarySheetEl = document.getElementById('aiSummarySheet');
+      aiSummarySheetEl.addEventListener('click', function (e) {
+        if (e.target === aiSummarySheetEl || e.target.closest('[data-close="ai-summary-sheet"]')) closeSheet('aiSummarySheet');
       });
 
       if (superAgentFab) {
