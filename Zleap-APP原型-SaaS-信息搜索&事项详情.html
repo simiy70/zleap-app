@@ -1403,16 +1403,17 @@
     .gs-chip {
       border: none;
       border-radius: 999px;
-      background: var(--bg);
+      background: linear-gradient(180deg, #fff6e9 0%, #fff1de 100%);
       padding: 8px 14px;
-      color: var(--text-secondary);
-      font-size: 13px; font-weight: 500;
+      color: var(--accent);
+      font-size: 13px; font-weight: 700;
       cursor: pointer;
       transition: var(--transition);
       line-height: 1;
       white-space: nowrap;
+      box-shadow: inset 0 0 0 1px rgba(255,139,33,.18);
     }
-    .gs-chip:active { background: var(--border); }
+    .gs-chip:active { background: #ffe8c8; }
     .gs-history-toggle {
       position: absolute;
       right: 0; top: 0;
@@ -4236,7 +4237,7 @@
         </div>
         <div class="gs-discovery">
           <div class="gs-discovery-head">
-            <div class="gs-discovery-title">每日事件</div>
+            <div class="gs-discovery-title">今日事件</div>
             <button class="gs-shortcut" id="gsSourceEntry" type="button">
               <svg class="gs-shortcut-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.6 4.6L18 9.5l-4.4 1.9L12 16l-1.6-4.6L6 9.5l4.4-1.9L12 3Z"></path></svg>
               <span>信息源搜索 &gt;</span>
