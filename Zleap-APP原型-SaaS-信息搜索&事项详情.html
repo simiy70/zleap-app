@@ -1182,17 +1182,27 @@
       30% { opacity: 1; transform: translateY(-4px); }
     }
     .sr-loading-text { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
-    /* 推理路径：详情里的紧凑入口 */
-    .event-path-entry {
-      display: inline-flex; align-items: center; gap: 5px;
-      margin-top: 12px; padding: 6px 11px;
-      border: none; border-radius: 999px; background: var(--accent-light);
-      color: var(--accent); font-size: 12px; font-weight: 800;
-      cursor: pointer; transition: var(--transition);
+    /* 推理路径：事件详情页的悬浮按钮（随滚动收起） */
+    .event-path-fab {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%);
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 18px 10px 16px;
+      border: none; border-radius: 999px;
+      background: linear-gradient(135deg,#ffb36b,#ff8b21);
+      color: #fff; font-size: 13px; font-weight: 800;
+      box-shadow: 0 10px 26px rgba(255,139,33,.36), 0 2px 6px rgba(0,0,0,.08);
+      cursor: pointer;
+      z-index: 4;
+      transition: transform .28s cubic-bezier(.4,0,.2,1), opacity .28s;
     }
-    .event-path-entry:active { transform: scale(.97); }
-    .event-path-entry .ic { flex: 0 0 auto; }
-    .event-path-entry .chev { flex: 0 0 auto; opacity: .65; }
+    .event-path-fab[hidden] { display: none; }
+    .event-path-fab:active { transform: translateX(-50%) scale(.97); }
+    .event-path-fab.hide { transform: translateX(-50%) translateY(180%); opacity: 0; pointer-events: none; }
+    .event-path-fab .ic { flex: 0 0 auto; }
+    .event-path-fab .chev { flex: 0 0 auto; opacity: .8; }
     /* 推理路径：sheet 内的流程 */
     #pathSheet { z-index: 200; }
     #pathSheet .bottom-sheet { max-height: 82vh; display: flex; flex-direction: column; }
@@ -1222,7 +1232,7 @@
     .path-attr-tag { max-width: 82%; padding: 6px 14px; border-radius: 8px; background: #e0deef; color: #6659b5; font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .path-arrow { display: grid; place-items: center; color: #c9c6b0; padding: 4px 0; }
     /* AI 总结 */
-    .sr-summary { border: 1px solid var(--border); border-radius: 16px; background: var(--surface); padding: 14px 16px; margin-bottom: 14px; }
+    .sr-summary { border-radius: 16px; background: var(--surface); padding: 14px 16px; margin-bottom: 14px; }
     .sr-summary-text { font-size: 13.5px; line-height: 1.85; color: var(--text-primary); }
     .sr-summary-text.clamped { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
     .sr-cite { display: inline-grid; place-items: center; min-width: 16px; height: 16px; padding: 0 4px; margin: 0 2px; border-radius: 5px; background: var(--accent-light); color: var(--accent); font-size: 10px; font-weight: 800; vertical-align: middle; }
@@ -1237,9 +1247,11 @@
     .ai-summary-sheet-body { flex: 1; overflow-y: auto; padding-top: 4px; }
     .ai-summary-body { font-size: 14px; line-height: 1.9; color: var(--text-primary); }
     /* controls */
-    .sr-controls { display: flex; align-items: center; gap: 18px; margin-bottom: 12px; padding: 0 2px; }
+    .sr-controls { display: flex; align-items: center; justify-content: flex-end; gap: 18px; margin-bottom: 12px; padding: 0 2px; }
     .sr-ctrl { display: inline-flex; align-items: center; gap: 5px; border: none; background: transparent; cursor: pointer; color: var(--text-secondary); font-size: 13px; font-weight: 700; }
     .sr-ctrl.active { color: var(--accent); }
+    .sr-cite { cursor: pointer; user-select: none; }
+    .sr-cite:active { opacity: .7; }
     /* 结果卡 */
     .sr-results { display: flex; flex-direction: column; gap: 10px; }
     .sr-result { display: flex; gap: 10px; align-items: flex-start; padding: 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(15,23,42,.05); transition: var(--transition); }
@@ -1801,6 +1813,79 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+    }
+    .gs-asst-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .gs-asst-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 14px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid #eceef2;
+      box-shadow: 0 1px 2px rgba(15,23,42,.03);
+      text-align: left;
+      width: 100%;
+      cursor: pointer;
+    }
+    .gs-asst-card-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      background: radial-gradient(circle at 50% 50%, #fff 0 28%, #ff6363 29% 56%, #ffc36a 57% 68%, #ffd9d9 69% 100%);
+      background-size: cover;
+      background-position: center;
+      border: 1px solid #f0f1f4;
+    }
+    .gs-asst-card-body {
+      min-width: 0;
+      flex: 1;
+    }
+    .gs-asst-card-title {
+      font-size: 14px;
+      line-height: 1.3;
+      font-weight: 800;
+      color: var(--text-primary);
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .gs-asst-card-title .gs-hi {
+      color: var(--accent);
+      font-weight: inherit;
+    }
+    .gs-asst-card-subtitle {
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 1.3;
+      color: #8f949d;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .gs-asst-follow {
+      flex: 0 0 auto;
+      min-width: 92px;
+      height: 34px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 1.5px solid var(--accent);
+      background: #fff;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .gs-asst-follow.followed {
+      color: #9aa0aa;
+      border-color: #e4e7ed;
     }
     .gs-chat-list { display: flex; flex-direction: column; }
     .gs-chat-item {
@@ -3756,63 +3841,68 @@
     }
     .event-detail-card {
       padding: 12px;
-      border: 1px solid var(--border);
       border-radius: 14px;
       background: #fff;
     }
-    .event-detail-tags-wrap {
+    .event-detail-tags-wrap { margin-bottom: 8px; }
+    .event-detail-tags-row {
       position: relative;
-      margin-bottom: 8px;
+      padding-right: 32px;
     }
     .event-detail-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      min-height: 28px;
-      max-height: 28px;
+      min-height: 26px;
+      max-height: 26px;
       overflow: hidden;
-      transition: max-height .25s ease;
-    }
-    .event-detail-tags.expanded {
-      max-height: 276px;
-      min-height: 60px;
-      overflow-y: auto;
     }
     .event-tag {
       flex: 0 0 auto;
       max-width: none;
-      height: 24px;
-      padding: 0 9px;
+      height: 26px;
+      padding: 0 10px;
       border-radius: var(--radius-pill);
       background: #f5f6f8;
       color: var(--text-secondary);
       font-size: 11.5px;
-      line-height: 24px;
+      line-height: 26px;
       white-space: nowrap;
     }
     .event-detail-tags-toggle {
       position: absolute;
       right: 0;
-      top: 2px;
+      top: 0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 22px;
-      height: 22px;
+      width: 26px;
+      height: 26px;
       border: none;
-      background: transparent;
+      background: #ffefdc;
+      border-radius: 50%;
       cursor: pointer;
       color: #e8852c;
       padding: 0;
-      z-index: 1;
     }
+    .event-detail-tags-toggle:active { opacity: .8; }
     .event-detail-tags-toggle svg {
       width: 14px;
       height: 14px;
       transition: transform .25s ease;
     }
-    .event-detail-tags.expanded ~ .event-detail-tags-toggle svg {
-      transform: rotate(180deg);
+    .event-detail-tags-toggle.expanded svg { transform: rotate(180deg); }
+    .event-detail-tags-panel {
+      margin-top: 10px;
+      padding: 12px;
+      background: #f2f4f7;
+      border-radius: 12px;
+    }
+    .event-detail-tags-panel[hidden] { display: none; }
+    .event-detail-tags-panel-inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
     }
     .event-detail-item-title {
       margin: 0 0 8px;
@@ -3850,7 +3940,6 @@
     }
     .event-detail-ref-body {
       padding: 10px 12px;
-      border: 1px solid var(--border);
       border-radius: 12px;
       background: #fff;
       color: var(--text-secondary);
@@ -4989,6 +5078,11 @@
       </header>
       <div class="event-detail-body" id="eventDetailBody"></div>
     </div>
+    <button class="event-path-fab" id="eventPathFab" type="button" data-open-path hidden>
+      <svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.4"></circle><circle cx="18" cy="18" r="2.4"></circle><path d="M8.4 6H16a2 2 0 0 1 2 2v7.6"></path></svg>
+      <span>推理路径</span>
+      <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+    </button>
   </section>
 
   <!-- 往期事件 · 日期选择 Sheet -->
@@ -6228,7 +6322,7 @@
       function buildResultSummaryText() {
         var q = escapeHTML(searchResultState.query);
         var n = searchResultState.events.length;
-        return '围绕「' + q + '」共汇总 ' + n + ' 条来源事项' + cite(1) + '。综合来看，相关信息主要集中在排名、学科建设与招生动态三个方面' + cite(3) + '；其中并列排名与学科评估结论的置信度较高' + cite(2) + '，招生与考情类信息更新较为频繁，建议结合原文参考进一步核对' + cite(6) + '。';
+        return '围绕「' + q + '」共汇总 ' + n + ' 条来源事项' + cite(1) + '。综合来看，相关信息主要集中在排名、学科建设与招生动态三个方面' + cite(3) + '；其中并列排名与学科评估结论的置信度较高' + cite(2) + '，招生与考情类信息更新较为频繁，建议结合原文参考进一步核对' + cite(5) + '。';
       }
       function renderResultSummary() {
         var el = document.getElementById('srSummary');
@@ -6244,7 +6338,15 @@
         var more = el.querySelector('#srSummaryMore');
         if (more) more.onclick = openAiSummarySheet;
       }
-      function cite(n) { return '<span class="sr-cite">' + n + '</span>'; }
+      function cite(n) { return '<span class="sr-cite" data-cite="' + n + '" role="button" tabindex="0">' + n + '</span>'; }
+
+      function openEventByCite(n) {
+        var events = searchResultState.events || [];
+        if (!events.length) return;
+        var idx = Math.min(Math.max(0, n - 1), events.length - 1);
+        var ev = events[idx];
+        if (ev) openEventDetail(ev);
+      }
 
       function openAiSummarySheet() {
         document.getElementById('aiSummarySheetBody').innerHTML =
@@ -6511,22 +6613,24 @@
         var refBody = reference
           ? '<div class="event-detail-ref-body">' + escapeHTML(reference) + '</div>'
           : '';
-        var pathHTML = source.path
-          ? '<button class="event-path-entry" type="button" data-open-path>' +
-              '<svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.4"></circle><circle cx="18" cy="18" r="2.4"></circle><path d="M8.4 6H16a2 2 0 0 1 2 2v7.6"></path></svg>' +
-              '<span>推理路径</span>' +
-              '<svg class="chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>' +
-            '</button>'
-          : '';
         var refInfo = source.source
           ? '<div class="event-detail-refinfo">参考信息：' + escapeHTML(source.source) + '</div>'
           : '';
         return '<div class="event-detail-card">' +
           '<h2 class="event-detail-item-title">' + escapeHTML(source.title || '未命名事件') + '</h2>' +
-          (tags ? '<div class="event-detail-tags-wrap"><div class="event-detail-tags" data-tag-list>' + tags + '</div><button class="event-detail-tags-toggle" type="button" data-tag-toggle hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div>' : '') +
+          (tags
+            ? '<div class="event-detail-tags-wrap">' +
+                '<div class="event-detail-tags-row">' +
+                  '<div class="event-detail-tags" data-tag-list>' + tags + '</div>' +
+                  '<button class="event-detail-tags-toggle" type="button" data-tag-toggle hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>' +
+                '</div>' +
+                '<div class="event-detail-tags-panel" data-tag-panel hidden>' +
+                  '<div class="event-detail-tags-panel-inner">' + tags + '</div>' +
+                '</div>' +
+              '</div>'
+            : '') +
           (source.summary ? '<div class="event-detail-summary">' + escapeHTML(source.summary) + '</div>' : '') +
           refInfo +
-          pathHTML +
         '</div>' + refHead + refBody;
       }
 
@@ -6534,23 +6638,24 @@
         currentEventSource = source || null;
         var body = document.getElementById('eventDetailBody');
         body.innerHTML = eventDetailHTML(currentEventSource);
-        // 标签展开/收起逻辑
+        // 标签展开/收起逻辑：单行不下时显示右侧圆形按钮，点击后在下方展开面板
         var tagList = body.querySelector('[data-tag-list]');
         if (tagList) {
           var toggle = body.querySelector('[data-tag-toggle]');
-          // 检测标签是否溢出一行
+          var panel = body.querySelector('[data-tag-panel]');
           var isOverflow = tagList.scrollHeight > tagList.clientHeight + 2;
           if (toggle && isOverflow) {
             toggle.hidden = false;
             toggle.onclick = function () {
-              var expanded = tagList.classList.toggle('expanded');
-              if (expanded) {
-                // 展开后点击外部区域可收起
+              var willExpand = panel.hidden;
+              panel.hidden = !willExpand;
+              toggle.classList.toggle('expanded', willExpand);
+              if (willExpand) {
                 setTimeout(function () {
                   function onDocClick(e) {
-                    var wrap = e.target.closest('.event-detail-tags-wrap');
-                    if (!wrap) {
-                      tagList.classList.remove('expanded');
+                    if (!e.target.closest('.event-detail-tags-wrap')) {
+                      panel.hidden = true;
+                      toggle.classList.remove('expanded');
                       document.removeEventListener('click', onDocClick);
                     }
                   }
@@ -6561,6 +6666,11 @@
           } else if (toggle) {
             toggle.hidden = true;
           }
+        }
+        var pathFab = document.getElementById('eventPathFab');
+        if (pathFab) {
+          pathFab.hidden = !(source && source.path);
+          pathFab.classList.remove('hide');
         }
       }
 
@@ -7315,14 +7425,14 @@
           }
         ],
         assistant: [
-          { id: 'gs-asst-1', name: '名称展示...' },
-          { id: 'gs-asst-2', name: '名称展示...' },
-          { id: 'gs-asst-3', name: '名称展示...' },
-          { id: 'gs-asst-4', name: '名称展示...' },
-          { id: 'gs-asst-5', name: '名称展示...' },
-          { id: 'gs-asst-6', name: '名称展示...' },
-          { id: 'gs-asst-7', name: '名称展示...' },
-          { id: 'gs-asst-8', name: '名称展示...' }
+          { id: 'gs-asst-1', name: '飞书CLI', subtitle: '问答助手', followed: false, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80' },
+          { id: 'gs-asst-2', name: '名称展示...', subtitle: '问答助手', followed: true, avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=120&q=80' },
+          { id: 'gs-asst-3', name: '名称展示...', subtitle: '问答助手', followed: false, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80' },
+          { id: 'gs-asst-4', name: '名称展示...', subtitle: '问答助手', followed: false, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80' },
+          { id: 'gs-asst-5', name: '名称展示...', subtitle: '问答助手', followed: true, avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=120&q=80' },
+          { id: 'gs-asst-6', name: '名称展示...', subtitle: '问答助手', followed: false, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80' },
+          { id: 'gs-asst-7', name: '名称展示...', subtitle: '问答助手', followed: false, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80' },
+          { id: 'gs-asst-8', name: '名称展示...', subtitle: '问答助手', followed: false, avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=120&q=80' }
         ],
         chat: [
           { id: 'gs-chat-1', name: '名称展示', time: '2025-11-5 21:04', preview: '聊天匹配内容展示，{q}对应内容' },
@@ -7378,10 +7488,26 @@
 
       function gsAssistantGridHTML(items) {
         return '<div class="gs-asst-grid">' + items.map(function (a) {
+          var avatarStyle = a.avatar ? ' style="background-image:url(\'' + escapeHTML(a.avatar) + '\')"' : '';
           return '<button class="gs-asst-item" type="button" data-gs-asst="' + escapeHTML(a.id) + '">' +
-            '<div class="gs-asst-avatar"></div>' +
+            '<div class="gs-asst-avatar"' + avatarStyle + '></div>' +
             '<div class="gs-asst-name">' + escapeHTML(a.name || '') + '</div>' +
           '</button>';
+        }).join('') + '</div>';
+      }
+
+      function gsAssistantListHTML(items, q) {
+        return '<div class="gs-asst-list">' + items.map(function (a) {
+          var avatarStyle = a.avatar ? ' style="background-image:url(\'' + escapeHTML(a.avatar) + '\')"' : '';
+          var followed = !!a.followed;
+          return '<div class="gs-asst-card" data-gs-asst="' + escapeHTML(a.id) + '">' +
+            '<div class="gs-asst-card-avatar"' + avatarStyle + '></div>' +
+            '<div class="gs-asst-card-body">' +
+              '<div class="gs-asst-card-title">' + gsHighlight(a.name || '', q) + '</div>' +
+              '<div class="gs-asst-card-subtitle">' + escapeHTML(a.subtitle || '问答助手') + '</div>' +
+            '</div>' +
+            '<button class="gs-asst-follow' + (followed ? ' followed' : '') + '" type="button" data-gs-asst-follow="' + escapeHTML(a.id) + '">' + (followed ? '已关注' : '关注') + '</button>' +
+          '</div>';
         }).join('') + '</div>';
       }
 
@@ -7424,7 +7550,7 @@
         } else if (tab === 'feed') {
           html += gsPool.feed.map(function (item) { return gsFeedCardHTML(item, q); }).join('');
         } else if (tab === 'assistant') {
-          html += '<section class="gs-section">' + gsAssistantGridHTML(gsPool.assistant) + '</section>';
+          html += gsAssistantListHTML(gsPool.assistant, q);
         } else if (tab === 'chat') {
           html += '<section class="gs-section">' + gsChatListHTML(gsPool.chat, q) + '</section>';
         }
@@ -7443,6 +7569,17 @@
             e.stopPropagation();
             var id = btn.dataset.gsFollow;
             var item = gsPool.feed.filter(function (f) { return f.id === id; })[0];
+            if (!item) return;
+            item.followed = !item.followed;
+            btn.textContent = item.followed ? '已关注' : '关注';
+            btn.classList.toggle('followed', item.followed);
+          };
+        });
+        gsResultsEl.querySelectorAll('[data-gs-asst-follow]').forEach(function (btn) {
+          btn.onclick = function (e) {
+            e.stopPropagation();
+            var id = btn.dataset.gsAsstFollow;
+            var item = gsPool.assistant.filter(function (a) { return a.id === id; })[0];
             if (!item) return;
             item.followed = !item.followed;
             btn.textContent = item.followed ? '已关注' : '关注';
@@ -7631,7 +7768,7 @@
         renderResultList();
         showToast(searchResultState.sortMode === 'time' ? '已按时间排序' : '已按智能排序');
       });
-      document.getElementById('eventDetailBody').addEventListener('click', function (e) {
+      eventDetailPage.addEventListener('click', function (e) {
         if (e.target.closest('[data-open-path]')) openPathSheet();
       });
       var pathSheetEl = document.getElementById('pathSheet');
@@ -7642,6 +7779,38 @@
       aiSummarySheetEl.addEventListener('click', function (e) {
         if (e.target === aiSummarySheetEl || e.target.closest('[data-close="ai-summary-sheet"]')) closeSheet('aiSummarySheet');
       });
+
+      // AI 总结的引用编号可点击 → 打开对应事件详情页
+      function handleCiteClick(e) {
+        var cite = e.target.closest('[data-cite]');
+        if (!cite) return;
+        e.stopPropagation();
+        openEventByCite(parseInt(cite.dataset.cite, 10) || 1);
+      }
+      document.getElementById('srSummary').addEventListener('click', handleCiteClick);
+      aiSummarySheetEl.addEventListener('click', function (e) {
+        var cite = e.target.closest('[data-cite]');
+        if (!cite) return;
+        e.stopPropagation();
+        closeSheet('aiSummarySheet');
+        openEventByCite(parseInt(cite.dataset.cite, 10) || 1);
+      });
+
+      // 事件详情页滚动时收起/展开推理路径悬浮按钮（模仿底部导航）
+      (function () {
+        var pathFab = document.getElementById('eventPathFab');
+        if (!pathFab) return;
+        var lastY = 0, downDist = 0, upDist = 0;
+        eventDetailPage.addEventListener('scroll', function () {
+          if (pathFab.hidden) return;
+          var y = eventDetailPage.scrollTop;
+          var delta = y - lastY;
+          if (y <= 8) { pathFab.classList.remove('hide'); downDist = 0; upDist = 0; }
+          else if (delta > 0) { downDist += delta; upDist = 0; if (downDist >= 120) pathFab.classList.add('hide'); }
+          else if (delta < 0) { upDist += Math.abs(delta); downDist = 0; if (upDist >= 40) pathFab.classList.remove('hide'); }
+          lastY = y;
+        }, { passive: true });
+      })();
 
       if (superAgentFab) {
         superAgentFab.addEventListener('click', function () {
