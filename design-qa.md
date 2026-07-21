@@ -10,12 +10,13 @@
   - `/var/folders/cx/wwlc2r057m18t68yq_t948bh0000gn/T/codex-clipboard-c30ca33a-1866-4983-bb60-646ee02e7551.png`（与我共享）
   - `/var/folders/cx/wwlc2r057m18t68yq_t948bh0000gn/T/codex-clipboard-c6fc2dc4-6720-4618-9ca6-cfb1cc09bd74.png`（名称搜索与已选 chip）
   - `/var/folders/cx/wwlc2r057m18t68yq_t948bh0000gn/T/codex-clipboard-dba7c5a9-fe1d-4ef7-84b6-776b9ecf68fc.png`（仅看已选）
-- implementation screenshot paths: `qa-artifacts/contacts-following.png`, `qa-artifacts/contacts-assistants.png`, `qa-artifacts/contacts-recommended.png`, `qa-artifacts/range-public.png`, `qa-artifacts/range-personal-single.png`, `qa-artifacts/range-personal-all.png`, `qa-artifacts/range-shared.png`, `qa-artifacts/range-search-default.png`, `qa-artifacts/range-selected-filter.png`
-- combined comparisons: `qa-artifacts/contacts-comparison.png`, `qa-artifacts/range-comparison.png`, `qa-artifacts/range-search-comparison.png`, `qa-artifacts/range-selected-comparison.png`
+  - `/var/folders/cx/wwlc2r057m18t68yq_t948bh0000gn/T/codex-clipboard-e1757ce4-2d28-4350-89fd-74bb686a57ba.png`（一级导航右侧 Agent 头像入口）
+- implementation screenshot paths: `qa-artifacts/contacts-following.png`, `qa-artifacts/contacts-assistants.png`, `qa-artifacts/contacts-recommended.png`, `qa-artifacts/range-public.png`, `qa-artifacts/range-personal-single.png`, `qa-artifacts/range-personal-all.png`, `qa-artifacts/range-shared.png`, `qa-artifacts/range-search-default.png`, `qa-artifacts/range-selected-filter.png`, `qa-artifacts/agent-nav-home.png`, `qa-artifacts/message-without-super-agent.png`
+- combined comparisons: `qa-artifacts/contacts-comparison.png`, `qa-artifacts/range-comparison.png`, `qa-artifacts/range-search-comparison.png`, `qa-artifacts/range-selected-comparison.png`, `qa-artifacts/agent-nav-comparison.png`
 - viewport: 390px app surface；对照图统一裁切为 390 × 522 可见区域，长列表通过页面内滚动继续浏览。
-- states: 消息页点击“新建”后的关注、助手、推荐；搜索范围弹层的公共信息源、个人信息源、名称搜索、分组切换和仅看已选。
-- full-view comparison evidence: 联系人三组和搜索范围参考图均与实现图并排比较；通讯录的导航、搜索与列表结构一致，最新版搜索范围的分段控件、子标签、已选 chip、名称搜索、来源标签、复选列表及底部按钮结构一致。
-- focused region comparison evidence: 通讯录顶部标签与首个列表项、搜索范围顶部控件与底部确认区在合并对照图中均清晰可读，无需额外局部放大。
+- states: 消息页点击“新建”后的关注、助手、推荐；搜索范围弹层的公共信息源、个人信息源、名称搜索、分组切换和仅看已选；首页一级导航 Agent 入口与删除 Super Agent 后的消息列表。
+- full-view comparison evidence: 联系人三组、搜索范围和一级导航参考图均与实现图并排比较；通讯录的导航、搜索与列表结构一致，最新版搜索范围的分段控件、子标签、已选 chip、名称搜索、来源标签、复选列表及底部按钮结构一致；一级导航保留原三项信息架构并按参考增加独立头像入口。
+- focused region comparison evidence: 通讯录顶部标签与首个列表项、搜索范围顶部控件与底部确认区均清晰可读；一级导航使用 `agent-nav-focus.png` 对目标区域单独裁切比较，圆角、分组、头像外圈和间距均可直接判断。
 
 **Findings**
 
@@ -27,6 +28,7 @@
 - 文案与内容：联系人分类、搜索占位、关注状态、“去聊天”及 `Simiy的agent` 命名规则符合本轮标注。
 - 图标与可访问性：返回、搜索沿用现有产品图标风格；标签使用 tab 语义和 `aria-selected`，搜索框与按钮均有可读标签。
 - 搜索范围弹层：公共信息源呈现说明与真实 globe 图标资源；个人信息源支持“我的信息源 / 与我共享”、名称搜索、逐项勾选和“已选 N”筛选，确认按钮实时展示选中数量。仅看已选时跨分组聚合并显示“我的 / 共享”来源标签，弹层高度与滚动区保持稳定。
+- 一级导航：沿用原有三项主导航，将玻璃态胶囊收敛为独立左侧分组，并在右侧增加 60px 圆形 Agent 入口；头像复用当前个人 Agent 的真实图片资源，未使用占位图。消息列表不再重复展示 Super Agent。
 
 **Primary interactions tested**
 
@@ -43,6 +45,8 @@
 - “已选 N”chip 在 Tab 同行切换仅看已选；取消勾选后条目即时移出并更新数量。
 - 与我共享列表切换，保留跨子标签的总选中数量。
 - 取消和关闭不提交草稿，确认后更新搜索范围摘要。
+- 一级导航右侧 Agent 头像可从首页和消息页进入 `Simiy的agent`；进入后原一级导航隐藏，返回时回到进入前页面。
+- 消息页会话列表从“录音助手”开始，不再包含 Super Agent；设置页同步移除“置顶到消息列表”。
 - 以上交互均在应用内浏览器完成，未出现页面脚本报错、失效控件或空白屏。
 
 **Comparison history**
@@ -55,9 +59,11 @@
 - Latest search range initial pass: 旧版将选中统计放在说明行，并以“全选”占据 Tab 右侧，无法承担仅看已选的筛选语义；按新参考改为同行 chip，并新增名称搜索与跨分组来源标签。
 - Latest search range final pass: 捕获默认列表与仅看已选两个状态，生成 `range-search-comparison.png` 与 `range-selected-comparison.png`；名称搜索、chip 状态、默认选中组合、来源标签和确认数量均与参考一致，无遗留 P0/P1/P2。
 - Independent filter correction: “已选 N”激活时两个分组 Tab 均取消高亮；点击任一分组 Tab 会退出仅看已选并恢复对应 Tab 高亮。应用内浏览器验证通过。
+- Agent nav initial pass: 头像内容贴近外圈，且带有额外未读圆点，与参考图的留白节奏不一致，记录为 P2。
+- Agent nav final pass: 将头像缩至 48px、外圈留白增至 6px并移除圆点；`agent-nav-comparison.png` 中胶囊、独立圆形入口、间距与阴影层级通过，无遗留 P0/P1/P2。消息页删除入口和返回链路均已验证。
 
 **Follow-up Polish**
 
-- 参考图与当前原型沿用不同状态栏时间和演示头像，这是已有产品框架与示例数据差异，不影响本次通讯录组件交付。
+- 参考图与当前原型沿用不同状态栏时间、主导航数量和 Agent 头像内容；本次保留现有三项产品信息架构，并复用项目内同一 Agent 的头像资源。
 
 final result: passed

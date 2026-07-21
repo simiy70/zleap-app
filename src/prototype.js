@@ -76,9 +76,8 @@ export function initializePrototype() {
           { id: 'super-rec', role: 'agent', text: '根据近一周的信号，我给出三条要点结论：\n1）客户 A Onboarding 出现明显阻力，主要卡在 SSO 对接；\n2）CFO 在 Slack 抛出「预算再砍 15%」的信号，需要 CS/销售侧同步节奏；\n3）ARR 目标下调后，续费策略需要重排。', time: '09:07', sourceCount: 3, recs: ['帮我总结当前列表', '有哪些重点结论', '创建一个新的自动化任务'] }
         ],
         settings: [
-          { title: '基础设置', subtitle: '名称、头像', note: '默认名称为“' + superAgentName + '”，头像同步更新消息列表与助手通讯录。' },
+          { title: '基础设置', subtitle: '名称、头像', note: '默认名称为“' + superAgentName + '”，头像同步更新一级导航与助手通讯录。' },
           { title: '角色定义', subtitle: 'Markdown 角色提示词', note: '支持复制助手、导入 .md 与一键完善；保存后仅对新请求生效。' },
-          { title: '置顶到消息列表', subtitle: '快捷入口', note: '固定展示在消息列表顶部，便于随时从会话入口进入。' },
           { title: '清空聊天记录', subtitle: '仅清空当前会话', note: '删除当前 Super Agent 历史消息，不影响任务和设置。', action: 'clear-chat' },
           { title: '自动化任务管理', subtitle: '查看任务与推送配置', note: '展示系统默认任务和当前 Agent 承接的自动化任务。', action: 'open-task-list' }
         ],
@@ -598,19 +597,13 @@ export function initializePrototype() {
 
       function updateSuperFab() {
         if (!superAgentFab) return;
-        superAgentFab.classList.toggle('show', !['superAgent', 'superSettings', 'superTasks', 'audio', 'audioSearch'].includes(currentPage));
         superAgentFab.classList.toggle('has-unread', !!superAgentState.unread);
+        superAgentFab.setAttribute('aria-label', superAgentState.unread ? '打开 ' + superAgentName + '，有新消息' : '打开 ' + superAgentName);
       }
 
       function markSuperAgentRead() {
         superAgentState.unread = false;
         updateSuperFab();
-      }
-
-      function getSuperAgentEntryState() {
-        var last = superAgentState.messages[superAgentState.messages.length - 1] || {};
-        var preview = last.text || last.title || '围绕当前页面提问，也可以根据行动结论生成任务';
-        return { preview: preview.replace(/\n/g, ' '), time: last.time || '刚刚', badge: superAgentState.unread ? 'dot' : 0 };
       }
 
       function superMessageHTML(message, index, messageCount) {
@@ -660,14 +653,13 @@ export function initializePrototype() {
         if (input) input.value = superAgentState.draft || '';
       }
 
-      var superPinned = false;
       function renderSuperSettings() {
         var wrap = document.getElementById('superSettingList');
         if (!wrap) return;
         var chev = '<svg class="setting-row-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>';
         wrap.innerHTML =
           '<div class="setting-profile">' +
-            '<div class="setting-profile-avatar">z</div>' +
+            '<div class="setting-profile-avatar"><img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=180&q=80" alt="' + escapeHTML(superAgentName) + '"></div>' +
             '<div class="setting-profile-name">' + escapeHTML(superAgentName) + '</div>' +
           '</div>' +
           '<div class="setting-group">' +
@@ -677,12 +669,6 @@ export function initializePrototype() {
             '<button class="setting-row" type="button" data-super-action="open-task-list">' +
               '<span class="setting-row-label">自动化任务管理</span><span class="setting-row-value">任务与推送</span>' + chev +
             '</button>' +
-          '</div>' +
-          '<div class="setting-group">' +
-            '<div class="setting-row">' +
-              '<span class="setting-row-label">置顶到消息列表</span>' +
-              '<button class="setting-toggle ' + (superPinned ? 'on' : '') + '" type="button" data-super-action="toggle-pin" aria-label="置顶到消息列表"></button>' +
-            '</div>' +
           '</div>' +
           '<div class="setting-group">' +
             '<button class="setting-row destructive" type="button" data-super-action="clear-chat">' +
@@ -832,9 +818,7 @@ export function initializePrototype() {
 
       function renderConvList() {
         var audioAssistantState = getAudioAssistantEntryState();
-        var superState = getSuperAgentEntryState();
         var convItems = [
-          { id: 'super-agent', name: superAgentName, preview: superState.preview, time: superState.time, badge: superState.badge, avatarType: 'super-agent', avatarRole: 'agent', system: false, zleapLogo: true },
           { id: 'audio-ast', name: '录音助手', preview: audioAssistantState.preview, time: audioAssistantState.time, badge: audioAssistantState.badge, avatarType: 'audio-ast', avatarRole: 'agent', system: true, icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="12" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><line x1="12" y1="18" x2="12" y2="22"></line><line x1="8.5" y1="22" x2="15.5" y2="22"></line></svg>' },
           { id: 'story-granny', name: '爱讲故事的老奶奶', preview: '但如果拿面相去断人一生吉凶，那我就摇...', time: '3月31日', badge: 0, avatarType: 'photo', avatarRole: 'human', photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=96&q=80' },
           { id: 'notif-center', name: '通知中心', preview: '新报告已生成', time: '4月23日', badge: 0, avatarType: 'system-notif', avatarRole: 'agent', system: true, icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>' },
@@ -859,7 +843,7 @@ export function initializePrototype() {
           } else {
             avatarHTML = '<div class="conv-avatar ' + item.avatarType + ' ' + roleClass + '">' + (item.icon || '') + '</div>';
           }
-          return '<div class="conv-item ' + (item.id === 'super-agent' ? 'super-agent-entry' : '') + '" data-conv-id="' + item.id + '">' +
+          return '<div class="conv-item" data-conv-id="' + item.id + '">' +
             avatarHTML +
             '<div class="conv-body">' +
               '<div class="conv-head">' +
@@ -874,12 +858,6 @@ export function initializePrototype() {
         convListEl.onclick = function (e) {
           var item = e.target.closest('[data-conv-id]');
           if (!item) return;
-          if (item.dataset.convId === 'super-agent') {
-            renderSuperAgent();
-            markSuperAgentRead();
-            switchPage('superAgent');
-            return;
-          }
           if (item.dataset.convId === 'audio-ast') {
             markAudioAssistantEntryViewed();
             switchPage('audio');
@@ -2892,7 +2870,10 @@ export function initializePrototype() {
       document.getElementById('contactChatInput').addEventListener('keydown', function (event) {
         if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendContactChatMessage(); }
       });
-      document.getElementById('superAgentBack').addEventListener('click', function () { switchPage('message'); });
+      document.getElementById('superAgentBack').addEventListener('click', function () {
+        if (pageHistory[pageHistory.length - 1] === 'superAgent') pageHistory.pop();
+        switchPage(pageHistory[pageHistory.length - 1] || 'home', { skipHistory: true });
+      });
       document.getElementById('superAgentSettingsBtn').addEventListener('click', function () { switchPage('superSettings'); });
       document.getElementById('superSettingsBack').addEventListener('click', function () { switchPage('superAgent'); });
       document.getElementById('superTasksBack').addEventListener('click', function () { switchPage('superSettings'); });
@@ -2933,10 +2914,6 @@ export function initializePrototype() {
           switchPage('superTasks');
         } else if (act === 'open-role') {
           switchPage('superRole');
-        } else if (act === 'toggle-pin') {
-          superPinned = !superPinned;
-          renderSuperSettings();
-          showToast(superPinned ? '已置顶到消息列表' : '已取消置顶');
         } else if (act === 'clear-chat') {
           superAgentState.messages = [{ role: 'agent', text: '聊天记录已清空。你可以从这里重新开始。', time: '刚刚', recs: ['开启新话题', '创建一个新的自动化任务'] }];
           renderSuperAgent();
