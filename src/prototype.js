@@ -26,6 +26,7 @@ export function initializePrototype() {
       const agentPage = document.getElementById('agentPage');
       const agentFeed = document.getElementById('agentFeed');
       const messagePage = document.getElementById('messagePage');
+      const contactBookPage = document.getElementById('contactBookPage');
       const searchPage = document.getElementById('searchPage');
       const searchResultPage = document.getElementById('searchResultPage');
       const audioPage = document.getElementById('audioPage');
@@ -63,16 +64,18 @@ export function initializePrototype() {
       const favoritedState = new Set();
       const followingState = new Set();
       const commentDrafts = new Map();
+      const currentUserName = 'Simiy';
+      const superAgentName = currentUserName + '的agent';
       const superAgentState = {
         unread: true,
         draft: '',
         messages: [
           { id: 'super-report', role: 'agent', type: 'report-card', title: '今日速览', subtitle: '企业关键动态日报', text: '日报已生成，包含重点变化、风险提醒和下一步动作建议。', actionLabel: '查看日报', time: '今天 09:00' },
-          { id: 'super-intro', role: 'agent', text: '你好，我是 Super Agent。可以总结信息、解释洞察、提炼要点，也可以根据明确行动结论生成任务。', time: '09:02' },
+          { id: 'super-intro', role: 'agent', text: '你好，我是 ' + superAgentName + '。可以总结信息、解释洞察、提炼要点，也可以根据明确行动结论生成任务。', time: '09:02' },
           { id: 'super-rec', role: 'agent', text: '根据近一周的信号，我给出三条要点结论：\n1）客户 A Onboarding 出现明显阻力，主要卡在 SSO 对接；\n2）CFO 在 Slack 抛出「预算再砍 15%」的信号，需要 CS/销售侧同步节奏；\n3）ARR 目标下调后，续费策略需要重排。', time: '09:07', sourceCount: 3, recs: ['帮我总结当前列表', '有哪些重点结论', '创建一个新的自动化任务'] }
         ],
         settings: [
-          { title: '基础设置', subtitle: '名称、头像', note: 'Super Agent 默认名称为“我的 agent”，头像同步更新悬浮入口与消息列表。' },
+          { title: '基础设置', subtitle: '名称、头像', note: '默认名称为“' + superAgentName + '”，头像同步更新消息列表与助手通讯录。' },
           { title: '角色定义', subtitle: 'Markdown 角色提示词', note: '支持复制助手、导入 .md 与一键完善；保存后仅对新请求生效。' },
           { title: '置顶到消息列表', subtitle: '快捷入口', note: '固定展示在消息列表顶部，便于随时从会话入口进入。' },
           { title: '清空聊天记录', subtitle: '仅清空当前会话', note: '删除当前 Super Agent 历史消息，不影响任务和设置。', action: 'clear-chat' },
@@ -81,6 +84,39 @@ export function initializePrototype() {
         tasks: [
           { id: 'task-daily', title: 'zleap 今日速览', desc: '每天 09:00 自动生成企业关键动态日报，并推送重点变化。', status: 'active', nextRun: '明天 09:00' },
           { id: 'task-risk', title: '客户风险跟踪', desc: '聚焦客户 A / 客户 B 的实施阻塞和预算变化，输出风险提醒。', status: 'paused', nextRun: '--' }
+        ]
+      };
+
+      const contactBookState = {
+        active: 'following',
+        query: '',
+        followed: new Set(['wendy', 'banana', 'cola', 'luoshen', 'coco', 'xiaoran', 'tina', 'noah'])
+      };
+      const contactBookData = {
+        following: [
+          { id: 'wendy', name: 'Wendy织梦', bio: '风吹草动不用说太明白，很多事我听个开头...', photo: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=144&q=80' },
+          { id: 'banana', name: '香蕉奶', bio: '流量当然重要，但节奏、合作和后面能不能...', photo: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=144&q=80' },
+          { id: 'cola', name: '可乐加冰块', bio: '买车先回家里看，空间、油耗和保值率这些...', photo: 'https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=144&q=80' },
+          { id: 'luoshen', name: '洛神饮', bio: '镜头怎么接、情绪怎么走，我一般都是先靠...', photo: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=144&q=80' },
+          { id: 'coco', name: 'Coco晒太阳', bio: '比起把话说满，我更想写那种读完会让人慢...', photo: 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?auto=format&fit=crop&w=144&q=80' },
+          { id: 'xiaoran', name: '夏冉', bio: '一个会撒娇、带点小傲娇的虚拟女友，擅长...', photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=144&q=80' },
+          { id: 'tina', name: 'Tina织毛衣', bio: '家庭聚餐那些忙半天还不落好的菜，我见得...', photo: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=144&q=80' },
+          { id: 'noah', name: 'Noah', bio: '很多应急现场不是靠热血记住的，是靠一次...', photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=144&q=80' }
+        ],
+        assistants: [
+          { id: 'my-agent', name: superAgentName, bio: '你的个人 AI 助手，负责总结、洞察与自动化任务。', photo: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=144&q=80' },
+          { id: 'zleaper', name: 'Zleaper', bio: '从信息到创作的 AI 合作伙伴。', photo: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=144&q=80' },
+          { id: 'story-granny', name: '爱讲故事的老奶奶', bio: 'ENTP · 天蝎女，擅长把复杂信息讲成故事。', photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=144&q=80' }
+        ],
+        recommended: [
+          { id: 'test018', name: 'test018', bio: '关注产品、商业与 AI 的新变化。', photo: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=144&q=80' },
+          { id: 'test01', name: 'test01', bio: '记录日常灵感与新鲜观点。', photo: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=144&q=80' },
+          { id: 'songjiang', name: '宋江', bio: '江湖人称及时雨，关注团队协作与组织关系。', photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=144&q=80' },
+          { id: 'wukong', name: '孙悟空', bio: '花果山仙石所生，擅长打破惯性思维。', photo: 'https://images.unsplash.com/photo-1521119989659-a83eee488004?auto=format&fit=crop&w=144&q=80' },
+          { id: 'demon', name: '伏地魔（汤姆·马沃罗·里德尔）', bio: '从反面视角审视权力、选择与代价。', photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=144&q=80' },
+          { id: 'lin', name: '林黛玉', bio: '敏锐、细腻，用文学视角观察情绪与关系。', photo: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=144&q=80' },
+          { id: 'buffett', name: '沃伦·巴菲特', bio: '作为思维顾问，用长期主义分析投资与决策。', photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=144&q=80' },
+          { id: 'musk', name: '埃隆·马斯克', bio: '从第一性原理出发审视产品、工程与未来。', photo: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=144&q=80' }
         ]
       };
 
@@ -575,7 +611,7 @@ export function initializePrototype() {
         return { preview: preview.replace(/\n/g, ' '), time: last.time || '刚刚', badge: superAgentState.unread ? 'dot' : 0 };
       }
 
-      function superMessageHTML(message) {
+      function superMessageHTML(message, index, messageCount) {
         if (message.type === 'report-card') {
           return '<div class="super-msg-row agent"><div class="super-msg-main">' +
             '<div class="super-msg-meta">' + escapeHTML(message.time || '') + '</div>' +
@@ -602,7 +638,7 @@ export function initializePrototype() {
             '<span>来源 · ' + escapeHTML(message.sourceCount) + '</span>' +
           '</button>';
         }
-        if (message.recs && message.recs.length) {
+        if (message.recs && message.recs.length && index === messageCount - 1 && message.role !== 'user') {
           bubble += '<div class="super-rec-wrap">' + message.recs.map(function (rec) {
             return '<button class="super-rec-btn" type="button" data-super-question="' + escapeHTML(rec) + '">' + escapeHTML(rec) + '</button>';
           }).join('') + '</div>';
@@ -613,7 +649,11 @@ export function initializePrototype() {
 
       function renderSuperAgent() {
         if (!superAgentPageBody) return;
-        superAgentPageBody.innerHTML = superAgentState.messages.map(superMessageHTML).join('');
+        var title = document.getElementById('superAgentTitle');
+        if (title) title.textContent = superAgentName;
+        superAgentPageBody.innerHTML = superAgentState.messages.map(function (message, index) {
+          return superMessageHTML(message, index, superAgentState.messages.length);
+        }).join('');
         var input = document.getElementById('superAgentInput');
         if (input) input.value = superAgentState.draft || '';
       }
@@ -626,7 +666,7 @@ export function initializePrototype() {
         wrap.innerHTML =
           '<div class="setting-profile">' +
             '<div class="setting-profile-avatar">z</div>' +
-            '<div class="setting-profile-name">我的 agent</div>' +
+            '<div class="setting-profile-name">' + escapeHTML(superAgentName) + '</div>' +
           '</div>' +
           '<div class="setting-group">' +
             '<button class="setting-row" type="button" data-super-action="open-role">' +
@@ -671,7 +711,14 @@ export function initializePrototype() {
         setDetailMode('sources');
       }
 
+      function retireSuperRecommendations() {
+        superAgentState.messages.forEach(function (message) {
+          if (message.recs) delete message.recs;
+        });
+      }
+
       function startNewTopic() {
+        retireSuperRecommendations();
         superAgentState.messages.push({ role: 'agent', text: '可以开始一个新话题了。你想继续讨论什么，或者要我帮你安排什么新的任务？', time: '刚刚', recs: ['总结一个新主题', '创建一个新的自动化任务', '帮我梳理下一步动作'] });
         superAgentState.draft = '';
         renderSuperAgent();
@@ -680,6 +727,7 @@ export function initializePrototype() {
       function sendSuperMessage(text) {
         var content = (text || superAgentState.draft || '').trim();
         if (!content) return;
+        retireSuperRecommendations();
         superAgentState.messages.push({ role: 'user', text: content, time: '刚刚' });
         superAgentState.draft = '';
         var reply = /任务|自动化/.test(content)
@@ -691,11 +739,45 @@ export function initializePrototype() {
         renderSuperAgent();
       }
 
+      function renderContactBook() {
+        var list = document.getElementById('contactBookList');
+        var searchWrap = document.getElementById('contactBookSearchWrap');
+        var searchInput = document.getElementById('contactBookSearch');
+        if (!list || !searchWrap || !searchInput) return;
+        document.querySelectorAll('[data-contact-tab]').forEach(function (tab) {
+          var selected = tab.dataset.contactTab === contactBookState.active;
+          tab.classList.toggle('active', selected);
+          tab.setAttribute('aria-selected', selected ? 'true' : 'false');
+        });
+        var isRecommended = contactBookState.active === 'recommended';
+        searchWrap.hidden = isRecommended;
+        searchInput.placeholder = contactBookState.active === 'assistants' ? '搜索创建的助手' : '搜索已关注的人';
+        if (searchInput.value !== contactBookState.query) searchInput.value = contactBookState.query;
+        var query = contactBookState.query.trim().toLowerCase();
+        var entries = (contactBookData[contactBookState.active] || []).filter(function (item) {
+          if (contactBookState.active === 'following' && !contactBookState.followed.has(item.id)) return false;
+          return !query || (item.name + ' ' + item.bio).toLowerCase().includes(query);
+        });
+        list.classList.toggle('recommended', isRecommended);
+        list.innerHTML = entries.map(function (item) {
+          var isAssistant = contactBookState.active === 'assistants';
+          var followed = contactBookState.followed.has(item.id);
+          var actionLabel = isAssistant ? '去聊天' : (followed ? '已关注' : '关注');
+          var actionClass = isAssistant ? '' : (followed ? 'followed' : 'follow');
+          var action = isAssistant ? 'chat' : 'follow';
+          return '<div class="contact-person" data-contact-id="' + escapeHTML(item.id) + '">' +
+            '<div class="contact-person-avatar"><img src="' + escapeHTML(item.photo) + '" alt="' + escapeHTML(item.name) + '"></div>' +
+            '<div class="contact-person-main"><div class="contact-person-name">' + escapeHTML(item.name) + '</div><div class="contact-person-bio">' + escapeHTML(item.bio) + '</div></div>' +
+            '<button class="contact-person-action ' + actionClass + '" type="button" data-contact-action="' + action + '" data-contact-id="' + escapeHTML(item.id) + '">' + actionLabel + '</button>' +
+          '</div>';
+        }).join('') || '<div class="contact-book-empty">没有找到匹配的内容</div>';
+      }
+
       function renderConvList() {
         var audioAssistantState = getAudioAssistantEntryState();
         var superState = getSuperAgentEntryState();
         var convItems = [
-          { id: 'super-agent', name: 'Super Agent', preview: superState.preview, time: superState.time, badge: superState.badge, avatarType: 'super-agent', avatarRole: 'agent', system: false, zleapLogo: true },
+          { id: 'super-agent', name: superAgentName, preview: superState.preview, time: superState.time, badge: superState.badge, avatarType: 'super-agent', avatarRole: 'agent', system: false, zleapLogo: true },
           { id: 'audio-ast', name: '录音助手', preview: audioAssistantState.preview, time: audioAssistantState.time, badge: audioAssistantState.badge, avatarType: 'audio-ast', avatarRole: 'agent', system: true, icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="12" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><line x1="12" y1="18" x2="12" y2="22"></line><line x1="8.5" y1="22" x2="15.5" y2="22"></line></svg>' },
           { id: 'story-granny', name: '爱讲故事的老奶奶', preview: '但如果拿面相去断人一生吉凶，那我就摇...', time: '3月31日', badge: 0, avatarType: 'photo', avatarRole: 'human', photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=96&q=80' },
           { id: 'notif-center', name: '通知中心', preview: '新报告已生成', time: '4月23日', badge: 0, avatarType: 'system-notif', avatarRole: 'agent', system: true, icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>' },
@@ -853,7 +935,8 @@ export function initializePrototype() {
         mySources: [
           { id: 'ms1', name: '团队周报', group: 'own' }, { id: 'ms2', name: '客户情报库', group: 'own' },
           { id: 'ms3', name: '市场竞品', group: 'own' }, { id: 'ms4', name: '财务动态', group: 'own' },
-          { id: 'ms5', name: '产品需求池', group: 'shared' }, { id: 'ms6', name: '组织人事', group: 'shared' }
+          { id: 'ms5', name: '设计资产库', group: 'shared' }, { id: 'ms6', name: '产品路线图', group: 'shared' },
+          { id: 'ms7', name: '运营数据', group: 'shared' }
         ],
         selectedSources: new Set(['ms1', 'ms2', 'ms3']),
         placeholders: [
@@ -1065,29 +1148,34 @@ export function initializePrototype() {
 
       function renderRangeOptions() {
         var el = document.getElementById('rangeOptions');
-        var checklist = '';
+        var segment = '<div class="range-segmented" role="tablist" aria-label="搜索范围类型">' +
+          '<button type="button" class="range-segment ' + (rangeDraft.range === 'public' ? 'active' : '') + '" data-range-opt="public" role="tab" aria-selected="' + (rangeDraft.range === 'public') + '">公共信息源</button>' +
+          '<button type="button" class="range-segment ' + (rangeDraft.range === 'mine' ? 'active' : '') + '" data-range-opt="mine" role="tab" aria-selected="' + (rangeDraft.range === 'mine') + '">个人信息源</button>' +
+        '</div>';
+        var content = '';
         if (rangeDraft.range === 'mine') {
-          // 个人信息源二级筛选：我的信息源 / 与我共享（与我共享仅企业版）
-          var subTabs = '<div class="range-subtabs">' +
+          var list = searchState.mySources.filter(function (s) { return s.group === rangeDraft.sub; });
+          var allSelected = list.length && list.every(function (s) { return rangeDraft.selected.has(s.id); });
+          var subTabs = '<div class="range-source-tabs">' +
             '<button type="button" class="range-subtab ' + (rangeDraft.sub === 'own' ? 'active' : '') + '" data-range-sub="own">我的信息源</button>' +
             '<button type="button" class="range-subtab ' + (rangeDraft.sub === 'shared' ? 'active' : '') + '" data-range-sub="shared">与我共享</button>' +
+            '<button type="button" class="range-select-all ' + (allSelected ? 'active' : '') + '" data-range-select-all>' + (allSelected ? '取消全选' : '全选') + '</button>' +
           '</div>';
-          var list = searchState.mySources.filter(function (s) { return s.group === rangeDraft.sub; });
           var listHTML = list.length
             ? list.map(function (s) {
-                return '<div class="range-check ' + (rangeDraft.selected.has(s.id) ? 'checked' : '') + '" data-range-src="' + escapeHTML(s.id) + '"><span class="range-check-box"></span><span>' + escapeHTML(s.name) + '</span></div>';
+                var checked = rangeDraft.selected.has(s.id);
+                return '<button type="button" class="range-check ' + (checked ? 'checked' : '') + '" data-range-src="' + escapeHTML(s.id) + '" role="checkbox" aria-checked="' + checked + '"><span class="range-check-box"></span><span>' + escapeHTML(s.name) + '</span></button>';
               }).join('')
             : '<div class="range-sub-empty">' + (rangeDraft.sub === 'shared' ? '暂无共享给你的信息源' : '暂无自建信息源') + '</div>';
-          checklist = subTabs + '<div class="range-checklist">' + listHTML + '</div>';
+          content = '<div class="range-summary">已勾选 ' + rangeDraft.selected.size + ' 个 · 自建与已加入</div>' +
+            '<div class="range-personal-state">' + subTabs + '<div class="range-checklist">' + listHTML + '</div></div>';
+        } else {
+          content = '<div class="range-summary">默认包含全部公共信息，无需单独配置</div>' +
+            '<div class="range-public-state"><div class="range-public-icon"><img src="/globe.svg" alt=""></div><span>包含全部公共知识库与开放数据</span></div>';
         }
-        el.innerHTML =
-          '<button type="button" class="range-opt ' + (rangeDraft.range === 'public' ? 'selected' : '') + '" data-range-opt="public" role="radio" aria-checked="' + (rangeDraft.range === 'public') + '">' +
-            '<span class="range-opt-radio"></span><div class="range-opt-main"><div class="range-opt-name">公共信息源</div><div class="range-opt-sub">默认包含全部公共信息</div></div>' +
-          '</button>' +
-          '<button type="button" class="range-opt ' + (rangeDraft.range === 'mine' ? 'selected' : '') + '" data-range-opt="mine" role="radio" aria-checked="' + (rangeDraft.range === 'mine') + '">' +
-            '<span class="range-opt-radio"></span><div class="range-opt-main"><div class="range-opt-name">个人信息源</div><div class="range-opt-sub">已勾选 ' + rangeDraft.selected.size + ' 个 · 自建与已加入</div></div>' +
-          '</button>' +
-          checklist;
+        el.innerHTML = segment + content;
+        var confirm = document.getElementById('rangeConfirmBtn');
+        if (confirm) confirm.textContent = rangeDraft.range === 'mine' ? '确定 (' + rangeDraft.selected.size + ')' : '确定';
         el.querySelectorAll('[data-range-opt]').forEach(function (opt) {
           opt.onclick = function () { rangeDraft.range = opt.dataset.rangeOpt; renderRangeOptions(); };
         });
@@ -1101,6 +1189,17 @@ export function initializePrototype() {
             renderRangeOptions();
           };
         });
+        var selectAll = el.querySelector('[data-range-select-all]');
+        if (selectAll) {
+          selectAll.onclick = function () {
+            var visibleSources = searchState.mySources.filter(function (s) { return s.group === rangeDraft.sub; });
+            var shouldClear = visibleSources.length && visibleSources.every(function (s) { return rangeDraft.selected.has(s.id); });
+            visibleSources.forEach(function (s) {
+              if (shouldClear) rangeDraft.selected.delete(s.id); else rangeDraft.selected.add(s.id);
+            });
+            renderRangeOptions();
+          };
+        }
       }
 
       function confirmRange() {
@@ -1248,12 +1347,13 @@ export function initializePrototype() {
       }
 
       function switchPage(page, options) {
-        currentPage = ['profile', 'agent', 'message', 'search', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole'].includes(page) ? page : 'home';
+        currentPage = ['profile', 'agent', 'message', 'contacts', 'search', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole'].includes(page) ? page : 'home';
         app.classList.toggle('profile-mode', currentPage === 'profile');
         app.classList.toggle('alt-mode', currentPage !== 'home' && currentPage !== 'profile');
         profilePage.classList.toggle('show', currentPage === 'profile');
         agentPage.classList.toggle('show', currentPage === 'agent');
         messagePage.classList.toggle('show', currentPage === 'message');
+        if (contactBookPage) contactBookPage.classList.toggle('show', currentPage === 'contacts');
         if (searchPage) searchPage.classList.toggle('show', currentPage === 'search');
         if (superAgentPage) superAgentPage.classList.toggle('show', currentPage === 'superAgent');
         if (superAgentSettingsPage) superAgentSettingsPage.classList.toggle('show', currentPage === 'superSettings');
@@ -1266,7 +1366,7 @@ export function initializePrototype() {
         }
         // Nav active: audio & audioSearch both highlight "message" since audio is sub-page of message
         var navActive = currentPage;
-        if (navActive === 'audio' || navActive === 'audioSearch' || navActive === 'superAgent' || navActive === 'superSettings' || navActive === 'superTasks' || navActive === 'superRole') navActive = 'message';
+        if (navActive === 'contacts' || navActive === 'audio' || navActive === 'audioSearch' || navActive === 'superAgent' || navActive === 'superSettings' || navActive === 'superTasks' || navActive === 'superRole') navActive = 'message';
         if (navActive === 'agent') navActive = 'profile';
         document.querySelectorAll('.nav-item').forEach(function (item) {
           item.classList.toggle('active', item.dataset.nav === navActive);
@@ -1274,6 +1374,7 @@ export function initializePrototype() {
         if (currentPage === 'profile') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderProfileFeed(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'agent') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderAgentFeed(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'message') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderConvList(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        else if (currentPage === 'contacts') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderContactBook(); }
         else if (currentPage === 'search') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSearchHome(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'superAgent') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSuperAgent(); markSuperAgentRead(); }
         else if (currentPage === 'superSettings') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSuperSettings(); }
@@ -2136,6 +2237,7 @@ export function initializePrototype() {
       renderSuperAgent();
       renderSuperSettings();
       renderSuperTasks();
+      renderContactBook();
       updateSuperFab();
       const initialPage = new URLSearchParams(window.location.search).get('page');
       if (initialPage) switchPage(initialPage);
@@ -2678,6 +2780,44 @@ export function initializePrototype() {
           switchPage('superAgent');
         });
       }
+      document.getElementById('messageNewBtn').addEventListener('click', function () {
+        contactBookState.active = 'following';
+        contactBookState.query = '';
+        renderContactBook();
+        switchPage('contacts');
+      });
+      document.getElementById('contactBookBack').addEventListener('click', function () { switchPage('message'); });
+      document.querySelectorAll('[data-contact-tab]').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          contactBookState.active = tab.dataset.contactTab;
+          contactBookState.query = '';
+          renderContactBook();
+        });
+      });
+      document.getElementById('contactBookSearch').addEventListener('input', function () {
+        contactBookState.query = this.value;
+        renderContactBook();
+      });
+      document.getElementById('contactBookList').addEventListener('click', function (event) {
+        var actionButton = event.target.closest('[data-contact-action]');
+        if (!actionButton) return;
+        var id = actionButton.dataset.contactId;
+        if (actionButton.dataset.contactAction === 'follow') {
+          if (contactBookState.followed.has(id)) contactBookState.followed.delete(id);
+          else contactBookState.followed.add(id);
+          renderContactBook();
+          return;
+        }
+        if (id === 'my-agent') {
+          renderSuperAgent();
+          markSuperAgentRead();
+          switchPage('superAgent');
+        } else {
+          var assistant = contactBookData.assistants.find(function (item) { return item.id === id; });
+          showToast('已打开与' + (assistant ? assistant.name : '助手') + '的会话');
+          switchPage('message');
+        }
+      });
       document.getElementById('superAgentBack').addEventListener('click', function () { switchPage('message'); });
       document.getElementById('superAgentSettingsBtn').addEventListener('click', function () { switchPage('superSettings'); });
       document.getElementById('superSettingsBack').addEventListener('click', function () { switchPage('superAgent'); });
@@ -2923,7 +3063,7 @@ export function initializePrototype() {
 
       /* ─── SCROLL HIDE NAV ─── */
       let lastScrollY = 0, downDist = 0, upDist = 0;
-      var navHidePages = ['audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks'];
+      var navHidePages = ['contacts', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks'];
       window.addEventListener('scroll', function () {
         if (navHidePages.includes(currentPage)) { bottomNav.classList.add('hide'); return; }
         const y = window.scrollY || document.documentElement.scrollTop;
