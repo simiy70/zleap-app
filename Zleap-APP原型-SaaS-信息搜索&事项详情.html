@@ -1192,14 +1192,14 @@
     .range-source-tabs {
       display: grid;
       grid-template-columns: auto auto 1fr;
-      align-items: end;
+      align-items: center;
       gap: 24px;
-      min-height: 40px;
+      min-height: 48px;
       border-bottom: 1px solid var(--border);
     }
     .range-subtab {
       position: relative;
-      height: 40px;
+      height: 48px;
       padding: 0;
       border: none;
       background: transparent;
@@ -1220,23 +1220,58 @@
       border-radius: 2px;
       background: var(--accent);
     }
-    .range-select-all {
+    .range-selected-chip {
       justify-self: end;
       align-self: center;
       border: 0;
-      background: transparent;
-      color: #98a1af;
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 11px;
+      border-radius: 12px;
+      background: #f3f4f7;
+      color: #707989;
       font: inherit;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
+      transition: color .16s ease, background .16s ease, transform .16s ease;
     }
-    .range-select-all.active { color: var(--accent); }
-    .range-checklist { flex: 0 1 auto; max-height: 206px; min-height: 0; margin: 0 -16px; overflow-y: auto; }
+    .range-selected-chip:active { transform: scale(.96); }
+    .range-selected-chip.active { background: var(--accent); color: #fff; }
+    .range-selected-chip img { width: 14px; height: 14px; filter: invert(49%) sepia(10%) saturate(678%) hue-rotate(181deg) brightness(89%) contrast(89%); }
+    .range-selected-chip.active img { filter: brightness(0) invert(1); }
+    .range-source-search {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 12px 0 4px;
+      padding: 0 12px;
+      border-radius: 12px;
+      background: #f4f5f7;
+      color: #9aa4b4;
+    }
+    .range-source-search img { width: 18px; height: 18px; filter: invert(68%) sepia(12%) saturate(425%) hue-rotate(178deg) brightness(93%) contrast(87%); }
+    .range-source-search input {
+      min-width: 0;
+      flex: 1;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text-primary);
+      font: inherit;
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+    .range-source-search input::placeholder { color: #a5aebd; }
+    .range-checklist { flex: 0 1 auto; max-height: 218px; min-height: 0; margin: 0 -16px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
     .range-check {
       width: 100%;
       min-height: 51px;
-      display: flex;
+      display: grid;
+      grid-template-columns: 20px minmax(0, 1fr) auto;
       align-items: center;
       gap: 13px;
       padding: 0 16px;
@@ -1264,15 +1299,14 @@
     .range-check.checked .range-check-box { background: var(--accent); border-color: var(--accent); }
     .range-check.checked .range-check-box::after {
       content: "";
-      position: absolute;
-      left: 5px;
-      top: 4px;
-      width: 7px;
-      height: 4px;
-      border-left: 2px solid #fff;
-      border-bottom: 2px solid #fff;
-      transform: rotate(-45deg);
+      width: 13px;
+      height: 13px;
+      background: url('/check.svg') center / contain no-repeat;
+      filter: brightness(0) invert(1);
     }
+    .range-source-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .range-origin-badge { padding: 3px 7px; border-radius: 8px; background: #f3f4f7; color: #a0a8b5; font-size: 11px; font-weight: 800; }
+    .range-origin-badge.shared { background: #fff1e7; color: var(--accent); }
     .range-sub-empty { padding: 34px 12px; text-align: center; color: var(--text-tertiary); font-size: 12.5px; }
     #searchRangeSheet .publish-actions {
       grid-template-columns: 1fr 2fr;
@@ -6602,7 +6636,7 @@
           { id: 'ms5', name: '设计资产库', group: 'shared' }, { id: 'ms6', name: '产品路线图', group: 'shared' },
           { id: 'ms7', name: '运营数据', group: 'shared' }
         ],
-        selectedSources: new Set(['ms1', 'ms2', 'ms3']),
+        selectedSources: new Set(['ms2', 'ms5', 'ms6']),
         placeholders: [
           '假婆婆纳属包含哪两个物种？',
           '客户 A 最近有哪些风险信号？',
@@ -6656,7 +6690,7 @@
       var searchPhTimer = null;
 
       var searchResultState = { query: '', events: [], sortMode: 'smart', pathOpen: false };
-      var rangeDraft = { range: 'public', sub: 'own', selected: new Set() };
+      var rangeDraft = { range: 'public', sub: 'own', selected: new Set(), query: '', selectedOnly: false };
 
       function updateRangeButton() {
         var el = document.getElementById('searchRangeText');
@@ -6806,11 +6840,13 @@
         rangeDraft.range = searchState.range;
         rangeDraft.sub = 'own';
         rangeDraft.selected = new Set(searchState.selectedSources);
+        rangeDraft.query = '';
+        rangeDraft.selectedOnly = false;
         renderRangeOptions();
         document.getElementById('searchRangeSheet').classList.add('show');
       }
 
-      function renderRangeOptions() {
+      function renderRangeOptions(keepSearchFocus) {
         var el = document.getElementById('rangeOptions');
         var segment = '<div class="range-segmented" role="tablist" aria-label="搜索范围类型">' +
           '<button type="button" class="range-segment ' + (rangeDraft.range === 'public' ? 'active' : '') + '" data-range-opt="public" role="tab" aria-selected="' + (rangeDraft.range === 'public') + '">公共信息源</button>' +
@@ -6818,21 +6854,26 @@
         '</div>';
         var content = '';
         if (rangeDraft.range === 'mine') {
-          var list = searchState.mySources.filter(function (s) { return s.group === rangeDraft.sub; });
-          var allSelected = list.length && list.every(function (s) { return rangeDraft.selected.has(s.id); });
+          var normalizedQuery = (rangeDraft.query || '').trim().toLowerCase();
+          var list = searchState.mySources.filter(function (s) {
+            var inScope = rangeDraft.selectedOnly ? rangeDraft.selected.has(s.id) : s.group === rangeDraft.sub;
+            var matchesName = !normalizedQuery || s.name.toLowerCase().indexOf(normalizedQuery) > -1;
+            return inScope && matchesName;
+          });
           var subTabs = '<div class="range-source-tabs">' +
             '<button type="button" class="range-subtab ' + (rangeDraft.sub === 'own' ? 'active' : '') + '" data-range-sub="own">我的信息源</button>' +
             '<button type="button" class="range-subtab ' + (rangeDraft.sub === 'shared' ? 'active' : '') + '" data-range-sub="shared">与我共享</button>' +
-            '<button type="button" class="range-select-all ' + (allSelected ? 'active' : '') + '" data-range-select-all>' + (allSelected ? '取消全选' : '全选') + '</button>' +
+            '<button type="button" class="range-selected-chip ' + (rangeDraft.selectedOnly ? 'active' : '') + '" data-range-selected-only aria-pressed="' + rangeDraft.selectedOnly + '"><img src="/check.svg" alt=""><span>已选 ' + rangeDraft.selected.size + '</span></button>' +
           '</div>';
           var listHTML = list.length
             ? list.map(function (s) {
                 var checked = rangeDraft.selected.has(s.id);
-                return '<button type="button" class="range-check ' + (checked ? 'checked' : '') + '" data-range-src="' + escapeHTML(s.id) + '" role="checkbox" aria-checked="' + checked + '"><span class="range-check-box"></span><span>' + escapeHTML(s.name) + '</span></button>';
+                var origin = rangeDraft.selectedOnly ? '<span class="range-origin-badge ' + (s.group === 'shared' ? 'shared' : '') + '">' + (s.group === 'shared' ? '共享' : '我的') + '</span>' : '';
+                return '<button type="button" class="range-check ' + (checked ? 'checked' : '') + '" data-range-src="' + escapeHTML(s.id) + '" role="checkbox" aria-checked="' + checked + '"><span class="range-check-box"></span><span class="range-source-name">' + escapeHTML(s.name) + '</span>' + origin + '</button>';
               }).join('')
-            : '<div class="range-sub-empty">' + (rangeDraft.sub === 'shared' ? '暂无共享给你的信息源' : '暂无自建信息源') + '</div>';
-          content = '<div class="range-summary">已勾选 ' + rangeDraft.selected.size + ' 个 · 自建与已加入</div>' +
-            '<div class="range-personal-state">' + subTabs + '<div class="range-checklist">' + listHTML + '</div></div>';
+            : '<div class="range-sub-empty">' + (normalizedQuery ? '未找到匹配的信息源' : (rangeDraft.selectedOnly ? '暂无已选信息源' : (rangeDraft.sub === 'shared' ? '暂无共享给你的信息源' : '暂无自建信息源'))) + '</div>';
+          var searchBox = '<label class="range-source-search"><img src="/search.svg" alt=""><input id="rangeSourceSearch" type="search" value="' + escapeHTML(rangeDraft.query) + '" placeholder="搜索信息源…" autocomplete="off" aria-label="搜索信息源名称"></label>';
+          content = '<div class="range-personal-state">' + subTabs + searchBox + '<div class="range-checklist">' + listHTML + '</div></div>';
         } else {
           content = '<div class="range-summary">默认包含全部公共信息，无需单独配置</div>' +
             '<div class="range-public-state"><div class="range-public-icon"><img src="/globe.svg" alt=""></div><span>包含全部公共知识库与开放数据</span></div>';
@@ -6844,7 +6885,7 @@
           opt.onclick = function () { rangeDraft.range = opt.dataset.rangeOpt; renderRangeOptions(); };
         });
         el.querySelectorAll('[data-range-sub]').forEach(function (t) {
-          t.onclick = function () { rangeDraft.sub = t.dataset.rangeSub; renderRangeOptions(); };
+          t.onclick = function () { rangeDraft.sub = t.dataset.rangeSub; rangeDraft.selectedOnly = false; renderRangeOptions(); };
         });
         el.querySelectorAll('[data-range-src]').forEach(function (c) {
           c.onclick = function () {
@@ -6853,16 +6894,15 @@
             renderRangeOptions();
           };
         });
-        var selectAll = el.querySelector('[data-range-select-all]');
-        if (selectAll) {
-          selectAll.onclick = function () {
-            var visibleSources = searchState.mySources.filter(function (s) { return s.group === rangeDraft.sub; });
-            var shouldClear = visibleSources.length && visibleSources.every(function (s) { return rangeDraft.selected.has(s.id); });
-            visibleSources.forEach(function (s) {
-              if (shouldClear) rangeDraft.selected.delete(s.id); else rangeDraft.selected.add(s.id);
-            });
-            renderRangeOptions();
-          };
+        var selectedOnly = el.querySelector('[data-range-selected-only]');
+        if (selectedOnly) selectedOnly.onclick = function () { rangeDraft.selectedOnly = !rangeDraft.selectedOnly; renderRangeOptions(); };
+        var sourceSearch = document.getElementById('rangeSourceSearch');
+        if (sourceSearch) {
+          sourceSearch.oninput = function () { rangeDraft.query = sourceSearch.value; renderRangeOptions(true); };
+          if (keepSearchFocus) {
+            sourceSearch.focus();
+            sourceSearch.setSelectionRange(sourceSearch.value.length, sourceSearch.value.length);
+          }
         }
       }
 

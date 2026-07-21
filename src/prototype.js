@@ -995,7 +995,7 @@ export function initializePrototype() {
           { id: 'ms5', name: '设计资产库', group: 'shared' }, { id: 'ms6', name: '产品路线图', group: 'shared' },
           { id: 'ms7', name: '运营数据', group: 'shared' }
         ],
-        selectedSources: new Set(['ms1', 'ms2', 'ms3']),
+        selectedSources: new Set(['ms2', 'ms5', 'ms6']),
         placeholders: [
           '假婆婆纳属包含哪两个物种？',
           '客户 A 最近有哪些风险信号？',
@@ -1049,7 +1049,7 @@ export function initializePrototype() {
       var searchPhTimer = null;
 
       var searchResultState = { query: '', events: [], sortMode: 'smart', pathOpen: false };
-      var rangeDraft = { range: 'public', sub: 'own', selected: new Set() };
+      var rangeDraft = { range: 'public', sub: 'own', selected: new Set(), query: '', selectedOnly: false };
 
       function updateRangeButton() {
         var el = document.getElementById('searchRangeText');
@@ -1199,11 +1199,13 @@ export function initializePrototype() {
         rangeDraft.range = searchState.range;
         rangeDraft.sub = 'own';
         rangeDraft.selected = new Set(searchState.selectedSources);
+        rangeDraft.query = '';
+        rangeDraft.selectedOnly = false;
         renderRangeOptions();
         document.getElementById('searchRangeSheet').classList.add('show');
       }
 
-      function renderRangeOptions() {
+      function renderRangeOptions(keepSearchFocus) {
         var el = document.getElementById('rangeOptions');
         var segment = '<div class="range-segmented" role="tablist" aria-label="搜索范围类型">' +
           '<button type="button" class="range-segment ' + (rangeDraft.range === 'public' ? 'active' : '') + '" data-range-opt="public" role="tab" aria-selected="' + (rangeDraft.range === 'public') + '">公共信息源</button>' +
@@ -1211,21 +1213,26 @@ export function initializePrototype() {
         '</div>';
         var content = '';
         if (rangeDraft.range === 'mine') {
-          var list = searchState.mySources.filter(function (s) { return s.group === rangeDraft.sub; });
-          var allSelected = list.length && list.every(function (s) { return rangeDraft.selected.has(s.id); });
+          var normalizedQuery = (rangeDraft.query || '').trim().toLowerCase();
+          var list = searchState.mySources.filter(function (s) {
+            var inScope = rangeDraft.selectedOnly ? rangeDraft.selected.has(s.id) : s.group === rangeDraft.sub;
+            var matchesName = !normalizedQuery || s.name.toLowerCase().indexOf(normalizedQuery) > -1;
+            return inScope && matchesName;
+          });
           var subTabs = '<div class="range-source-tabs">' +
             '<button type="button" class="range-subtab ' + (rangeDraft.sub === 'own' ? 'active' : '') + '" data-range-sub="own">我的信息源</button>' +
             '<button type="button" class="range-subtab ' + (rangeDraft.sub === 'shared' ? 'active' : '') + '" data-range-sub="shared">与我共享</button>' +
-            '<button type="button" class="range-select-all ' + (allSelected ? 'active' : '') + '" data-range-select-all>' + (allSelected ? '取消全选' : '全选') + '</button>' +
+            '<button type="button" class="range-selected-chip ' + (rangeDraft.selectedOnly ? 'active' : '') + '" data-range-selected-only aria-pressed="' + rangeDraft.selectedOnly + '"><img src="/check.svg" alt=""><span>已选 ' + rangeDraft.selected.size + '</span></button>' +
           '</div>';
           var listHTML = list.length
             ? list.map(function (s) {
                 var checked = rangeDraft.selected.has(s.id);
-                return '<button type="button" class="range-check ' + (checked ? 'checked' : '') + '" data-range-src="' + escapeHTML(s.id) + '" role="checkbox" aria-checked="' + checked + '"><span class="range-check-box"></span><span>' + escapeHTML(s.name) + '</span></button>';
+                var origin = rangeDraft.selectedOnly ? '<span class="range-origin-badge ' + (s.group === 'shared' ? 'shared' : '') + '">' + (s.group === 'shared' ? '共享' : '我的') + '</span>' : '';
+                return '<button type="button" class="range-check ' + (checked ? 'checked' : '') + '" data-range-src="' + escapeHTML(s.id) + '" role="checkbox" aria-checked="' + checked + '"><span class="range-check-box"></span><span class="range-source-name">' + escapeHTML(s.name) + '</span>' + origin + '</button>';
               }).join('')
-            : '<div class="range-sub-empty">' + (rangeDraft.sub === 'shared' ? '暂无共享给你的信息源' : '暂无自建信息源') + '</div>';
-          content = '<div class="range-summary">已勾选 ' + rangeDraft.selected.size + ' 个 · 自建与已加入</div>' +
-            '<div class="range-personal-state">' + subTabs + '<div class="range-checklist">' + listHTML + '</div></div>';
+            : '<div class="range-sub-empty">' + (normalizedQuery ? '未找到匹配的信息源' : (rangeDraft.selectedOnly ? '暂无已选信息源' : (rangeDraft.sub === 'shared' ? '暂无共享给你的信息源' : '暂无自建信息源'))) + '</div>';
+          var searchBox = '<label class="range-source-search"><img src="/search.svg" alt=""><input id="rangeSourceSearch" type="search" value="' + escapeHTML(rangeDraft.query) + '" placeholder="搜索信息源…" autocomplete="off" aria-label="搜索信息源名称"></label>';
+          content = '<div class="range-personal-state">' + subTabs + searchBox + '<div class="range-checklist">' + listHTML + '</div></div>';
         } else {
           content = '<div class="range-summary">默认包含全部公共信息，无需单独配置</div>' +
             '<div class="range-public-state"><div class="range-public-icon"><img src="/globe.svg" alt=""></div><span>包含全部公共知识库与开放数据</span></div>';
@@ -1237,7 +1244,7 @@ export function initializePrototype() {
           opt.onclick = function () { rangeDraft.range = opt.dataset.rangeOpt; renderRangeOptions(); };
         });
         el.querySelectorAll('[data-range-sub]').forEach(function (t) {
-          t.onclick = function () { rangeDraft.sub = t.dataset.rangeSub; renderRangeOptions(); };
+          t.onclick = function () { rangeDraft.sub = t.dataset.rangeSub; rangeDraft.selectedOnly = false; renderRangeOptions(); };
         });
         el.querySelectorAll('[data-range-src]').forEach(function (c) {
           c.onclick = function () {
@@ -1246,16 +1253,15 @@ export function initializePrototype() {
             renderRangeOptions();
           };
         });
-        var selectAll = el.querySelector('[data-range-select-all]');
-        if (selectAll) {
-          selectAll.onclick = function () {
-            var visibleSources = searchState.mySources.filter(function (s) { return s.group === rangeDraft.sub; });
-            var shouldClear = visibleSources.length && visibleSources.every(function (s) { return rangeDraft.selected.has(s.id); });
-            visibleSources.forEach(function (s) {
-              if (shouldClear) rangeDraft.selected.delete(s.id); else rangeDraft.selected.add(s.id);
-            });
-            renderRangeOptions();
-          };
+        var selectedOnly = el.querySelector('[data-range-selected-only]');
+        if (selectedOnly) selectedOnly.onclick = function () { rangeDraft.selectedOnly = !rangeDraft.selectedOnly; renderRangeOptions(); };
+        var sourceSearch = document.getElementById('rangeSourceSearch');
+        if (sourceSearch) {
+          sourceSearch.oninput = function () { rangeDraft.query = sourceSearch.value; renderRangeOptions(true); };
+          if (keepSearchFocus) {
+            sourceSearch.focus();
+            sourceSearch.setSelectionRange(sourceSearch.value.length, sourceSearch.value.length);
+          }
         }
       }
 

@@ -1183,14 +1183,14 @@
     .range-source-tabs {
       display: grid;
       grid-template-columns: auto auto 1fr;
-      align-items: end;
+      align-items: center;
       gap: 24px;
-      min-height: 40px;
+      min-height: 48px;
       border-bottom: 1px solid var(--border);
     }
     .range-subtab {
       position: relative;
-      height: 40px;
+      height: 48px;
       padding: 0;
       border: none;
       background: transparent;
@@ -1211,23 +1211,58 @@
       border-radius: 2px;
       background: var(--accent);
     }
-    .range-select-all {
+    .range-selected-chip {
       justify-self: end;
       align-self: center;
       border: 0;
-      background: transparent;
-      color: #98a1af;
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 11px;
+      border-radius: 12px;
+      background: #f3f4f7;
+      color: #707989;
       font: inherit;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
+      transition: color .16s ease, background .16s ease, transform .16s ease;
     }
-    .range-select-all.active { color: var(--accent); }
-    .range-checklist { flex: 0 1 auto; max-height: 206px; min-height: 0; margin: 0 -16px; overflow-y: auto; }
+    .range-selected-chip:active { transform: scale(.96); }
+    .range-selected-chip.active { background: var(--accent); color: #fff; }
+    .range-selected-chip img { width: 14px; height: 14px; filter: invert(49%) sepia(10%) saturate(678%) hue-rotate(181deg) brightness(89%) contrast(89%); }
+    .range-selected-chip.active img { filter: brightness(0) invert(1); }
+    .range-source-search {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 12px 0 4px;
+      padding: 0 12px;
+      border-radius: 12px;
+      background: #f4f5f7;
+      color: #9aa4b4;
+    }
+    .range-source-search img { width: 18px; height: 18px; filter: invert(68%) sepia(12%) saturate(425%) hue-rotate(178deg) brightness(93%) contrast(87%); }
+    .range-source-search input {
+      min-width: 0;
+      flex: 1;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text-primary);
+      font: inherit;
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+    .range-source-search input::placeholder { color: #a5aebd; }
+    .range-checklist { flex: 0 1 auto; max-height: 218px; min-height: 0; margin: 0 -16px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
     .range-check {
       width: 100%;
       min-height: 51px;
-      display: flex;
+      display: grid;
+      grid-template-columns: 20px minmax(0, 1fr) auto;
       align-items: center;
       gap: 13px;
       padding: 0 16px;
@@ -1255,15 +1290,14 @@
     .range-check.checked .range-check-box { background: var(--accent); border-color: var(--accent); }
     .range-check.checked .range-check-box::after {
       content: "";
-      position: absolute;
-      left: 5px;
-      top: 4px;
-      width: 7px;
-      height: 4px;
-      border-left: 2px solid #fff;
-      border-bottom: 2px solid #fff;
-      transform: rotate(-45deg);
+      width: 13px;
+      height: 13px;
+      background: url('/check.svg') center / contain no-repeat;
+      filter: brightness(0) invert(1);
     }
+    .range-source-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .range-origin-badge { padding: 3px 7px; border-radius: 8px; background: #f3f4f7; color: #a0a8b5; font-size: 11px; font-weight: 800; }
+    .range-origin-badge.shared { background: #fff1e7; color: var(--accent); }
     .range-sub-empty { padding: 34px 12px; text-align: center; color: var(--text-tertiary); font-size: 12.5px; }
     #searchRangeSheet .publish-actions {
       grid-template-columns: 1fr 2fr;
