@@ -443,7 +443,7 @@
       position: fixed;
       left: 50%; bottom: calc(14px + env(safe-area-inset-bottom, 0px));
       z-index: 50;
-      width: min(348px, calc(100% - 28px));
+      width: min(210px, calc(100% - 28px));
       display: flex;
       align-items: center;
       gap: 18px;
@@ -452,10 +452,11 @@
     }
     .bottom-nav.hide { transform: translateX(-50%) translateY(180%); opacity: 0; }
     .bottom-inner {
-      flex: 1;
-      min-width: 0;
+      flex: 0 0 132px;
+      width: 132px;
+      min-width: 132px;
       height: 58px;
-      display: flex; align-items: center; justify-content: space-around;
+      display: flex; align-items: center; justify-content: center; gap: 4px;
       padding: 4px;
       background: rgba(255,255,255,.68);
       backdrop-filter: blur(26px) saturate(1.9);
@@ -465,7 +466,8 @@
       box-shadow: 0 10px 28px rgba(15,23,42,.13);
     }
     .nav-item {
-      flex: 1;
+      flex: 0 0 60px;
+      width: 60px;
       height: 52px;
       display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
       border: none; background: transparent;
@@ -2800,11 +2802,13 @@
 
     /* ═══════════════════ MESSAGE PAGE (WeChat style) ═══════════════════ */
     .msg-title-bar {
+      position: relative;
       height: 52px; display: flex; align-items: center; justify-content: space-between;
-      padding: 0 16px 0 20px;
+      padding: 0 16px;
       background: var(--surface);
     }
-    .msg-title { font-size: 20px; font-weight: 900; letter-spacing: -.4px; color: var(--text-primary); }
+    .msg-title { position: absolute; left: 50%; transform: translateX(-50%); font-size: 18px; font-weight: 900; letter-spacing: -.4px; color: var(--text-primary); }
+    .message-profile-entry { width: 36px; height: 36px; flex: 0 0 36px; }
     .msg-search-bar { padding: 6px 14px 10px; background: var(--surface); }
     .msg-search-box {
       display: flex; align-items: center; gap: 8px;
@@ -4710,6 +4714,9 @@
     <section class="screen-page" id="messagePage">
       <div class="mini-status"><span style="font-weight:700">MS</span><span style="font-weight:700">9:41</span><span style="font-weight:700">100%</span></div>
       <div class="msg-title-bar">
+        <button class="profile-entry message-profile-entry" type="button" data-open-profile-drawer aria-label="打开个人中心">
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=120&q=80" alt="Simiy">
+        </button>
         <span class="msg-title">消息</span>
         <button class="icon-btn" id="messageNewBtn" type="button" aria-label="新建">
           <svg class="icon" viewBox="0 0 24 24" style="width:22px;height:22px"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v8"></path><path d="M8 12h8"></path></svg>
