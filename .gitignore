@@ -2,3 +2,9 @@
 .claude/
 .vercel/
 .vercel
+node_modules/
+dist/
+.vite/
+qa-artifacts/
+source-reference.png
+.workbuddy/
