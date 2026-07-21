@@ -27,6 +27,7 @@ export function initializePrototype() {
       const agentFeed = document.getElementById('agentFeed');
       const messagePage = document.getElementById('messagePage');
       const contactBookPage = document.getElementById('contactBookPage');
+      const contactChatPage = document.getElementById('contactChatPage');
       const searchPage = document.getElementById('searchPage');
       const searchResultPage = document.getElementById('searchResultPage');
       const audioPage = document.getElementById('audioPage');
@@ -92,6 +93,7 @@ export function initializePrototype() {
         query: '',
         followed: new Set(['wendy', 'banana', 'cola', 'luoshen', 'coco', 'xiaoran', 'tina', 'noah'])
       };
+      const contactChatState = { currentId: '', messages: {} };
       const contactBookData = {
         following: [
           { id: 'wendy', name: 'Wendy织梦', bio: '风吹草动不用说太明白，很多事我听个开头...', photo: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=144&q=80' },
@@ -765,12 +767,67 @@ export function initializePrototype() {
           var actionLabel = isAssistant ? '去聊天' : (followed ? '已关注' : '关注');
           var actionClass = isAssistant ? '' : (followed ? 'followed' : 'follow');
           var action = isAssistant ? 'chat' : 'follow';
-          return '<div class="contact-person" data-contact-id="' + escapeHTML(item.id) + '">' +
+          return '<div class="contact-person" data-contact-id="' + escapeHTML(item.id) + '" role="button" tabindex="0" aria-label="打开与' + escapeHTML(item.name) + '的会话">' +
             '<div class="contact-person-avatar"><img src="' + escapeHTML(item.photo) + '" alt="' + escapeHTML(item.name) + '"></div>' +
             '<div class="contact-person-main"><div class="contact-person-name">' + escapeHTML(item.name) + '</div><div class="contact-person-bio">' + escapeHTML(item.bio) + '</div></div>' +
             '<button class="contact-person-action ' + actionClass + '" type="button" data-contact-action="' + action + '" data-contact-id="' + escapeHTML(item.id) + '">' + actionLabel + '</button>' +
           '</div>';
         }).join('') || '<div class="contact-book-empty">没有找到匹配的内容</div>';
+      }
+
+      function findContactBookItem(id) {
+        var groups = ['following', 'assistants', 'recommended'];
+        for (var i = 0; i < groups.length; i++) {
+          var found = contactBookData[groups[i]].find(function (item) { return item.id === id; });
+          if (found) return found;
+        }
+        return null;
+      }
+
+      function renderContactChat() {
+        var person = findContactBookItem(contactChatState.currentId);
+        if (!person) return;
+        var name = document.getElementById('contactChatName');
+        var avatar = document.getElementById('contactChatAvatar');
+        var body = document.getElementById('contactChatBody');
+        if (name) name.textContent = person.name;
+        if (avatar) { avatar.src = person.photo; avatar.alt = person.name; }
+        var messages = contactChatState.messages[person.id] || [];
+        body.innerHTML = messages.map(function (message) {
+          return '<div class="contact-chat-row ' + (message.mine ? 'mine' : '') + '"><div class="contact-chat-bubble">' + escapeHTML(message.text) + '</div></div>';
+        }).join('');
+        requestAnimationFrame(function () { body.scrollTop = body.scrollHeight; });
+      }
+
+      function openContactChat(id) {
+        if (id === 'my-agent') {
+          renderSuperAgent();
+          markSuperAgentRead();
+          switchPage('superAgent');
+          return;
+        }
+        var person = findContactBookItem(id);
+        if (!person) return;
+        contactChatState.currentId = id;
+        if (!contactChatState.messages[id]) {
+          contactChatState.messages[id] = [{ mine: false, text: '你好，我是' + person.name + '。' + (person.bio || '很高兴和你聊天。') }];
+        }
+        var input = document.getElementById('contactChatInput');
+        if (input) input.value = '';
+        renderContactChat();
+        switchPage('contactChat');
+      }
+
+      function sendContactChatMessage() {
+        var input = document.getElementById('contactChatInput');
+        var text = (input.value || '').trim();
+        if (!text || !contactChatState.currentId) return;
+        var person = findContactBookItem(contactChatState.currentId);
+        contactChatState.messages[contactChatState.currentId].push({ mine: true, text: text });
+        input.value = '';
+        contactChatState.messages[contactChatState.currentId].push({ mine: false, text: '收到，我会继续围绕这个话题和你聊。' });
+        renderContactChat();
+        if (person) showToast('消息已发送给' + person.name);
       }
 
       function renderConvList() {
@@ -1347,13 +1404,14 @@ export function initializePrototype() {
       }
 
       function switchPage(page, options) {
-        currentPage = ['profile', 'agent', 'message', 'contacts', 'search', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole'].includes(page) ? page : 'home';
+        currentPage = ['profile', 'agent', 'message', 'contacts', 'contactChat', 'search', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole'].includes(page) ? page : 'home';
         app.classList.toggle('profile-mode', currentPage === 'profile');
         app.classList.toggle('alt-mode', currentPage !== 'home' && currentPage !== 'profile');
         profilePage.classList.toggle('show', currentPage === 'profile');
         agentPage.classList.toggle('show', currentPage === 'agent');
         messagePage.classList.toggle('show', currentPage === 'message');
         if (contactBookPage) contactBookPage.classList.toggle('show', currentPage === 'contacts');
+        if (contactChatPage) contactChatPage.classList.toggle('show', currentPage === 'contactChat');
         if (searchPage) searchPage.classList.toggle('show', currentPage === 'search');
         if (superAgentPage) superAgentPage.classList.toggle('show', currentPage === 'superAgent');
         if (superAgentSettingsPage) superAgentSettingsPage.classList.toggle('show', currentPage === 'superSettings');
@@ -1366,7 +1424,7 @@ export function initializePrototype() {
         }
         // Nav active: audio & audioSearch both highlight "message" since audio is sub-page of message
         var navActive = currentPage;
-        if (navActive === 'contacts' || navActive === 'audio' || navActive === 'audioSearch' || navActive === 'superAgent' || navActive === 'superSettings' || navActive === 'superTasks' || navActive === 'superRole') navActive = 'message';
+        if (navActive === 'contacts' || navActive === 'contactChat' || navActive === 'audio' || navActive === 'audioSearch' || navActive === 'superAgent' || navActive === 'superSettings' || navActive === 'superTasks' || navActive === 'superRole') navActive = 'message';
         if (navActive === 'agent') navActive = 'profile';
         document.querySelectorAll('.nav-item').forEach(function (item) {
           item.classList.toggle('active', item.dataset.nav === navActive);
@@ -1375,6 +1433,7 @@ export function initializePrototype() {
         else if (currentPage === 'agent') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderAgentFeed(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'message') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderConvList(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'contacts') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderContactBook(); }
+        else if (currentPage === 'contactChat') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderContactChat(); }
         else if (currentPage === 'search') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSearchHome(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'superAgent') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSuperAgent(); markSuperAgentRead(); }
         else if (currentPage === 'superSettings') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSuperSettings(); }
@@ -2800,23 +2859,32 @@ export function initializePrototype() {
       });
       document.getElementById('contactBookList').addEventListener('click', function (event) {
         var actionButton = event.target.closest('[data-contact-action]');
-        if (!actionButton) return;
-        var id = actionButton.dataset.contactId;
-        if (actionButton.dataset.contactAction === 'follow') {
-          if (contactBookState.followed.has(id)) contactBookState.followed.delete(id);
-          else contactBookState.followed.add(id);
-          renderContactBook();
+        if (actionButton) {
+          var actionId = actionButton.dataset.contactId;
+          if (actionButton.dataset.contactAction === 'follow') {
+            if (contactBookState.followed.has(actionId)) contactBookState.followed.delete(actionId);
+            else contactBookState.followed.add(actionId);
+            renderContactBook();
+            return;
+          }
+          openContactChat(actionId);
           return;
         }
-        if (id === 'my-agent') {
-          renderSuperAgent();
-          markSuperAgentRead();
-          switchPage('superAgent');
-        } else {
-          var assistant = contactBookData.assistants.find(function (item) { return item.id === id; });
-          showToast('已打开与' + (assistant ? assistant.name : '助手') + '的会话');
-          switchPage('message');
-        }
+        var personRow = event.target.closest('.contact-person[data-contact-id]');
+        if (personRow) openContactChat(personRow.dataset.contactId);
+      });
+      document.getElementById('contactBookList').addEventListener('keydown', function (event) {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        if (event.target.closest('[data-contact-action]')) return;
+        var personRow = event.target.closest('.contact-person[data-contact-id]');
+        if (!personRow) return;
+        event.preventDefault();
+        openContactChat(personRow.dataset.contactId);
+      });
+      document.getElementById('contactChatBack').addEventListener('click', function () { switchPage('contacts'); });
+      document.getElementById('contactChatSend').addEventListener('click', sendContactChatMessage);
+      document.getElementById('contactChatInput').addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendContactChatMessage(); }
       });
       document.getElementById('superAgentBack').addEventListener('click', function () { switchPage('message'); });
       document.getElementById('superAgentSettingsBtn').addEventListener('click', function () { switchPage('superSettings'); });
@@ -3063,7 +3131,7 @@ export function initializePrototype() {
 
       /* ─── SCROLL HIDE NAV ─── */
       let lastScrollY = 0, downDist = 0, upDist = 0;
-      var navHidePages = ['contacts', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks'];
+      var navHidePages = ['contacts', 'contactChat', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks'];
       window.addEventListener('scroll', function () {
         if (navHidePages.includes(currentPage)) { bottomNav.classList.add('hide'); return; }
         const y = window.scrollY || document.documentElement.scrollTop;

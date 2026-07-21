@@ -2884,6 +2884,95 @@
       font-size: 13px;
     }
 
+    /* 联系人会话页 */
+    #contactChatPage.screen-page.show {
+      height: 100dvh;
+      min-height: 0;
+      padding-bottom: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: #f7f8fb;
+    }
+    .contact-chat-shell { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+    .contact-chat-bar {
+      height: 56px;
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr) 40px;
+      align-items: center;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,.97);
+    }
+    .contact-chat-person { min-width: 0; display: flex; align-items: center; justify-content: center; gap: 9px; }
+    .contact-chat-avatar {
+      width: 32px;
+      height: 32px;
+      flex: 0 0 auto;
+      overflow: hidden;
+      border-radius: 50%;
+      border: 1px solid rgba(255,139,33,.28);
+    }
+    .contact-chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .contact-chat-name { overflow: hidden; color: var(--text-primary); font-size: 16px; font-weight: 900; text-overflow: ellipsis; white-space: nowrap; }
+    .contact-chat-body { flex: 1; min-height: 0; overflow-y: auto; padding: 18px 14px 118px; }
+    .contact-chat-row { display: flex; margin-bottom: 14px; }
+    .contact-chat-row.mine { justify-content: flex-end; }
+    .contact-chat-bubble {
+      max-width: 78%;
+      padding: 11px 14px;
+      border-radius: 16px;
+      background: #fff;
+      color: var(--text-primary);
+      box-shadow: 0 1px 4px rgba(15,23,42,.06);
+      font-size: 14px;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+    .contact-chat-row:not(.mine) .contact-chat-bubble { border-bottom-left-radius: 6px; }
+    .contact-chat-row.mine .contact-chat-bubble { border-bottom-right-radius: 6px; background: #ff8b21; color: #fff; }
+    .contact-chat-composer-wrap {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      z-index: 130;
+      width: 100%;
+      max-width: 390px;
+      transform: translateX(-50%);
+      padding: 10px 14px calc(14px + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--border);
+      background: rgba(255,255,255,.98);
+      backdrop-filter: blur(18px);
+    }
+    .contact-chat-composer { display: flex; align-items: flex-end; gap: 10px; }
+    .contact-chat-composer textarea {
+      flex: 1;
+      min-height: 46px;
+      max-height: 100px;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border-strong);
+      border-radius: 16px;
+      background: #fff;
+      color: var(--text-primary);
+      font: inherit;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: none;
+      outline: none;
+    }
+    .contact-chat-composer textarea:focus { border-color: var(--accent); }
+    .contact-chat-send {
+      width: 46px;
+      height: 46px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+
     /* ═══════════════════ AUDIO CENTER ENHANCED ═══════════════════ */
 
     /* Audio page header */
