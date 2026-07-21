@@ -1111,7 +1111,8 @@
 
     /* 搜索范围 sheet */
     .range-options { display: flex; flex-direction: column; gap: 4px; margin-bottom: 4px; }
-    .range-opt { display: flex; align-items: center; gap: 12px; padding: 14px 4px; cursor: pointer; }
+    .range-opt { width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px 4px; border: 0; background: transparent; text-align: left; font: inherit; cursor: pointer; }
+    .range-opt:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 10px; }
     .range-opt-radio { flex: 0 0 auto; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border-strong); display: grid; place-items: center; transition: border-color .15s; }
     .range-opt.selected .range-opt-radio { border-color: var(--accent); border-width: 5.5px; }
     .range-opt-main { flex: 1; min-width: 0; }
@@ -5132,10 +5133,10 @@
 
   <!-- 搜索范围 Sheet -->
   <div class="sheet-backdrop" id="searchRangeSheet">
-    <div class="bottom-sheet">
+    <div class="bottom-sheet search-range-sheet" role="dialog" aria-modal="true" aria-labelledby="searchRangeTitle">
       <div class="sheet-handle"></div>
       <div class="sheet-title-row">
-        <strong>搜索范围</strong>
+        <strong id="searchRangeTitle">搜索范围</strong>
         <button class="sources-sheet-close" data-close="search-range-sheet" type="button" aria-label="关闭">×</button>
       </div>
       <div class="range-options" id="rangeOptions"></div>
@@ -5223,6 +5224,7 @@
       let currentProfileTab = 'saved';
       let currentAgentDetail = null;
       const pageHistory = ['home'];
+      let searchReturnsToGlobalSearch = false;
       const likedState = new Set();
       const favoritedState = new Set();
       const followingState = new Set();
@@ -6079,8 +6081,8 @@
         var el = document.getElementById('searchRangeText');
         if (!el) return;
         el.textContent = searchState.range === 'public'
-          ? '公共信息'
-          : '个人信息 · ' + searchState.selectedSources.size + ' 个';
+          ? '公共信息源'
+          : '个人信息源 · ' + searchState.selectedSources.size + ' 个';
       }
 
       function renderSearchHome() {
@@ -6245,12 +6247,12 @@
           checklist = subTabs + '<div class="range-checklist">' + listHTML + '</div>';
         }
         el.innerHTML =
-          '<div class="range-opt ' + (rangeDraft.range === 'public' ? 'selected' : '') + '" data-range-opt="public">' +
+          '<button type="button" class="range-opt ' + (rangeDraft.range === 'public' ? 'selected' : '') + '" data-range-opt="public" role="radio" aria-checked="' + (rangeDraft.range === 'public') + '">' +
             '<span class="range-opt-radio"></span><div class="range-opt-main"><div class="range-opt-name">公共信息源</div><div class="range-opt-sub">默认包含全部公共信息</div></div>' +
-          '</div>' +
-          '<div class="range-opt ' + (rangeDraft.range === 'mine' ? 'selected' : '') + '" data-range-opt="mine">' +
+          '</button>' +
+          '<button type="button" class="range-opt ' + (rangeDraft.range === 'mine' ? 'selected' : '') + '" data-range-opt="mine" role="radio" aria-checked="' + (rangeDraft.range === 'mine') + '">' +
             '<span class="range-opt-radio"></span><div class="range-opt-main"><div class="range-opt-name">个人信息源</div><div class="range-opt-sub">已勾选 ' + rangeDraft.selected.size + ' 个 · 自建与已加入</div></div>' +
-          '</div>' +
+          '</button>' +
           checklist;
         el.querySelectorAll('[data-range-opt]').forEach(function (opt) {
           opt.onclick = function () { rangeDraft.range = opt.dataset.rangeOpt; renderRangeOptions(); };
@@ -7738,6 +7740,7 @@
         gsRenderHistory();
       });
       document.getElementById('gsSourceEntry').addEventListener('click', function () {
+        searchReturnsToGlobalSearch = true;
         closeGlobalSearch();
         switchPage('search');
       });
@@ -7916,8 +7919,14 @@
       });
 
       document.getElementById('searchPageBack').addEventListener('click', function () {
-        if (pageHistory.length > 1) pageHistory.pop();
-        switchPage(pageHistory.pop() || 'home', { skipHistory: true });
+        if (pageHistory[pageHistory.length - 1] === 'search') pageHistory.pop();
+        var previousPage = pageHistory[pageHistory.length - 1] || 'home';
+        switchPage(previousPage, { skipHistory: true });
+        if (searchReturnsToGlobalSearch) {
+          searchReturnsToGlobalSearch = false;
+          globalSearchPage.classList.add('show');
+          setTimeout(function () { gsInput.focus(); }, 40);
+        }
       });
 
       document.querySelectorAll('[data-nav-back]').forEach(function (btn) {

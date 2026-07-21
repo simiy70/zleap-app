@@ -1102,7 +1102,8 @@
 
     /* 搜索范围 sheet */
     .range-options { display: flex; flex-direction: column; gap: 4px; margin-bottom: 4px; }
-    .range-opt { display: flex; align-items: center; gap: 12px; padding: 14px 4px; cursor: pointer; }
+    .range-opt { width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px 4px; border: 0; background: transparent; text-align: left; font: inherit; cursor: pointer; }
+    .range-opt:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 10px; }
     .range-opt-radio { flex: 0 0 auto; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border-strong); display: grid; place-items: center; transition: border-color .15s; }
     .range-opt.selected .range-opt-radio { border-color: var(--accent); border-width: 5.5px; }
     .range-opt-main { flex: 1; min-width: 0; }

@@ -58,6 +58,7 @@ export function initializePrototype() {
       let currentProfileTab = 'saved';
       let currentAgentDetail = null;
       const pageHistory = ['home'];
+      let searchReturnsToGlobalSearch = false;
       const likedState = new Set();
       const favoritedState = new Set();
       const followingState = new Set();
@@ -914,8 +915,8 @@ export function initializePrototype() {
         var el = document.getElementById('searchRangeText');
         if (!el) return;
         el.textContent = searchState.range === 'public'
-          ? '公共信息'
-          : '个人信息 · ' + searchState.selectedSources.size + ' 个';
+          ? '公共信息源'
+          : '个人信息源 · ' + searchState.selectedSources.size + ' 个';
       }
 
       function renderSearchHome() {
@@ -1080,12 +1081,12 @@ export function initializePrototype() {
           checklist = subTabs + '<div class="range-checklist">' + listHTML + '</div>';
         }
         el.innerHTML =
-          '<div class="range-opt ' + (rangeDraft.range === 'public' ? 'selected' : '') + '" data-range-opt="public">' +
+          '<button type="button" class="range-opt ' + (rangeDraft.range === 'public' ? 'selected' : '') + '" data-range-opt="public" role="radio" aria-checked="' + (rangeDraft.range === 'public') + '">' +
             '<span class="range-opt-radio"></span><div class="range-opt-main"><div class="range-opt-name">公共信息源</div><div class="range-opt-sub">默认包含全部公共信息</div></div>' +
-          '</div>' +
-          '<div class="range-opt ' + (rangeDraft.range === 'mine' ? 'selected' : '') + '" data-range-opt="mine">' +
+          '</button>' +
+          '<button type="button" class="range-opt ' + (rangeDraft.range === 'mine' ? 'selected' : '') + '" data-range-opt="mine" role="radio" aria-checked="' + (rangeDraft.range === 'mine') + '">' +
             '<span class="range-opt-radio"></span><div class="range-opt-main"><div class="range-opt-name">个人信息源</div><div class="range-opt-sub">已勾选 ' + rangeDraft.selected.size + ' 个 · 自建与已加入</div></div>' +
-          '</div>' +
+          '</button>' +
           checklist;
         el.querySelectorAll('[data-range-opt]').forEach(function (opt) {
           opt.onclick = function () { rangeDraft.range = opt.dataset.rangeOpt; renderRangeOptions(); };
@@ -2573,6 +2574,7 @@ export function initializePrototype() {
         gsRenderHistory();
       });
       document.getElementById('gsSourceEntry').addEventListener('click', function () {
+        searchReturnsToGlobalSearch = true;
         closeGlobalSearch();
         switchPage('search');
       });
@@ -2751,8 +2753,14 @@ export function initializePrototype() {
       });
 
       document.getElementById('searchPageBack').addEventListener('click', function () {
-        if (pageHistory.length > 1) pageHistory.pop();
-        switchPage(pageHistory.pop() || 'home', { skipHistory: true });
+        if (pageHistory[pageHistory.length - 1] === 'search') pageHistory.pop();
+        var previousPage = pageHistory[pageHistory.length - 1] || 'home';
+        switchPage(previousPage, { skipHistory: true });
+        if (searchReturnsToGlobalSearch) {
+          searchReturnsToGlobalSearch = false;
+          globalSearchPage.classList.add('show');
+          setTimeout(function () { gsInput.focus(); }, 40);
+        }
       });
 
       document.querySelectorAll('[data-nav-back]').forEach(function (btn) {
