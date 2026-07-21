@@ -562,12 +562,26 @@
     .drawer-profile strong { display: block; font-size: 17px; }
     .drawer-profile span { display: block; margin-top: 5px; color: var(--text-secondary); font-size: 12px; }
     .drawer-menu { display: grid; gap: 4px; margin-top: 14px; }
+    .drawer-divider {
+      height: 1px;
+      margin: 11px 10px;
+      background: rgba(156,163,175,.24);
+    }
     .drawer-item { width: 100%; min-height: 52px; display: grid; grid-template-columns: 34px 1fr 18px; gap: 10px; align-items: center; padding: 0 10px; border: none; border-radius: 13px; background: transparent; color: var(--text-primary); text-align: left; }
     .drawer-item:active { background: var(--bg); }
     .drawer-item-icon { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; color: var(--accent); background: var(--accent-light); }
     .drawer-item-label { font-size: 14px; font-weight: 750; }
     .drawer-chevron { color: var(--text-tertiary); font-size: 20px; }
     .drawer-close { position: absolute; left: 274px; top: 18px; width: 32px; height: 32px; border: none; border-radius: 50%; background: var(--bg); color: var(--text-secondary); font-size: 20px; }
+
+    .dynamic-back {
+      position: absolute; left: 14px;
+      width: 36px; height: 36px;
+      border: 1px solid rgba(226,229,235,.74);
+      background: rgba(255,255,255,.72);
+      box-shadow: 0 4px 14px rgba(15,23,42,.08), inset 0 1px 0 rgba(255,255,255,.9);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    }
 
     .simple-page { background: radial-gradient(circle at 90% 4%, rgba(255,139,33,.09), transparent 28%), linear-gradient(165deg,#f8f9fb,#eef1f5); }
     .simple-page-body { padding: 20px 16px 100px; }
@@ -4559,8 +4573,8 @@
       <div class="feed-panel" id="feedPanel" hidden>
         <header class="top-header">
           <div class="main-tab">
-            <button class="profile-entry" type="button" data-open-profile-drawer aria-label="打开个人中心" style="position:absolute;left:14px">
-              <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=120&q=80" alt="Simiy">
+            <button class="icon-btn dynamic-back" id="dynamicBackBtn" type="button" aria-label="返回工作台">
+              <svg class="icon" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg>
             </button>
             <div class="main-tab-inner">
               <button class="top-tab active" data-tab="discover">发现</button>
@@ -4589,9 +4603,11 @@
         <nav class="drawer-menu">
           <button class="drawer-item" type="button" data-drawer-page="personalInfo"><span class="drawer-item-icon">◉</span><span class="drawer-item-label">个人信息</span><span class="drawer-chevron">›</span></button>
           <button class="drawer-item" type="button" data-drawer-page="accountSettings"><span class="drawer-item-icon">⚙</span><span class="drawer-item-label">设置</span><span class="drawer-chevron">›</span></button>
+          <div class="drawer-divider" role="separator" aria-hidden="true"></div>
           <button class="drawer-item" type="button" data-drawer-page="invite"><span class="drawer-item-icon">+</span><span class="drawer-item-label">邀请好友</span><span class="drawer-chevron">›</span></button>
           <button class="drawer-item" type="button" data-drawer-page="dynamic"><span class="drawer-item-icon">◇</span><span class="drawer-item-label">动态</span><span class="drawer-chevron">›</span></button>
           <button class="drawer-item" type="button" data-drawer-page="myShares"><span class="drawer-item-icon">↗</span><span class="drawer-item-label">我的分享</span><span class="drawer-chevron">›</span></button>
+          <div class="drawer-divider" role="separator" aria-hidden="true"></div>
           <button class="drawer-item" type="button" data-drawer-page="superTasks"><span class="drawer-item-icon">◎</span><span class="drawer-item-label">自动化任务</span><span class="drawer-chevron">›</span></button>
         </nav>
       </div>
@@ -7230,7 +7246,7 @@
           item.classList.toggle('active', item.dataset.nav === navActive);
         });
         if (currentPage === 'home') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        else if (currentPage === 'dynamic') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderFeed(getVisibleItems()); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        else if (currentPage === 'dynamic') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderFeed(getVisibleItems()); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'profile') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderProfileFeed(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'agent') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderAgentFeed(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'message') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderConvList(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
@@ -8120,6 +8136,7 @@
         button.addEventListener('click', function () { setProfileDrawer(true); });
       });
       document.getElementById('profileDrawerClose').addEventListener('click', function () { setProfileDrawer(false); });
+      document.getElementById('dynamicBackBtn').addEventListener('click', function () { switchPage('home'); });
       profileDrawer.addEventListener('click', function (event) {
         if (event.target === profileDrawer) setProfileDrawer(false);
         var entry = event.target.closest('[data-drawer-page]');
@@ -8968,7 +8985,7 @@
 
       /* ─── SCROLL HIDE NAV ─── */
       let lastScrollY = 0, downDist = 0, upDist = 0;
-      var navHidePages = ['contacts', 'contactChat', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole', 'personalInfo', 'accountSettings', 'invite', 'myShares'];
+      var navHidePages = ['dynamic', 'contacts', 'contactChat', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole', 'personalInfo', 'accountSettings', 'invite', 'myShares'];
       window.addEventListener('scroll', function () {
         if (navHidePages.includes(currentPage)) { bottomNav.classList.add('hide'); return; }
         const y = window.scrollY || document.documentElement.scrollTop;
