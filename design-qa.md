@@ -54,6 +54,7 @@
 - Search range final pass: 重新捕获公共、个人单选、个人全选和与我共享四种状态；弹层比例、橙色状态、按钮数量和列表结构均通过，无新的 P0/P1/P2。
 - Latest search range initial pass: 旧版将选中统计放在说明行，并以“全选”占据 Tab 右侧，无法承担仅看已选的筛选语义；按新参考改为同行 chip，并新增名称搜索与跨分组来源标签。
 - Latest search range final pass: 捕获默认列表与仅看已选两个状态，生成 `range-search-comparison.png` 与 `range-selected-comparison.png`；名称搜索、chip 状态、默认选中组合、来源标签和确认数量均与参考一致，无遗留 P0/P1/P2。
+- Independent filter correction: “已选 N”激活时两个分组 Tab 均取消高亮；点击任一分组 Tab 会退出仅看已选并恢复对应 Tab 高亮。应用内浏览器验证通过。
 
 **Follow-up Polish**
 

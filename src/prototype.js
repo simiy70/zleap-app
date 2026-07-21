@@ -1220,8 +1220,8 @@ export function initializePrototype() {
             return inScope && matchesName;
           });
           var subTabs = '<div class="range-source-tabs">' +
-            '<button type="button" class="range-subtab ' + (rangeDraft.sub === 'own' ? 'active' : '') + '" data-range-sub="own">我的信息源</button>' +
-            '<button type="button" class="range-subtab ' + (rangeDraft.sub === 'shared' ? 'active' : '') + '" data-range-sub="shared">与我共享</button>' +
+            '<button type="button" class="range-subtab ' + (!rangeDraft.selectedOnly && rangeDraft.sub === 'own' ? 'active' : '') + '" data-range-sub="own" aria-pressed="' + (!rangeDraft.selectedOnly && rangeDraft.sub === 'own') + '">我的信息源</button>' +
+            '<button type="button" class="range-subtab ' + (!rangeDraft.selectedOnly && rangeDraft.sub === 'shared' ? 'active' : '') + '" data-range-sub="shared" aria-pressed="' + (!rangeDraft.selectedOnly && rangeDraft.sub === 'shared') + '">与我共享</button>' +
             '<button type="button" class="range-selected-chip ' + (rangeDraft.selectedOnly ? 'active' : '') + '" data-range-selected-only aria-pressed="' + rangeDraft.selectedOnly + '"><img src="/check.svg" alt=""><span>已选 ' + rangeDraft.selected.size + '</span></button>' +
           '</div>';
           var listHTML = list.length
