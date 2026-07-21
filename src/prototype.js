@@ -741,8 +741,9 @@ export function initializePrototype() {
             return;
           }
           if (item.dataset.convId === 'audio-ast') {
-            // 录音助手功能已在本版 demo 下线，仅保留入口
-            showToast('录音助手功能暂未开放');
+            markAudioAssistantEntryViewed();
+            switchPage('audio');
+            return;
           }
         };
       }
