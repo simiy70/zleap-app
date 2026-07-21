@@ -443,7 +443,7 @@
       position: fixed;
       left: 50%; bottom: calc(14px + env(safe-area-inset-bottom, 0px));
       z-index: 50;
-      width: min(360px, calc(100% - 24px));
+      width: min(348px, calc(100% - 28px));
       display: flex;
       align-items: center;
       gap: 8px;
@@ -454,15 +454,15 @@
     .bottom-inner {
       flex: 1;
       min-width: 0;
-      height: 60px;
+      height: 58px;
       display: flex; align-items: center; justify-content: space-around;
       padding: 0 6px;
       background: rgba(255,255,255,.68);
       backdrop-filter: blur(26px) saturate(1.9);
       -webkit-backdrop-filter: blur(26px) saturate(1.9);
       border: 1px solid rgba(255,255,255,.65);
-      border-radius: 30px;
-      box-shadow: 0 12px 34px rgba(15,23,42,.16);
+      border-radius: 29px;
+      box-shadow: 0 10px 28px rgba(15,23,42,.13);
     }
     .nav-item {
       flex: 1;
@@ -474,9 +474,106 @@
       transition: var(--transition);
     }
     .nav-item span { display: none; }
-    .nav-item .icon { width: 22px; height: 22px; }
+    .nav-item .icon { width: 23px; height: 23px; }
     .nav-item.active { color: var(--accent); }
     .nav-item.active .icon { stroke: var(--accent); }
+
+    /* ═══════════════════ WORKBENCH ═══════════════════ */
+    .workbench-panel {
+      min-height: calc(100dvh - 50px); padding-bottom: calc(var(--nav-h) + 34px);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(255,139,33,.11), transparent 29%),
+        radial-gradient(circle at 92% 26%, rgba(80,124,255,.09), transparent 32%),
+        linear-gradient(165deg, #f8f9fb 0%, #eef1f5 100%);
+    }
+    .workbench-panel[hidden], .feed-panel[hidden] { display: none; }
+    .workbench-header {
+      position: sticky; top: 50px; z-index: 60;
+      height: 62px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px; background: rgba(255,255,255,.58);
+      border-bottom: 1px solid rgba(255,255,255,.74); backdrop-filter: blur(24px) saturate(1.45);
+      -webkit-backdrop-filter: blur(24px) saturate(1.45);
+    }
+    .profile-entry {
+      width: 38px; height: 38px; padding: 0; overflow: hidden;
+      border: 2px solid #fff; border-radius: 50%; background: #eceff3;
+      box-shadow: 0 0 0 1px var(--border-strong), 0 4px 12px rgba(15,23,42,.1);
+    }
+    .profile-entry img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .workbench-title { position: absolute; left: 50%; transform: translateX(-50%); font-size: 18px; font-weight: 900; letter-spacing: -.4px; }
+    .workbench-content { padding: 22px 16px 0; }
+    .workbench-greeting { margin-bottom: 18px; }
+    .workbench-greeting strong { display: block; font-size: 24px; line-height: 1.25; letter-spacing: -.7px; }
+    .workbench-greeting span { display: block; margin-top: 6px; color: var(--text-secondary); font-size: 13px; }
+    .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .metric-card {
+      min-height: 146px; padding: 16px; text-align: left;
+      border: 1px solid rgba(255,255,255,.82); border-radius: 20px;
+      background: rgba(255,255,255,.62); box-shadow: 0 10px 30px rgba(15,23,42,.07), inset 0 1px 0 rgba(255,255,255,.75);
+      backdrop-filter: blur(20px) saturate(1.25); -webkit-backdrop-filter: blur(20px) saturate(1.25);
+      position: relative; overflow: hidden;
+    }
+    .metric-card::after { content: ""; position: absolute; right: -28px; bottom: -32px; width: 92px; height: 92px; border-radius: 50%; background: var(--metric-tint, #fff4e8); opacity: .55; filter: blur(4px); }
+    .metric-card:active { transform: scale(.98); }
+    .metric-icon { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 11px; color: var(--metric-color, var(--accent)); background: var(--metric-tint, var(--accent-light)); }
+    .metric-value { margin-top: 18px; font-size: 28px; line-height: 1; font-weight: 900; letter-spacing: -1px; }
+    .metric-label { margin-top: 8px; color: var(--text-secondary); font-size: 12px; font-weight: 700; }
+    .metric-trend { margin-top: 5px; color: #35a85a; font-size: 10px; font-weight: 700; }
+    .dashboard-section { margin-top: 24px; }
+    .dashboard-section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .dashboard-section-head strong { font-size: 16px; }
+    .dashboard-section-head span { color: var(--text-tertiary); font-size: 12px; }
+    .agent-board { display: grid; gap: 10px; }
+    .agent-board-item { display: grid; grid-template-columns: 42px 1fr auto; gap: 11px; align-items: center; padding: 13px; border: 1px solid rgba(255,255,255,.82); border-radius: 16px; background: rgba(255,255,255,.58); box-shadow: inset 0 1px 0 rgba(255,255,255,.7); backdrop-filter: blur(18px); }
+    .board-avatar { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; color: #fff; font-size: 14px; font-weight: 900; background: linear-gradient(135deg,#ff9d42,#ff7627); }
+    .board-name { font-size: 14px; font-weight: 800; }
+    .board-task { margin-top: 4px; color: var(--text-secondary); font-size: 11px; }
+    .board-state { padding: 5px 8px; border-radius: 999px; background: #eaf8ed; color: #2d9147; font-size: 10px; font-weight: 800; }
+
+    /* 个人中心左侧抽屉 */
+    .profile-drawer {
+      position: fixed; inset: 0; z-index: 150; margin: 0 auto; max-width: 390px;
+      background: rgba(15,23,42,.26); opacity: 0; pointer-events: none;
+      backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
+      transition: opacity .24s ease;
+    }
+    .profile-drawer.show { opacity: 1; pointer-events: auto; }
+    .drawer-panel {
+      width: 318px; max-width: 84%; height: 100%; padding: 58px 18px 28px;
+      background: rgba(249,250,252,.84); box-shadow: 20px 0 50px rgba(15,23,42,.16);
+      border-right: 1px solid rgba(255,255,255,.84); backdrop-filter: blur(30px) saturate(1.45); -webkit-backdrop-filter: blur(30px) saturate(1.45);
+      transform: translateX(-104%); transition: transform .3s cubic-bezier(.22,1,.36,1);
+      overflow-y: auto;
+    }
+    .profile-drawer.show .drawer-panel { transform: translateX(0); }
+    .drawer-profile { display: flex; align-items: center; gap: 13px; padding: 12px 6px 22px; border-bottom: 1px solid var(--border); }
+    .drawer-avatar { width: 54px; height: 54px; border-radius: 17px; object-fit: cover; }
+    .drawer-profile strong { display: block; font-size: 17px; }
+    .drawer-profile span { display: block; margin-top: 5px; color: var(--text-secondary); font-size: 12px; }
+    .drawer-menu { display: grid; gap: 4px; margin-top: 14px; }
+    .drawer-item { width: 100%; min-height: 52px; display: grid; grid-template-columns: 34px 1fr 18px; gap: 10px; align-items: center; padding: 0 10px; border: none; border-radius: 13px; background: transparent; color: var(--text-primary); text-align: left; }
+    .drawer-item:active { background: var(--bg); }
+    .drawer-item-icon { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; color: var(--accent); background: var(--accent-light); }
+    .drawer-item-label { font-size: 14px; font-weight: 750; }
+    .drawer-chevron { color: var(--text-tertiary); font-size: 20px; }
+    .drawer-close { position: absolute; left: 274px; top: 18px; width: 32px; height: 32px; border: none; border-radius: 50%; background: var(--bg); color: var(--text-secondary); font-size: 20px; }
+
+    .simple-page { background: radial-gradient(circle at 90% 4%, rgba(255,139,33,.09), transparent 28%), linear-gradient(165deg,#f8f9fb,#eef1f5); }
+    .simple-page-body { padding: 20px 16px 100px; }
+    .simple-card { padding: 18px; border: 1px solid rgba(255,255,255,.82); border-radius: 18px; background: rgba(255,255,255,.64); box-shadow: 0 10px 30px rgba(15,23,42,.07), inset 0 1px 0 rgba(255,255,255,.76); backdrop-filter: blur(20px); }
+    .simple-profile-card { display: flex; align-items: center; gap: 14px; }
+    .simple-profile-card img { width: 64px; height: 64px; border-radius: 18px; object-fit: cover; }
+    .simple-profile-card strong { display: block; font-size: 18px; }
+    .simple-profile-card span { display: block; margin-top: 5px; color: var(--text-secondary); font-size: 13px; }
+    .simple-list { margin-top: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,.82); border-radius: 18px; background: rgba(255,255,255,.62); box-shadow: inset 0 1px 0 rgba(255,255,255,.72); backdrop-filter: blur(20px); }
+    .simple-row { min-height: 54px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .simple-row:last-child { border-bottom: none; }
+    .simple-row span:last-child { color: var(--text-tertiary); font-size: 13px; }
+    .invite-card { padding: 28px 22px; text-align: center; }
+    .invite-graphic { width: 76px; height: 76px; display: grid; place-items: center; margin: 0 auto 16px; border-radius: 24px; background: var(--accent-light); color: var(--accent); font-size: 32px; }
+    .invite-card h2 { font-size: 20px; }
+    .invite-card p { margin: 10px 0 20px; color: var(--text-secondary); font-size: 13px; line-height: 1.65; }
+    .primary-button { width: 100%; height: 46px; border: none; border-radius: 14px; background: var(--accent); color: #fff; font-size: 14px; font-weight: 800; }
 
     /* ═══════════════════ PROFILE PAGE ═══════════════════ */
     .profile-page, .screen-page {
@@ -2353,11 +2450,14 @@
       padding: 6px;
       border: none;
       border-radius: 50%;
-      background: rgba(255,255,255,.82);
+      background: rgba(255,255,255,.64);
+      border: 1px solid rgba(255,255,255,.78);
+      backdrop-filter: blur(22px) saturate(1.5);
+      -webkit-backdrop-filter: blur(22px) saturate(1.5);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 12px 34px rgba(15,23,42,.16);
+      box-shadow: 0 12px 34px rgba(15,23,42,.14), inset 0 1px 0 rgba(255,255,255,.82);
       cursor: pointer;
       transition: transform .18s ease, box-shadow .18s ease;
     }
@@ -4401,24 +4501,111 @@
 
     <!-- Main Feed Shell -->
     <div class="main-feed-shell">
-      <header class="top-header">
-        <div class="main-tab">
-          <div class="main-tab-inner">
-            <button class="top-tab active" data-tab="discover">发现</button>
-            <button class="top-tab" data-tab="following">关注</button>
+      <section class="workbench-panel" id="workbenchPanel">
+        <header class="workbench-header">
+          <button class="profile-entry" type="button" data-open-profile-drawer aria-label="打开个人中心">
+            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=120&q=80" alt="Simiy">
+          </button>
+          <div class="workbench-title">工作台</div>
+          <button class="icon-btn" id="workbenchSearchBtn" type="button" aria-label="搜索">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg>
+          </button>
+        </header>
+        <div class="workbench-content">
+          <div class="workbench-greeting">
+            <strong>早上好，Simiy</strong>
+            <span>今天的重点信息和 Agent 进度已经准备好了</span>
           </div>
-          <div class="header-actions">
-            <button class="icon-btn" id="globalSearchBtn" type="button" aria-label="搜索">
-              <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg>
+          <div class="metric-grid">
+            <button class="metric-card" type="button" data-dashboard-action="insights">
+              <span class="metric-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 19V9"></path><path d="M10 19V5"></path><path d="M16 19v-7"></path><path d="M22 19V3"></path></svg></span>
+              <div class="metric-value">28</div><div class="metric-label">今日洞察数量</div><div class="metric-trend">↑ 12% 较昨日</div>
+            </button>
+            <button class="metric-card" type="button" data-dashboard-action="activity" style="--metric-color:#6d5ce7;--metric-tint:#f0edff">
+              <span class="metric-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M8 12h8"></path><path d="M12 8v8"></path><circle cx="12" cy="12" r="9"></circle></svg></span>
+              <div class="metric-value">16</div><div class="metric-label">Agent 动态数</div><div class="metric-trend">5 个任务进行中</div>
+            </button>
+            <button class="metric-card" type="button" data-dashboard-action="sources" style="--metric-color:#1683d8;--metric-tint:#e9f5ff">
+              <span class="metric-icon"><svg class="icon" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"></path><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"></path></svg></span>
+              <div class="metric-value">24<span style="font-size:14px;color:var(--text-tertiary)">/25</span></div><div class="metric-label">信息源状态监控</div><div class="metric-trend">96% 运行正常</div>
+            </button>
+            <button class="metric-card" type="button" data-dashboard-action="board" style="--metric-color:#d98719;--metric-tint:#fff4dd">
+              <span class="metric-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"></rect><rect x="14" y="3" width="7" height="7" rx="2"></rect><rect x="3" y="14" width="7" height="7" rx="2"></rect><rect x="14" y="14" width="7" height="7" rx="2"></rect></svg></span>
+              <div class="metric-value">8</div><div class="metric-label">Agent 工作台看板</div><div class="metric-trend">7 个状态正常</div>
             </button>
           </div>
+          <section class="dashboard-section">
+            <div class="dashboard-section-head"><strong>Agent 运行中</strong><span>实时更新</span></div>
+            <div class="agent-board">
+              <div class="agent-board-item"><div class="board-avatar">AI</div><div><div class="board-name">行业洞察 Agent</div><div class="board-task">正在汇总今日重点动态</div></div><span class="board-state">运行中</span></div>
+              <div class="agent-board-item"><div class="board-avatar" style="background:linear-gradient(135deg,#6377e8,#815ee8)">风</div><div><div class="board-name">风险监控 Agent</div><div class="board-task">已发现 2 条需要关注的信号</div></div><span class="board-state">运行中</span></div>
+              <div class="agent-board-item"><div class="board-avatar" style="background:linear-gradient(135deg,#2ebc72,#16a0a0)">研</div><div><div class="board-name">竞品研究 Agent</div><div class="board-task">上次同步于 10 分钟前</div></div><span class="board-state">正常</span></div>
+            </div>
+          </section>
         </div>
-        <div class="category-filter" id="categoryFilter"></div>
-        <div class="agent-filter" id="agentFilter"></div>
-      </header>
+      </section>
 
-      <section class="feed" id="feed"></section>
+      <div class="feed-panel" id="feedPanel" hidden>
+        <header class="top-header">
+          <div class="main-tab">
+            <button class="profile-entry" type="button" data-open-profile-drawer aria-label="打开个人中心" style="position:absolute;left:14px">
+              <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=120&q=80" alt="Simiy">
+            </button>
+            <div class="main-tab-inner">
+              <button class="top-tab active" data-tab="discover">发现</button>
+              <button class="top-tab" data-tab="following">关注</button>
+            </div>
+            <div class="header-actions">
+              <button class="icon-btn" id="globalSearchBtn" type="button" aria-label="搜索">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg>
+              </button>
+            </div>
+          </div>
+          <div class="category-filter" id="categoryFilter"></div>
+          <div class="agent-filter" id="agentFilter"></div>
+        </header>
+        <section class="feed" id="feed"></section>
+      </div>
     </div>
+
+    <aside class="profile-drawer" id="profileDrawer" aria-hidden="true">
+      <div class="drawer-panel" role="dialog" aria-label="个人中心">
+        <button class="drawer-close" id="profileDrawerClose" type="button" aria-label="关闭">×</button>
+        <div class="drawer-profile">
+          <img class="drawer-avatar" src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=160&q=80" alt="Simiy">
+          <div><strong>Simiy</strong><span>智跃 Zleap · 产品组</span></div>
+        </div>
+        <nav class="drawer-menu">
+          <button class="drawer-item" type="button" data-drawer-page="personalInfo"><span class="drawer-item-icon">◉</span><span class="drawer-item-label">个人信息</span><span class="drawer-chevron">›</span></button>
+          <button class="drawer-item" type="button" data-drawer-page="accountSettings"><span class="drawer-item-icon">⚙</span><span class="drawer-item-label">设置</span><span class="drawer-chevron">›</span></button>
+          <button class="drawer-item" type="button" data-drawer-page="invite"><span class="drawer-item-icon">+</span><span class="drawer-item-label">邀请好友</span><span class="drawer-chevron">›</span></button>
+          <button class="drawer-item" type="button" data-drawer-page="dynamic"><span class="drawer-item-icon">◇</span><span class="drawer-item-label">动态</span><span class="drawer-chevron">›</span></button>
+          <button class="drawer-item" type="button" data-drawer-page="myShares"><span class="drawer-item-icon">↗</span><span class="drawer-item-label">我的分享</span><span class="drawer-chevron">›</span></button>
+          <button class="drawer-item" type="button" data-drawer-page="superTasks"><span class="drawer-item-icon">◎</span><span class="drawer-item-label">自动化任务</span><span class="drawer-chevron">›</span></button>
+        </nav>
+      </div>
+    </aside>
+
+    <section class="screen-page simple-page" id="personalInfoPage">
+      <div class="mini-status"><span>MS</span><span>9:41</span><span>100%</span></div>
+      <div class="screen-title-bar with-back"><button class="screen-back" type="button" data-drawer-back>‹</button><span class="screen-title-center">个人信息</span><span></span></div>
+      <div class="simple-page-body"><div class="simple-card simple-profile-card"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=180&q=80" alt="Simiy"><div><strong>Simiy</strong><span>智跃 Zleap</span><span>产品组 · 产品经理</span></div></div><div class="simple-list"><div class="simple-row"><span>姓名</span><span>Simiy</span></div><div class="simple-row"><span>组织</span><span>智跃 Zleap</span></div><div class="simple-row"><span>部门</span><span>产品组</span></div></div></div>
+    </section>
+    <section class="screen-page simple-page" id="accountSettingsPage">
+      <div class="mini-status"><span>MS</span><span>9:41</span><span>100%</span></div>
+      <div class="screen-title-bar with-back"><button class="screen-back" type="button" data-drawer-back>‹</button><span class="screen-title-center">设置</span><span></span></div>
+      <div class="simple-page-body"><div class="simple-list" style="margin-top:0"><div class="simple-row"><span>通知设置</span><span>›</span></div><div class="simple-row"><span>隐私与权限</span><span>›</span></div><div class="simple-row"><span>语言</span><span>简体中文 ›</span></div></div><div class="simple-list"><div class="simple-row"><span>帮助与反馈</span><span>›</span></div><div class="simple-row"><span>关于 Zleap</span><span>v2.6.0 ›</span></div></div></div>
+    </section>
+    <section class="screen-page simple-page" id="invitePage">
+      <div class="mini-status"><span>MS</span><span>9:41</span><span>100%</span></div>
+      <div class="screen-title-bar with-back"><button class="screen-back" type="button" data-drawer-back>‹</button><span class="screen-title-center">邀请好友</span><span></span></div>
+      <div class="simple-page-body"><div class="simple-card invite-card"><div class="invite-graphic">☺</div><h2>一起用 Agent 高效工作</h2><p>将邀请链接分享给好友，加入后即可共享信息和协作任务。</p><button class="primary-button" type="button" id="copyInviteBtn">复制邀请链接</button></div></div>
+    </section>
+    <section class="screen-page simple-page" id="mySharesPage">
+      <div class="mini-status"><span>MS</span><span>9:41</span><span>100%</span></div>
+      <div class="screen-title-bar with-back"><button class="screen-back" type="button" data-drawer-back>‹</button><span class="screen-title-center">我的分享</span><span></span></div>
+      <div class="simple-page-body"><div class="simple-card"><strong style="font-size:16px">最近分享</strong><div class="simple-list"><div class="simple-row"><span>AI 行业趋势周报</span><span>今天</span></div><div class="simple-row"><span>客户 A 风险信号</span><span>昨天</span></div><div class="simple-row"><span>2026 产品机会清单</span><span>7 月 18 日</span></div></div></div></div>
+    </section>
 
     <!-- Profile Page -->
     <section class="profile-page" id="profilePage">
@@ -4827,18 +5014,14 @@
       <div class="bottom-inner">
         <button class="nav-item active" data-nav="home">
           <svg class="icon" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 10v10h14V10"></path><path d="M9.5 20v-6h5v6"></path></svg>
-          <span>首页</span>
+          <span>工作台</span>
         </button>
         <button class="nav-item" data-nav="message">
           <svg class="icon" viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 4V5Z"></path><path d="M8 9h8"></path><path d="M8 13h5"></path></svg>
           <span>消息</span>
         </button>
-        <button class="nav-item" data-nav="profile">
-          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
-          <span>我的</span>
-        </button>
       </div>
-      <button class="super-agent-fab has-unread" id="superAgentFab" type="button" aria-label="打开 Simiy的agent">
+      <button class="super-agent-fab has-unread" id="superAgentFab" type="button" data-nav="superAgent" aria-label="打开超级 Agent">
         <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=144&q=80" alt="Simiy的agent">
       </button>
     </nav>
@@ -5627,6 +5810,9 @@
       const feed = document.getElementById('feed');
       const bottomNav = document.getElementById('bottomNav');
       const app = document.querySelector('.app');
+      const workbenchPanel = document.getElementById('workbenchPanel');
+      const feedPanel = document.getElementById('feedPanel');
+      const profileDrawer = document.getElementById('profileDrawer');
       const profilePage = document.getElementById('profilePage');
       const profileFeed = document.getElementById('profileFeed');
       const agentPage = document.getElementById('agentPage');
@@ -5653,6 +5839,11 @@
       const superAgentRolePage = document.getElementById('superAgentRolePage');
       const superAgentFab = document.getElementById('superAgentFab');
       const superAgentPageBody = document.getElementById('superAgentPageBody');
+      const personalInfoPage = document.getElementById('personalInfoPage');
+      const accountSettingsPage = document.getElementById('accountSettingsPage');
+      const invitePage = document.getElementById('invitePage');
+      const mySharesPage = document.getElementById('mySharesPage');
+      let superTasksReturnPage = 'superSettings';
       let eventDetailReturn = null;
       if (eventDetailBack && eventDetailPage) {
         eventDetailBack.addEventListener('click', function () {
@@ -6994,9 +7185,11 @@
       }
 
       function switchPage(page, options) {
-        currentPage = ['profile', 'agent', 'message', 'contacts', 'contactChat', 'search', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole'].includes(page) ? page : 'home';
+        currentPage = ['dynamic', 'profile', 'agent', 'message', 'contacts', 'contactChat', 'search', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole', 'personalInfo', 'accountSettings', 'invite', 'myShares'].includes(page) ? page : 'home';
         app.classList.toggle('profile-mode', currentPage === 'profile');
-        app.classList.toggle('alt-mode', currentPage !== 'home' && currentPage !== 'profile');
+        app.classList.toggle('alt-mode', currentPage !== 'home' && currentPage !== 'dynamic' && currentPage !== 'profile');
+        if (workbenchPanel) workbenchPanel.hidden = currentPage !== 'home';
+        if (feedPanel) feedPanel.hidden = currentPage !== 'dynamic';
         profilePage.classList.toggle('show', currentPage === 'profile');
         agentPage.classList.toggle('show', currentPage === 'agent');
         messagePage.classList.toggle('show', currentPage === 'message');
@@ -7007,6 +7200,10 @@
         if (superAgentSettingsPage) superAgentSettingsPage.classList.toggle('show', currentPage === 'superSettings');
         if (superAgentTasksPage) superAgentTasksPage.classList.toggle('show', currentPage === 'superTasks');
         if (superAgentRolePage) superAgentRolePage.classList.toggle('show', currentPage === 'superRole');
+        if (personalInfoPage) personalInfoPage.classList.toggle('show', currentPage === 'personalInfo');
+        if (accountSettingsPage) accountSettingsPage.classList.toggle('show', currentPage === 'accountSettings');
+        if (invitePage) invitePage.classList.toggle('show', currentPage === 'invite');
+        if (mySharesPage) mySharesPage.classList.toggle('show', currentPage === 'myShares');
         audioPage.classList.toggle('show', currentPage === 'audio');
         audioSearchPage.classList.toggle('show', currentPage === 'audioSearch');
         if (!options || !options.skipHistory) {
@@ -7014,12 +7211,16 @@
         }
         // Nav active: audio & audioSearch both highlight "message" since audio is sub-page of message
         var navActive = currentPage;
-        if (navActive === 'contacts' || navActive === 'contactChat' || navActive === 'audio' || navActive === 'audioSearch' || navActive === 'superAgent' || navActive === 'superSettings' || navActive === 'superTasks' || navActive === 'superRole') navActive = 'message';
+        if (navActive === 'contacts' || navActive === 'contactChat' || navActive === 'audio' || navActive === 'audioSearch') navActive = 'message';
+        if (navActive === 'dynamic' || navActive === 'personalInfo' || navActive === 'accountSettings' || navActive === 'invite' || navActive === 'myShares') navActive = '';
+        if (navActive === 'superSettings' || navActive === 'superTasks' || navActive === 'superRole') navActive = 'superAgent';
         if (navActive === 'agent') navActive = 'profile';
         document.querySelectorAll('.nav-item').forEach(function (item) {
           item.classList.toggle('active', item.dataset.nav === navActive);
         });
-        if (currentPage === 'profile') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderProfileFeed(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        if (currentPage === 'home') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        else if (currentPage === 'dynamic') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderFeed(getVisibleItems()); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        else if (currentPage === 'profile') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderProfileFeed(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'agent') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderAgentFeed(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'message') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderConvList(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'contacts') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderContactBook(); }
@@ -7029,9 +7230,10 @@
         else if (currentPage === 'superSettings') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSuperSettings(); }
         else if (currentPage === 'superTasks') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSuperTasks(); }
         else if (currentPage === 'superRole') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); }
+        else if (currentPage === 'personalInfo' || currentPage === 'accountSettings' || currentPage === 'invite' || currentPage === 'myShares') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'audio') { bottomNav.classList.add('hide'); audioFabBar.classList.add('visible'); renderAudioList(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'audioSearch') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderAudioSearch(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        else { audioFabBar.classList.remove('visible'); renderFeed(getVisibleItems()); }
+        else { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); }
         updateSuperFab();
       }
 
@@ -7898,6 +8100,36 @@
         switchPage(nav.dataset.nav);
       });
 
+      function setProfileDrawer(open) {
+        if (!profileDrawer) return;
+        profileDrawer.classList.toggle('show', open);
+        profileDrawer.setAttribute('aria-hidden', open ? 'false' : 'true');
+      }
+      document.querySelectorAll('[data-open-profile-drawer]').forEach(function (button) {
+        button.addEventListener('click', function () { setProfileDrawer(true); });
+      });
+      document.getElementById('profileDrawerClose').addEventListener('click', function () { setProfileDrawer(false); });
+      profileDrawer.addEventListener('click', function (event) {
+        if (event.target === profileDrawer) setProfileDrawer(false);
+        var entry = event.target.closest('[data-drawer-page]');
+        if (!entry) return;
+        var targetPage = entry.dataset.drawerPage;
+        if (targetPage === 'superTasks') superTasksReturnPage = 'home';
+        setProfileDrawer(false);
+        switchPage(targetPage);
+      });
+      document.querySelectorAll('[data-drawer-back]').forEach(function (button) {
+        button.addEventListener('click', function () { switchPage('home'); setTimeout(function () { setProfileDrawer(true); }, 80); });
+      });
+      document.getElementById('workbenchSearchBtn').addEventListener('click', openGlobalSearch);
+      document.querySelectorAll('[data-dashboard-action]').forEach(function (card) {
+        card.addEventListener('click', function () {
+          var messages = { insights: '已打开今日洞察', activity: '已打开 Agent 动态', sources: '信息源运行正常', board: '已打开 Agent 工作台看板' };
+          showToast(messages[card.dataset.dashboardAction] || '已打开');
+        });
+      });
+      document.getElementById('copyInviteBtn').addEventListener('click', function () { showToast('邀请链接已复制'); });
+
       /* ─── 全局搜索（顶部图标入口） ─── */
       var gsState = {
         history: ['文件传输', '开源', '荣耀', '客户 A 风险信号', 'CFO 预算表态', 'ARR 续费策略', 'AI 科研工具', 'Super Agent 使用记录', '多模态大模型', 'Anthropic Claude 3.7'],
@@ -8482,7 +8714,12 @@
       });
       document.getElementById('superAgentSettingsBtn').addEventListener('click', function () { switchPage('superSettings'); });
       document.getElementById('superSettingsBack').addEventListener('click', function () { switchPage('superAgent'); });
-      document.getElementById('superTasksBack').addEventListener('click', function () { switchPage('superSettings'); });
+      document.getElementById('superTasksBack').addEventListener('click', function () {
+        var target = superTasksReturnPage || 'superSettings';
+        superTasksReturnPage = 'superSettings';
+        switchPage(target);
+        if (target === 'home') setTimeout(function () { setProfileDrawer(true); }, 80);
+      });
       document.getElementById('superTasksNew').addEventListener('click', function () { switchPage('superTasks'); });
       document.getElementById('superAgentNewTopicBtn').addEventListener('click', startNewTopic);
       document.getElementById('superAgentSend').addEventListener('click', function () { sendSuperMessage(); });
@@ -8720,7 +8957,7 @@
 
       /* ─── SCROLL HIDE NAV ─── */
       let lastScrollY = 0, downDist = 0, upDist = 0;
-      var navHidePages = ['contacts', 'contactChat', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks'];
+      var navHidePages = ['contacts', 'contactChat', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole', 'personalInfo', 'accountSettings', 'invite', 'myShares'];
       window.addEventListener('scroll', function () {
         if (navHidePages.includes(currentPage)) { bottomNav.classList.add('hide'); return; }
         const y = window.scrollY || document.documentElement.scrollTop;
