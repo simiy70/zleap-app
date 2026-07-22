@@ -4606,11 +4606,11 @@
           <div><strong>Simiy</strong><span>智跃 Zleap · 产品组</span></div>
         </div>
         <nav class="drawer-menu">
-          <button class="drawer-item" type="button" data-drawer-page="personalInfo"><span class="drawer-item-icon">◉</span><span class="drawer-item-label">个人信息</span><span class="drawer-chevron">›</span></button>
           <button class="drawer-item" type="button" data-drawer-page="accountSettings"><span class="drawer-item-icon">⚙</span><span class="drawer-item-label">设置</span><span class="drawer-chevron">›</span></button>
-          <div class="drawer-divider" role="separator" aria-hidden="true"></div>
           <button class="drawer-item" type="button" data-drawer-page="invite"><span class="drawer-item-icon">+</span><span class="drawer-item-label">邀请好友</span><span class="drawer-chevron">›</span></button>
+          <div class="drawer-divider" role="separator" aria-hidden="true"></div>
           <button class="drawer-item" type="button" data-drawer-page="dynamic"><span class="drawer-item-icon">◇</span><span class="drawer-item-label">动态</span><span class="drawer-chevron">›</span></button>
+          <button class="drawer-item" type="button" data-drawer-page="myFavorites"><span class="drawer-item-icon">☆</span><span class="drawer-item-label">我的收藏</span><span class="drawer-chevron">›</span></button>
           <button class="drawer-item" type="button" data-drawer-page="myShares"><span class="drawer-item-icon">↗</span><span class="drawer-item-label">我的分享</span><span class="drawer-chevron">›</span></button>
           <div class="drawer-divider" role="separator" aria-hidden="true"></div>
           <button class="drawer-item" type="button" data-drawer-page="superTasks"><span class="drawer-item-icon">◎</span><span class="drawer-item-label">自动化任务</span><span class="drawer-chevron">›</span></button>
@@ -4632,6 +4632,11 @@
       <div class="mini-status"><span>MS</span><span>9:41</span><span>100%</span></div>
       <div class="screen-title-bar with-back"><button class="screen-back" type="button" data-drawer-back>‹</button><span class="screen-title-center">邀请好友</span><span></span></div>
       <div class="simple-page-body"><div class="simple-card invite-card"><div class="invite-graphic">☺</div><h2>一起用 Agent 高效工作</h2><p>将邀请链接分享给好友，加入后即可共享信息和协作任务。</p><button class="primary-button" type="button" id="copyInviteBtn">复制邀请链接</button></div></div>
+    </section>
+    <section class="screen-page simple-page" id="myFavoritesPage">
+      <div class="mini-status"><span>MS</span><span>9:41</span><span>100%</span></div>
+      <div class="screen-title-bar with-back"><button class="screen-back" type="button" data-drawer-back>‹</button><span class="screen-title-center">我的收藏</span><span></span></div>
+      <div class="simple-page-body"><div class="simple-card"><strong style="font-size:16px">最近收藏</strong><div class="simple-list"><div class="simple-row"><span>RAG vs. 微调：核心优化路径</span><span>今天</span></div><div class="simple-row"><span>AI 科研工作台发展趋势</span><span>昨天</span></div><div class="simple-row"><span>客户风险信号追踪</span><span>7 月 19 日</span></div></div></div></div>
     </section>
     <section class="screen-page simple-page" id="mySharesPage">
       <div class="mini-status"><span>MS</span><span>9:41</span><span>100%</span></div>
@@ -5057,7 +5062,7 @@
         </button>
       </div>
       <button class="super-agent-fab has-unread" id="superAgentFab" type="button" data-nav="superAgent" aria-label="打开超级 Agent">
-        <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=144&q=80" alt="Simiy的agent">
+        <img src="assets/super-agent-robot.png" alt="超级 Agent 机器人头像">
       </button>
     </nav>
   </main>
@@ -5877,6 +5882,7 @@
       const personalInfoPage = document.getElementById('personalInfoPage');
       const accountSettingsPage = document.getElementById('accountSettingsPage');
       const invitePage = document.getElementById('invitePage');
+      const myFavoritesPage = document.getElementById('myFavoritesPage');
       const mySharesPage = document.getElementById('mySharesPage');
       let superTasksReturnPage = 'superSettings';
       let eventDetailReturn = null;
@@ -7220,7 +7226,7 @@
       }
 
       function switchPage(page, options) {
-        currentPage = ['dynamic', 'profile', 'agent', 'message', 'contacts', 'contactChat', 'search', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole', 'personalInfo', 'accountSettings', 'invite', 'myShares'].includes(page) ? page : 'home';
+        currentPage = ['dynamic', 'profile', 'agent', 'message', 'contacts', 'contactChat', 'search', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole', 'personalInfo', 'accountSettings', 'invite', 'myFavorites', 'myShares'].includes(page) ? page : 'home';
         app.classList.toggle('profile-mode', currentPage === 'profile');
         app.classList.toggle('alt-mode', currentPage !== 'home' && currentPage !== 'dynamic' && currentPage !== 'profile');
         if (workbenchPanel) workbenchPanel.hidden = currentPage !== 'home';
@@ -7238,6 +7244,7 @@
         if (personalInfoPage) personalInfoPage.classList.toggle('show', currentPage === 'personalInfo');
         if (accountSettingsPage) accountSettingsPage.classList.toggle('show', currentPage === 'accountSettings');
         if (invitePage) invitePage.classList.toggle('show', currentPage === 'invite');
+        if (myFavoritesPage) myFavoritesPage.classList.toggle('show', currentPage === 'myFavorites');
         if (mySharesPage) mySharesPage.classList.toggle('show', currentPage === 'myShares');
         audioPage.classList.toggle('show', currentPage === 'audio');
         audioSearchPage.classList.toggle('show', currentPage === 'audioSearch');
@@ -7247,7 +7254,7 @@
         // Nav active: audio & audioSearch both highlight "message" since audio is sub-page of message
         var navActive = currentPage;
         if (navActive === 'contacts' || navActive === 'contactChat' || navActive === 'audio' || navActive === 'audioSearch') navActive = 'message';
-        if (navActive === 'dynamic' || navActive === 'personalInfo' || navActive === 'accountSettings' || navActive === 'invite' || navActive === 'myShares') navActive = '';
+        if (navActive === 'dynamic' || navActive === 'personalInfo' || navActive === 'accountSettings' || navActive === 'invite' || navActive === 'myFavorites' || navActive === 'myShares') navActive = '';
         if (navActive === 'superSettings' || navActive === 'superTasks' || navActive === 'superRole') navActive = 'superAgent';
         if (navActive === 'agent') navActive = 'profile';
         document.querySelectorAll('.nav-item').forEach(function (item) {
@@ -7265,7 +7272,7 @@
         else if (currentPage === 'superSettings') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSuperSettings(); }
         else if (currentPage === 'superTasks') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSuperTasks(); }
         else if (currentPage === 'superRole') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); }
-        else if (currentPage === 'personalInfo' || currentPage === 'accountSettings' || currentPage === 'invite' || currentPage === 'myShares') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        else if (currentPage === 'personalInfo' || currentPage === 'accountSettings' || currentPage === 'invite' || currentPage === 'myFavorites' || currentPage === 'myShares') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'audio') { bottomNav.classList.add('hide'); audioFabBar.classList.add('visible'); renderAudioList(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'audioSearch') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderAudioSearch(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); }
@@ -8993,7 +9000,7 @@
 
       /* ─── SCROLL HIDE NAV ─── */
       let lastScrollY = 0, downDist = 0, upDist = 0;
-      var navHidePages = ['dynamic', 'contacts', 'contactChat', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole', 'personalInfo', 'accountSettings', 'invite', 'myShares'];
+      var navHidePages = ['dynamic', 'contacts', 'contactChat', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole', 'personalInfo', 'accountSettings', 'invite', 'myFavorites', 'myShares'];
       window.addEventListener('scroll', function () {
         if (navHidePages.includes(currentPage)) { bottomNav.classList.add('hide'); return; }
         const y = window.scrollY || document.documentElement.scrollTop;

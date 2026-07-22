@@ -1427,6 +1427,7 @@ export function initializePrototype() {
         else if (currentPage === 'audioSearch') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderAudioSearch(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else { audioFabBar.classList.remove('visible'); renderFeed(getVisibleItems()); }
         updateSuperFab();
+        requestAnimationFrame(updateSearchBackToTop);
       }
 
       function openAgentPage(handle) {
@@ -2315,6 +2316,7 @@ export function initializePrototype() {
       var gsResultsEl = document.getElementById('gsResults');
       var gsHistoryChipsEl = document.getElementById('gsHistoryChips');
       var gsTimelineEl = document.getElementById('gsTimeline');
+      var gsBackToTopBtn = document.getElementById('gsBackToTop');
 
       function gsRenderHistory() {
         var toggle = document.getElementById('gsHistoryToggle');
@@ -2365,6 +2367,7 @@ export function initializePrototype() {
             closeGlobalSearch();
             openEventDetail(findDailyEvent(node.dataset.dailyOpen), function () {
               globalSearchPage.classList.add('show');
+              requestAnimationFrame(updateGsBackToTop);
             });
           };
         });
@@ -2651,12 +2654,20 @@ export function initializePrototype() {
         gsEntryEl.style.display = 'block';
         gsTabsEl.style.display = 'none';
         gsResultsEl.style.display = 'none';
+        requestAnimationFrame(updateGsBackToTop);
       }
 
       function gsShowResults() {
         gsEntryEl.style.display = 'none';
         gsTabsEl.style.display = 'flex';
         gsResultsEl.style.display = 'block';
+        if (gsBackToTopBtn) gsBackToTopBtn.classList.remove('show');
+      }
+
+      function updateGsBackToTop() {
+        if (!gsBackToTopBtn || !gsEntryEl) return;
+        var canScroll = gsEntryEl.scrollHeight > gsEntryEl.clientHeight + 1;
+        gsBackToTopBtn.classList.toggle('show', canScroll && gsEntryEl.scrollTop > 320);
       }
 
       function gsUpdateClearBtn() {
@@ -2694,11 +2705,14 @@ export function initializePrototype() {
         globalSearchPage.classList.add('show');
         gsRenderHistory();
         gsRenderTimeline();
+        gsEntryEl.scrollTop = 0;
+        if (gsBackToTopBtn) gsBackToTopBtn.classList.remove('show');
         setTimeout(function () { gsInput.focus(); }, 40);
       }
 
       function closeGlobalSearch() {
         globalSearchPage.classList.remove('show');
+        if (gsBackToTopBtn) gsBackToTopBtn.classList.remove('show');
       }
 
       var globalSearchBtnEl = document.getElementById('globalSearchBtn');
@@ -2714,6 +2728,12 @@ export function initializePrototype() {
       gsInput.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') { e.preventDefault(); gsRunSearch(); }
       });
+      gsEntryEl.addEventListener('scroll', updateGsBackToTop, { passive: true });
+      if (gsBackToTopBtn) {
+        gsBackToTopBtn.addEventListener('click', function () {
+          gsEntryEl.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
       document.getElementById('gsHistoryToggle').addEventListener('click', function () {
         gsState.historyExpanded = !gsState.historyExpanded;
         gsRenderHistory();
@@ -2737,6 +2757,19 @@ export function initializePrototype() {
         if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); runSearch(); }
       });
       document.getElementById('searchHistoryBtn').addEventListener('click', openDatePicker);
+      var searchBackToTopBtn = document.getElementById('searchBackToTop');
+      function updateSearchBackToTop() {
+        if (!searchBackToTopBtn) return;
+        var y = window.scrollY || document.documentElement.scrollTop;
+        var canScroll = document.documentElement.scrollHeight > window.innerHeight + 1;
+        searchBackToTopBtn.classList.toggle('show', currentPage === 'search' && canScroll && y > 320);
+      }
+      window.addEventListener('scroll', updateSearchBackToTop, { passive: true });
+      if (searchBackToTopBtn) {
+        searchBackToTopBtn.addEventListener('click', function () {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
       var datePickerSheetEl = document.getElementById('datePickerSheet');
       datePickerSheetEl.addEventListener('click', function (e) {
         if (e.target === datePickerSheetEl || e.target.closest('[data-close="date-picker-sheet"]')) closeSheet('datePickerSheet');
