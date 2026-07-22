@@ -1292,6 +1292,7 @@ export function initializePrototype() {
         if (input) input.value = query;
         bottomNav.classList.add('hide');
         searchResultPage.classList.add('show');
+        searchResultPage.classList.remove('empty');
         updateResultRangeButton();
         if (loading) {
           searchResultPage.classList.add('loading');
@@ -1311,6 +1312,7 @@ export function initializePrototype() {
       function populateSearchResults(query) {
         searchResultState.query = query;
         searchResultState.events = buildResultEvents();
+        searchResultPage.classList.toggle('empty', !searchResultState.events.length);
         // 给每条结果事项挂上「推理路径」——说明该事项是怎么被检索到的
         searchResultState.events.forEach(function (ev) {
           ev.path = { query: query, source: ev.source, via: '关键词 + 语义相似度检索', hit: ev.title };
@@ -1400,7 +1402,14 @@ export function initializePrototype() {
         if (searchResultState.sortMode === 'time') {
           events = events.slice().sort(function (a, b) { return (b.time || '').localeCompare(a.time || ''); });
         }
-        if (!events.length) { el.innerHTML = '<div class="sr-empty">暂无搜索结果</div>'; return; }
+        if (!events.length) {
+          el.innerHTML = '<div class="sr-empty">' +
+            '<div class="sr-empty-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg></div>' +
+            '<div class="sr-empty-title">暂无相关结果</div>' +
+            '<div class="sr-empty-desc">换个关键词或调整搜索范围试试</div>' +
+          '</div>';
+          return;
+        }
         el.innerHTML = events.map(resultCardHTML).join('');
         el.querySelectorAll('.sr-result').forEach(function (card) {
           card.onclick = function () {
