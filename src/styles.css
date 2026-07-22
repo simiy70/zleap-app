@@ -478,6 +478,10 @@
     }
     .profile-page.show, .screen-page.show { display: block; }
 
+    /* 二级搜索页面不展示一级悬浮菜单，避免滚动逻辑误恢复。 */
+    #searchPage.show ~ .bottom-nav,
+    .search-result-page.show ~ .bottom-nav { display: none; }
+
     .app.alt-mode .status-bar,
     .app.alt-mode .top-header,
     .app.alt-mode .feed { display: none; }

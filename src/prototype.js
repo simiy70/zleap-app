@@ -3147,7 +3147,7 @@ export function initializePrototype() {
 
       /* ─── SCROLL HIDE NAV ─── */
       let lastScrollY = 0, downDist = 0, upDist = 0;
-      var navHidePages = ['contacts', 'contactChat', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks'];
+      var navHidePages = ['contacts', 'contactChat', 'search', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks'];
       window.addEventListener('scroll', function () {
         if (navHidePages.includes(currentPage)) { bottomNav.classList.add('hide'); return; }
         const y = window.scrollY || document.documentElement.scrollTop;
