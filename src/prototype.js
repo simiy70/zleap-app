@@ -1327,6 +1327,14 @@ export function initializePrototype() {
         if (currentPage === 'search') bottomNav.classList.remove('hide');
       }
 
+      function exitSourceSearchMode() {
+        closeSearchResults();
+        closeGlobalSearch();
+        searchReturnsToGlobalSearch = false;
+        if (pageHistory[pageHistory.length - 1] === 'search') pageHistory.pop();
+        switchPage(pageHistory[pageHistory.length - 1] || 'home', { skipHistory: true });
+      }
+
       function buildResultSummaryText() {
         var q = escapeHTML(searchResultState.query);
         var n = searchResultState.events.length;
@@ -2803,7 +2811,7 @@ export function initializePrototype() {
       });
       document.getElementById('rangeConfirmBtn').addEventListener('click', confirmRange);
       document.getElementById('searchResultRangeBtn').addEventListener('click', function () { openRangeSheet('results'); });
-      document.getElementById('searchResultBack').addEventListener('click', closeSearchResults);
+      document.getElementById('searchResultCancel').addEventListener('click', exitSourceSearchMode);
       document.getElementById('searchResultClear').addEventListener('click', function () {
         var resultInput = document.getElementById('searchResultInput');
         var homeInput = document.getElementById('searchInput');
