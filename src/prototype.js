@@ -1028,6 +1028,7 @@ export function initializePrototype() {
 
       var searchResultState = { query: '', events: [], sortMode: 'smart', pathOpen: false };
       var rangeDraft = { range: 'public', sub: 'own', selected: new Set(), query: '', selectedOnly: false };
+      var rangeSheetContext = 'entry';
 
       function updateRangeButton() {
         var el = document.getElementById('searchRangeText');
@@ -1035,6 +1036,16 @@ export function initializePrototype() {
         el.textContent = searchState.range === 'public'
           ? '公共信息源'
           : '个人信息源 · ' + searchState.selectedSources.size + ' 个';
+      }
+
+      function updateResultRangeButton() {
+        var text = document.getElementById('searchResultRangeText');
+        var button = document.getElementById('searchResultRangeBtn');
+        var label = searchState.range === 'public'
+          ? '公共信息源'
+          : '个人信息源 · ' + searchState.selectedSources.size + ' 个';
+        if (text) text.textContent = label;
+        if (button) button.setAttribute('aria-label', '调整搜索范围：' + label);
       }
 
       function renderSearchHome() {
@@ -1173,7 +1184,8 @@ export function initializePrototype() {
       }
 
       /* ── 搜索范围 sheet ── */
-      function openRangeSheet() {
+      function openRangeSheet(context) {
+        rangeSheetContext = context || 'entry';
         rangeDraft.range = searchState.range;
         rangeDraft.sub = 'own';
         rangeDraft.selected = new Set(searchState.selectedSources);
@@ -1245,10 +1257,19 @@ export function initializePrototype() {
 
       function confirmRange() {
         if (rangeDraft.range === 'mine' && !rangeDraft.selected.size) { showToast('请至少选择一个信息源'); return; }
+        var previousRange = searchState.range;
+        var previousSelected = Array.from(searchState.selectedSources).sort().join(',');
+        var nextSelected = Array.from(rangeDraft.selected).sort().join(',');
+        var rangeChanged = previousRange !== rangeDraft.range || previousSelected !== nextSelected;
         searchState.range = rangeDraft.range;
         searchState.selectedSources = new Set(rangeDraft.selected);
         updateRangeButton();
+        updateResultRangeButton();
         closeSheet('searchRangeSheet');
+        if (rangeSheetContext === 'results' && rangeChanged && searchResultPage.classList.contains('show')) {
+          openSearchResults(searchResultState.query, { loading: true });
+        }
+        rangeSheetContext = 'entry';
       }
 
       function closeSheet(id) { var el = document.getElementById(id); if (el) el.classList.remove('show'); }
@@ -1271,6 +1292,7 @@ export function initializePrototype() {
         if (input) input.value = query;
         bottomNav.classList.add('hide');
         searchResultPage.classList.add('show');
+        updateResultRangeButton();
         if (loading) {
           searchResultPage.classList.add('loading');
           var token = ++searchResultLoadingToken;
@@ -2751,7 +2773,7 @@ export function initializePrototype() {
       });
 
       /* ─── 信息源搜索 wiring ─── */
-      document.getElementById('searchRangeBtn').addEventListener('click', openRangeSheet);
+      document.getElementById('searchRangeBtn').addEventListener('click', function () { openRangeSheet('entry'); });
       document.getElementById('searchGoBtn').addEventListener('click', function () { runSearch(); });
       document.getElementById('searchInput').addEventListener('keydown', function (e) {
         if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); runSearch(); }
@@ -2780,11 +2802,15 @@ export function initializePrototype() {
         if (e.target === rangeSheetEl || e.target.closest('[data-close="search-range-sheet"]')) closeSheet('searchRangeSheet');
       });
       document.getElementById('rangeConfirmBtn').addEventListener('click', confirmRange);
+      document.getElementById('searchResultRangeBtn').addEventListener('click', function () { openRangeSheet('results'); });
       document.getElementById('searchResultBack').addEventListener('click', closeSearchResults);
       document.getElementById('searchResultClear').addEventListener('click', function () {
-        var i = document.getElementById('searchResultInput');
-        i.value = '';
-        i.focus();
+        var resultInput = document.getElementById('searchResultInput');
+        var homeInput = document.getElementById('searchInput');
+        if (resultInput) resultInput.value = '';
+        if (homeInput) homeInput.value = '';
+        closeSearchResults();
+        switchPage('search');
       });
       document.getElementById('searchResultInput').addEventListener('keydown', function (e) {
         if (e.key !== 'Enter') return;

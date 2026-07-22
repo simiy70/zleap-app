@@ -1467,8 +1467,10 @@
     .ai-summary-sheet-body { flex: 1; overflow-y: auto; padding-top: 4px; }
     .ai-summary-body { font-size: 14px; line-height: 1.9; color: var(--text-primary); }
     /* controls */
-    .sr-controls { display: flex; align-items: center; justify-content: flex-end; gap: 18px; margin-bottom: 12px; padding: 0 2px; }
+    .sr-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; padding: 0 2px; }
     .sr-ctrl { display: inline-flex; align-items: center; gap: 5px; border: none; background: transparent; cursor: pointer; color: var(--text-secondary); font-size: 13px; font-weight: 700; }
+    .sr-range-ctrl { min-width: 0; color: var(--accent); }
+    .sr-range-ctrl span { max-width: 132px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .sr-ctrl.active { color: var(--accent); }
     .sr-cite { cursor: pointer; user-select: none; }
     .sr-cite:active { opacity: .7; }
