@@ -4382,7 +4382,7 @@
       font-size: 12px;
       line-height: 1.65;
       white-space: pre-wrap;
-      opacity: 0;
+      opacity: 1;
     }
     .event-detail-refinfo {
       margin-top: 10px;
