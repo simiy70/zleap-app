@@ -1114,8 +1114,9 @@ export function initializePrototype() {
         });
       }
 
-      function timelineCardHTML(ev) {
-        var expanded = dailyExpanded.has(ev.id);
+      function timelineCardHTML(ev, options) {
+        var showChildren = !options || options.showChildren !== false;
+        var expanded = showChildren && dailyExpanded.has(ev.id);
         var kids = ev.children || [];
         var childrenHTML = expanded ? '<div class="tl-children">' + kids.map(function (c) {
           return '<div class="tl-child" data-daily-open="' + escapeHTML(c.id) + '">' +
@@ -1132,7 +1133,7 @@ export function initializePrototype() {
             '</div>' +
             '<div class="tl-card-foot">' +
               '<span class="tl-card-source"><span class="tl-card-source-avatar">' + escapeHTML((ev.avatar || ev.source || '·').slice(0, 1)) + '</span><span class="tl-card-source-name">' + escapeHTML(ev.source || '') + '</span></span>' +
-              (kids.length ? '<button class="tl-card-sub ' + (expanded ? 'expanded' : '') + '" type="button" data-daily-toggle="' + escapeHTML(ev.id) + '">' + kids.length + ' 个相关子事项 <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>' : '') +
+              (showChildren && kids.length ? '<button class="tl-card-sub ' + (expanded ? 'expanded' : '') + '" type="button" data-daily-toggle="' + escapeHTML(ev.id) + '">' + kids.length + ' 个相关子事项 <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>' : '') +
             '</div>' +
             childrenHTML +
           '</div>' +
@@ -1142,7 +1143,9 @@ export function initializePrototype() {
       function renderDailyTimeline() {
         var el = document.getElementById('searchTimeline');
         if (!el) return;
-        el.innerHTML = searchState.dailyEvents.map(timelineCardHTML).join('');
+        el.innerHTML = searchState.dailyEvents.map(function (event) {
+          return timelineCardHTML(event);
+        }).join('');
         el.querySelectorAll('[data-daily-toggle]').forEach(function (btn) {
           btn.onclick = function (e) {
             e.stopPropagation();
@@ -1653,7 +1656,7 @@ export function initializePrototype() {
           ? '<div class="event-detail-ref-body">' + escapeHTML(reference) + '</div>'
           : '';
         var refInfo = source.source
-          ? '<div class="event-detail-refinfo">参考信息：' + escapeHTML(source.source) + '</div>'
+          ? '<div class="event-detail-refinfo">参考信息源：' + escapeHTML(source.source) + '</div>'
           : '';
         return '<div class="event-detail-card">' +
           '<h2 class="event-detail-item-title">' + escapeHTML(source.title || '未命名事件') + '</h2>' +
@@ -2399,7 +2402,9 @@ export function initializePrototype() {
 
       function gsRenderTimeline() {
         if (!gsTimelineEl) return;
-        gsTimelineEl.innerHTML = searchState.dailyEvents.map(timelineCardHTML).join('');
+        gsTimelineEl.innerHTML = searchState.dailyEvents.map(function (event) {
+          return timelineCardHTML(event, { showChildren: false });
+        }).join('');
         var dateEl = document.getElementById('gsDiscoveryDate');
         if (dateEl) dateEl.textContent = searchState.dailyDate;
         gsTimelineEl.querySelectorAll('[data-daily-toggle]').forEach(function (btn) {
