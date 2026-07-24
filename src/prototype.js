@@ -21,6 +21,9 @@ export function initializePrototype() {
       const feed = document.getElementById('feed');
       const bottomNav = document.getElementById('bottomNav');
       const app = document.querySelector('.app');
+      const workbenchPanel = document.getElementById('workbenchPanel');
+      const feedPanel = document.getElementById('feedPanel');
+      const profileDrawer = document.getElementById('profileDrawer');
       const profilePage = document.getElementById('profilePage');
       const profileFeed = document.getElementById('profileFeed');
       const agentPage = document.getElementById('agentPage');
@@ -47,6 +50,12 @@ export function initializePrototype() {
       const superAgentRolePage = document.getElementById('superAgentRolePage');
       const superAgentFab = document.getElementById('superAgentFab');
       const superAgentPageBody = document.getElementById('superAgentPageBody');
+      const personalInfoPage = document.getElementById('personalInfoPage');
+      const accountSettingsPage = document.getElementById('accountSettingsPage');
+      const invitePage = document.getElementById('invitePage');
+      const myFavoritesPage = document.getElementById('myFavoritesPage');
+      const mySharesPage = document.getElementById('mySharesPage');
+      let superTasksReturnPage = 'superSettings';
       let eventDetailReturn = null;
       if (eventDetailBack && eventDetailPage) {
         eventDetailBack.addEventListener('click', function () {
@@ -1440,9 +1449,11 @@ export function initializePrototype() {
       }
 
       function switchPage(page, options) {
-        currentPage = ['profile', 'agent', 'message', 'contacts', 'contactChat', 'search', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole'].includes(page) ? page : 'home';
+        currentPage = ['dynamic', 'profile', 'agent', 'message', 'contacts', 'contactChat', 'search', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole', 'personalInfo', 'accountSettings', 'invite', 'myFavorites', 'myShares'].includes(page) ? page : 'home';
         app.classList.toggle('profile-mode', currentPage === 'profile');
-        app.classList.toggle('alt-mode', currentPage !== 'home' && currentPage !== 'profile');
+        app.classList.toggle('alt-mode', currentPage !== 'home' && currentPage !== 'dynamic' && currentPage !== 'profile');
+        if (workbenchPanel) workbenchPanel.hidden = currentPage !== 'home';
+        if (feedPanel) feedPanel.hidden = currentPage !== 'dynamic';
         profilePage.classList.toggle('show', currentPage === 'profile');
         agentPage.classList.toggle('show', currentPage === 'agent');
         messagePage.classList.toggle('show', currentPage === 'message');
@@ -1453,6 +1464,11 @@ export function initializePrototype() {
         if (superAgentSettingsPage) superAgentSettingsPage.classList.toggle('show', currentPage === 'superSettings');
         if (superAgentTasksPage) superAgentTasksPage.classList.toggle('show', currentPage === 'superTasks');
         if (superAgentRolePage) superAgentRolePage.classList.toggle('show', currentPage === 'superRole');
+        if (personalInfoPage) personalInfoPage.classList.toggle('show', currentPage === 'personalInfo');
+        if (accountSettingsPage) accountSettingsPage.classList.toggle('show', currentPage === 'accountSettings');
+        if (invitePage) invitePage.classList.toggle('show', currentPage === 'invite');
+        if (myFavoritesPage) myFavoritesPage.classList.toggle('show', currentPage === 'myFavorites');
+        if (mySharesPage) mySharesPage.classList.toggle('show', currentPage === 'myShares');
         audioPage.classList.toggle('show', currentPage === 'audio');
         audioSearchPage.classList.toggle('show', currentPage === 'audioSearch');
         if (!options || !options.skipHistory) {
@@ -1460,12 +1476,16 @@ export function initializePrototype() {
         }
         // Nav active: audio & audioSearch both highlight "message" since audio is sub-page of message
         var navActive = currentPage;
-        if (navActive === 'contacts' || navActive === 'contactChat' || navActive === 'audio' || navActive === 'audioSearch' || navActive === 'superAgent' || navActive === 'superSettings' || navActive === 'superTasks' || navActive === 'superRole') navActive = 'message';
+        if (navActive === 'contacts' || navActive === 'contactChat' || navActive === 'audio' || navActive === 'audioSearch') navActive = 'message';
+        if (navActive === 'personalInfo' || navActive === 'accountSettings' || navActive === 'invite' || navActive === 'myFavorites' || navActive === 'myShares') navActive = '';
+        if (navActive === 'superSettings' || navActive === 'superTasks' || navActive === 'superRole') navActive = 'superAgent';
         if (navActive === 'agent') navActive = 'profile';
         document.querySelectorAll('.nav-item').forEach(function (item) {
           item.classList.toggle('active', item.dataset.nav === navActive);
         });
-        if (currentPage === 'profile') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderProfileFeed(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        if (currentPage === 'home') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        else if (currentPage === 'dynamic') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderFeed(getVisibleItems()); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        else if (currentPage === 'profile') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderProfileFeed(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'agent') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderAgentFeed(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'message') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderConvList(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'contacts') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderContactBook(); }
@@ -1475,9 +1495,10 @@ export function initializePrototype() {
         else if (currentPage === 'superSettings') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSuperSettings(); }
         else if (currentPage === 'superTasks') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderSuperTasks(); }
         else if (currentPage === 'superRole') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); }
+        else if (currentPage === 'personalInfo' || currentPage === 'accountSettings' || currentPage === 'invite' || currentPage === 'myFavorites' || currentPage === 'myShares') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'audio') { bottomNav.classList.add('hide'); audioFabBar.classList.add('visible'); renderAudioList(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'audioSearch') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderAudioSearch(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        else { audioFabBar.classList.remove('visible'); renderFeed(getVisibleItems()); }
+        else { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); }
         updateSuperFab();
         requestAnimationFrame(updateSearchBackToTop);
       }
@@ -2345,6 +2366,36 @@ export function initializePrototype() {
         switchPage(nav.dataset.nav);
       });
 
+      function setProfileDrawer(open) {
+        if (!profileDrawer) return;
+        profileDrawer.classList.toggle('show', open);
+        profileDrawer.setAttribute('aria-hidden', open ? 'false' : 'true');
+      }
+      document.querySelectorAll('[data-open-profile-drawer]').forEach(function (button) {
+        button.addEventListener('click', function () { setProfileDrawer(true); });
+      });
+      document.getElementById('profileDrawerClose').addEventListener('click', function () { setProfileDrawer(false); });
+      profileDrawer.addEventListener('click', function (event) {
+        if (event.target === profileDrawer) setProfileDrawer(false);
+        var entry = event.target.closest('[data-drawer-page]');
+        if (!entry) return;
+        var targetPage = entry.dataset.drawerPage;
+        if (targetPage === 'superTasks') superTasksReturnPage = 'home';
+        setProfileDrawer(false);
+        switchPage(targetPage);
+      });
+      document.querySelectorAll('[data-drawer-back]').forEach(function (button) {
+        button.addEventListener('click', function () { switchPage('home'); setTimeout(function () { setProfileDrawer(true); }, 80); });
+      });
+      document.getElementById('workbenchSearchBtn').addEventListener('click', openGlobalSearch);
+      document.querySelectorAll('[data-dashboard-action]').forEach(function (card) {
+        card.addEventListener('click', function () {
+          var messages = { insights: '已打开今日洞察', activity: '已打开 Agent 动态', sources: '信息源运行正常', board: '已打开 Agent 工作台看板' };
+          showToast(messages[card.dataset.dashboardAction] || '已打开');
+        });
+      });
+      document.getElementById('copyInviteBtn').addEventListener('click', function () { showToast('邀请链接已复制'); });
+
       /* ─── 全局搜索（顶部图标入口） ─── */
       var gsState = {
         history: ['文件传输', '开源', '荣耀', '客户 A 风险信号', 'CFO 预算表态', 'ARR 续费策略', 'AI 科研工具', 'Super Agent 使用记录', '多模态大模型', 'Anthropic Claude 3.7'],
@@ -2967,7 +3018,12 @@ export function initializePrototype() {
       });
       document.getElementById('superAgentSettingsBtn').addEventListener('click', function () { switchPage('superSettings'); });
       document.getElementById('superSettingsBack').addEventListener('click', function () { switchPage('superAgent'); });
-      document.getElementById('superTasksBack').addEventListener('click', function () { switchPage('superSettings'); });
+      document.getElementById('superTasksBack').addEventListener('click', function () {
+        var target = superTasksReturnPage || 'superSettings';
+        superTasksReturnPage = 'superSettings';
+        switchPage(target);
+        if (target === 'home') setTimeout(function () { setProfileDrawer(true); }, 80);
+      });
       document.getElementById('superTasksNew').addEventListener('click', function () { switchPage('superTasks'); });
       document.getElementById('superAgentNewTopicBtn').addEventListener('click', startNewTopic);
       document.getElementById('superAgentSend').addEventListener('click', function () { sendSuperMessage(); });
@@ -3205,7 +3261,7 @@ export function initializePrototype() {
 
       /* ─── SCROLL HIDE NAV ─── */
       let lastScrollY = 0, downDist = 0, upDist = 0;
-      var navHidePages = ['contacts', 'contactChat', 'search', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks'];
+      var navHidePages = ['contacts', 'contactChat', 'search', 'audio', 'audioSearch', 'superAgent', 'superSettings', 'superTasks', 'superRole', 'personalInfo', 'accountSettings', 'invite', 'myFavorites', 'myShares'];
       window.addEventListener('scroll', function () {
         if (navHidePages.includes(currentPage)) { bottomNav.classList.add('hide'); return; }
         const y = window.scrollY || document.documentElement.scrollTop;

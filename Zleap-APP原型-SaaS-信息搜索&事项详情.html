@@ -453,9 +453,9 @@
     }
     .bottom-nav.hide { transform: translateX(-50%) translateY(180%); opacity: 0; }
     .bottom-inner {
-      flex: 0 0 132px;
-      width: 132px;
-      min-width: 132px;
+      flex: 0 0 196px;
+      width: 196px;
+      min-width: 196px;
       height: 58px;
       display: flex; align-items: center; justify-content: center; gap: 4px;
       padding: 4px;
@@ -4578,9 +4578,6 @@
       <div class="feed-panel" id="feedPanel" hidden>
         <header class="top-header">
           <div class="main-tab">
-            <button class="icon-btn dynamic-back" id="dynamicBackBtn" type="button" aria-label="返回工作台">
-              <svg class="icon" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg>
-            </button>
             <div class="main-tab-inner">
               <button class="top-tab active" data-tab="discover">发现</button>
               <button class="top-tab" data-tab="following">关注</button>
@@ -4609,7 +4606,6 @@
           <button class="drawer-item" type="button" data-drawer-page="accountSettings"><span class="drawer-item-icon">⚙</span><span class="drawer-item-label">设置</span><span class="drawer-chevron">›</span></button>
           <button class="drawer-item" type="button" data-drawer-page="invite"><span class="drawer-item-icon">+</span><span class="drawer-item-label">邀请好友</span><span class="drawer-chevron">›</span></button>
           <div class="drawer-divider" role="separator" aria-hidden="true"></div>
-          <button class="drawer-item" type="button" data-drawer-page="dynamic"><span class="drawer-item-icon">◇</span><span class="drawer-item-label">动态</span><span class="drawer-chevron">›</span></button>
           <button class="drawer-item" type="button" data-drawer-page="myFavorites"><span class="drawer-item-icon">☆</span><span class="drawer-item-label">我的收藏</span><span class="drawer-chevron">›</span></button>
           <button class="drawer-item" type="button" data-drawer-page="myShares"><span class="drawer-item-icon">↗</span><span class="drawer-item-label">我的分享</span><span class="drawer-chevron">›</span></button>
           <div class="drawer-divider" role="separator" aria-hidden="true"></div>
@@ -5059,6 +5055,10 @@
         <button class="nav-item" data-nav="message">
           <svg class="icon" viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 4V5Z"></path><path d="M8 9h8"></path><path d="M8 13h5"></path></svg>
           <span>消息</span>
+        </button>
+        <button class="nav-item" data-nav="dynamic">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M4 19V9"></path><path d="M10 19V5"></path><path d="M16 19v-7"></path><path d="M22 19V3"></path></svg>
+          <span>动态</span>
         </button>
       </div>
       <button class="super-agent-fab has-unread" id="superAgentFab" type="button" data-nav="superAgent" aria-label="打开超级 Agent">
@@ -7254,14 +7254,14 @@
         // Nav active: audio & audioSearch both highlight "message" since audio is sub-page of message
         var navActive = currentPage;
         if (navActive === 'contacts' || navActive === 'contactChat' || navActive === 'audio' || navActive === 'audioSearch') navActive = 'message';
-        if (navActive === 'dynamic' || navActive === 'personalInfo' || navActive === 'accountSettings' || navActive === 'invite' || navActive === 'myFavorites' || navActive === 'myShares') navActive = '';
+        if (navActive === 'personalInfo' || navActive === 'accountSettings' || navActive === 'invite' || navActive === 'myFavorites' || navActive === 'myShares') navActive = '';
         if (navActive === 'superSettings' || navActive === 'superTasks' || navActive === 'superRole') navActive = 'superAgent';
         if (navActive === 'agent') navActive = 'profile';
         document.querySelectorAll('.nav-item').forEach(function (item) {
           item.classList.toggle('active', item.dataset.nav === navActive);
         });
         if (currentPage === 'home') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        else if (currentPage === 'dynamic') { bottomNav.classList.add('hide'); audioFabBar.classList.remove('visible'); renderFeed(getVisibleItems()); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        else if (currentPage === 'dynamic') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderFeed(getVisibleItems()); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'profile') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderProfileFeed(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'agent') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderAgentFeed(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         else if (currentPage === 'message') { bottomNav.classList.remove('hide'); audioFabBar.classList.remove('visible'); renderConvList(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
@@ -8151,7 +8151,6 @@
         button.addEventListener('click', function () { setProfileDrawer(true); });
       });
       document.getElementById('profileDrawerClose').addEventListener('click', function () { setProfileDrawer(false); });
-      document.getElementById('dynamicBackBtn').addEventListener('click', function () { switchPage('home'); });
       profileDrawer.addEventListener('click', function (event) {
         if (event.target === profileDrawer) setProfileDrawer(false);
         var entry = event.target.closest('[data-drawer-page]');

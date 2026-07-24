@@ -15,24 +15,114 @@
 
     <!-- Main Feed Shell -->
     <div class="main-feed-shell">
-      <header class="top-header">
-        <div class="main-tab">
-          <div class="main-tab-inner">
-            <button class="top-tab active" data-tab="discover">发现</button>
-            <button class="top-tab" data-tab="following">关注</button>
+      <section class="workbench-panel" id="workbenchPanel">
+        <header class="workbench-header">
+          <button class="profile-entry" type="button" data-open-profile-drawer aria-label="打开个人中心">
+            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=120&q=80" alt="Simiy">
+          </button>
+          <div class="workbench-title">工作台</div>
+          <button class="icon-btn" id="workbenchSearchBtn" type="button" aria-label="搜索">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg>
+          </button>
+        </header>
+        <div class="workbench-content">
+          <div class="workbench-greeting">
+            <strong>早上好，Simiy</strong>
+            <span>今天的重点信息和 Agent 进度已经准备好了</span>
           </div>
-          <div class="header-actions">
-            <button class="icon-btn" id="globalSearchBtn" type="button" aria-label="搜索">
-              <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg>
+          <div class="metric-grid">
+            <button class="metric-card" type="button" data-dashboard-action="insights">
+              <span class="metric-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 19V9"></path><path d="M10 19V5"></path><path d="M16 19v-7"></path><path d="M22 19V3"></path></svg></span>
+              <div class="metric-value">28</div><div class="metric-label">今日洞察数量</div><div class="metric-trend">↑ 12% 较昨日</div>
+            </button>
+            <button class="metric-card" type="button" data-dashboard-action="activity" style="--metric-color:#6d5ce7;--metric-tint:#f0edff">
+              <span class="metric-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M8 12h8"></path><path d="M12 8v8"></path><circle cx="12" cy="12" r="9"></circle></svg></span>
+              <div class="metric-value">16</div><div class="metric-label">Agent 动态数</div><div class="metric-trend">5 个任务进行中</div>
+            </button>
+            <button class="metric-card" type="button" data-dashboard-action="sources" style="--metric-color:#1683d8;--metric-tint:#e9f5ff">
+              <span class="metric-icon"><svg class="icon" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"></path><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"></path></svg></span>
+              <div class="metric-value">24<span style="font-size:14px;color:var(--text-tertiary)">/25</span></div><div class="metric-label">信息源状态监控</div><div class="metric-trend">96% 运行正常</div>
+            </button>
+            <button class="metric-card" type="button" data-dashboard-action="board" style="--metric-color:#d98719;--metric-tint:#fff4dd">
+              <span class="metric-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"></rect><rect x="14" y="3" width="7" height="7" rx="2"></rect><rect x="3" y="14" width="7" height="7" rx="2"></rect><rect x="14" y="14" width="7" height="7" rx="2"></rect></svg></span>
+              <div class="metric-value">8</div><div class="metric-label">Agent 工作台看板</div><div class="metric-trend">7 个状态正常</div>
             </button>
           </div>
+          <section class="dashboard-section">
+            <div class="dashboard-section-head"><strong>Agent 运行中</strong><span>实时更新</span></div>
+            <div class="agent-board">
+              <div class="agent-board-item"><div class="board-avatar">AI</div><div><div class="board-name">行业洞察 Agent</div><div class="board-task">正在汇总今日重点动态</div></div><span class="board-state">运行中</span></div>
+              <div class="agent-board-item"><div class="board-avatar" style="background:linear-gradient(135deg,#6377e8,#815ee8)">风</div><div><div class="board-name">风险监控 Agent</div><div class="board-task">已发现 2 条需要关注的信号</div></div><span class="board-state">运行中</span></div>
+              <div class="agent-board-item"><div class="board-avatar" style="background:linear-gradient(135deg,#2ebc72,#16a0a0)">研</div><div><div class="board-name">竞品研究 Agent</div><div class="board-task">上次同步于 10 分钟前</div></div><span class="board-state">正常</span></div>
+            </div>
+          </section>
         </div>
-        <div class="category-filter" id="categoryFilter"></div>
-        <div class="agent-filter" id="agentFilter"></div>
-      </header>
+      </section>
 
-      <section class="feed" id="feed"></section>
+      <div class="feed-panel" id="feedPanel" hidden>
+        <header class="top-header">
+          <div class="main-tab">
+            <div class="main-tab-inner">
+              <button class="top-tab active" data-tab="discover">发现</button>
+              <button class="top-tab" data-tab="following">关注</button>
+            </div>
+            <div class="header-actions">
+              <button class="icon-btn" id="globalSearchBtn" type="button" aria-label="搜索">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.3-4.3"></path></svg>
+              </button>
+            </div>
+          </div>
+          <div class="category-filter" id="categoryFilter"></div>
+          <div class="agent-filter" id="agentFilter"></div>
+        </header>
+        <section class="feed" id="feed"></section>
+      </div>
     </div>
+
+    <aside class="profile-drawer" id="profileDrawer" aria-hidden="true">
+      <div class="drawer-panel" role="dialog" aria-label="个人中心">
+        <button class="drawer-close" id="profileDrawerClose" type="button" aria-label="关闭">×</button>
+        <div class="drawer-profile">
+          <img class="drawer-avatar" src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=160&q=80" alt="Simiy">
+          <div><strong>Simiy</strong><span>智跃 Zleap · 产品组</span></div>
+        </div>
+        <nav class="drawer-menu">
+          <button class="drawer-item" type="button" data-drawer-page="accountSettings"><span class="drawer-item-icon">⚙</span><span class="drawer-item-label">设置</span><span class="drawer-chevron">›</span></button>
+          <button class="drawer-item" type="button" data-drawer-page="invite"><span class="drawer-item-icon">+</span><span class="drawer-item-label">邀请好友</span><span class="drawer-chevron">›</span></button>
+          <div class="drawer-divider" role="separator" aria-hidden="true"></div>
+          <button class="drawer-item" type="button" data-drawer-page="myFavorites"><span class="drawer-item-icon">☆</span><span class="drawer-item-label">我的收藏</span><span class="drawer-chevron">›</span></button>
+          <button class="drawer-item" type="button" data-drawer-page="myShares"><span class="drawer-item-icon">↗</span><span class="drawer-item-label">我的分享</span><span class="drawer-chevron">›</span></button>
+          <div class="drawer-divider" role="separator" aria-hidden="true"></div>
+          <button class="drawer-item" type="button" data-drawer-page="superTasks"><span class="drawer-item-icon">◎</span><span class="drawer-item-label">自动化任务</span><span class="drawer-chevron">›</span></button>
+        </nav>
+      </div>
+    </aside>
+
+    <section class="screen-page simple-page" id="personalInfoPage">
+      <div class="mini-status"><span>MS</span><span>9:41</span><span>100%</span></div>
+      <div class="screen-title-bar with-back"><button class="screen-back" type="button" data-drawer-back>‹</button><span class="screen-title-center">个人信息</span><span></span></div>
+      <div class="simple-page-body"><div class="simple-card simple-profile-card"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=180&q=80" alt="Simiy"><div><strong>Simiy</strong><span>智跃 Zleap</span><span>产品组 · 产品经理</span></div></div><div class="simple-list"><div class="simple-row"><span>姓名</span><span>Simiy</span></div><div class="simple-row"><span>组织</span><span>智跃 Zleap</span></div><div class="simple-row"><span>部门</span><span>产品组</span></div></div></div>
+    </section>
+    <section class="screen-page simple-page" id="accountSettingsPage">
+      <div class="mini-status"><span>MS</span><span>9:41</span><span>100%</span></div>
+      <div class="screen-title-bar with-back"><button class="screen-back" type="button" data-drawer-back>‹</button><span class="screen-title-center">设置</span><span></span></div>
+      <div class="simple-page-body"><div class="simple-list" style="margin-top:0"><div class="simple-row"><span>通知设置</span><span>›</span></div><div class="simple-row"><span>隐私与权限</span><span>›</span></div><div class="simple-row"><span>语言</span><span>简体中文 ›</span></div></div><div class="simple-list"><div class="simple-row"><span>帮助与反馈</span><span>›</span></div><div class="simple-row"><span>关于 Zleap</span><span>v2.6.0 ›</span></div></div></div>
+    </section>
+    <section class="screen-page simple-page" id="invitePage">
+      <div class="mini-status"><span>MS</span><span>9:41</span><span>100%</span></div>
+      <div class="screen-title-bar with-back"><button class="screen-back" type="button" data-drawer-back>‹</button><span class="screen-title-center">邀请好友</span><span></span></div>
+      <div class="simple-page-body"><div class="simple-card invite-card"><div class="invite-graphic">☺</div><h2>一起用 Agent 高效工作</h2><p>将邀请链接分享给好友，加入后即可共享信息和协作任务。</p><button class="primary-button" type="button" id="copyInviteBtn">复制邀请链接</button></div></div>
+    </section>
+    <section class="screen-page simple-page" id="myFavoritesPage">
+      <div class="mini-status"><span>MS</span><span>9:41</span><span>100%</span></div>
+      <div class="screen-title-bar with-back"><button class="screen-back" type="button" data-drawer-back>‹</button><span class="screen-title-center">我的收藏</span><span></span></div>
+      <div class="simple-page-body"><div class="simple-card"><strong style="font-size:16px">最近收藏</strong><div class="simple-list"><div class="simple-row"><span>RAG vs. 微调：核心优化路径</span><span>今天</span></div><div class="simple-row"><span>AI 科研工作台发展趋势</span><span>昨天</span></div><div class="simple-row"><span>客户风险信号追踪</span><span>7 月 19 日</span></div></div></div></div>
+    </section>
+    <section class="screen-page simple-page" id="mySharesPage">
+      <div class="mini-status"><span>MS</span><span>9:41</span><span>100%</span></div>
+      <div class="screen-title-bar with-back"><button class="screen-back" type="button" data-drawer-back>‹</button><span class="screen-title-center">我的分享</span><span></span></div>
+      <div class="simple-page-body"><div class="simple-card"><strong style="font-size:16px">最近分享</strong><div class="simple-list"><div class="simple-row"><span>AI 行业趋势周报</span><span>今天</span></div><div class="simple-row"><span>客户 A 风险信号</span><span>昨天</span></div><div class="simple-row"><span>2026 产品机会清单</span><span>7 月 18 日</span></div></div></div></div>
+    </section>
 
     <!-- Profile Page -->
     <section class="profile-page" id="profilePage">
@@ -110,6 +200,9 @@
     <section class="screen-page" id="messagePage">
       <div class="mini-status"><span style="font-weight:700">MS</span><span style="font-weight:700">9:41</span><span style="font-weight:700">100%</span></div>
       <div class="msg-title-bar">
+        <button class="profile-entry message-profile-entry" type="button" data-open-profile-drawer aria-label="打开个人中心">
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=120&q=80" alt="Simiy">
+        </button>
         <span class="msg-title">消息</span>
         <button class="icon-btn" id="messageNewBtn" type="button" aria-label="新建">
           <svg class="icon" viewBox="0 0 24 24" style="width:22px;height:22px"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v8"></path><path d="M8 12h8"></path></svg>
@@ -450,19 +543,19 @@
       <div class="bottom-inner">
         <button class="nav-item active" data-nav="home">
           <svg class="icon" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 10v10h14V10"></path><path d="M9.5 20v-6h5v6"></path></svg>
-          <span>首页</span>
+          <span>工作台</span>
         </button>
         <button class="nav-item" data-nav="message">
           <svg class="icon" viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 4V5Z"></path><path d="M8 9h8"></path><path d="M8 13h5"></path></svg>
           <span>消息</span>
         </button>
-        <button class="nav-item" data-nav="profile">
-          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
-          <span>我的</span>
+        <button class="nav-item" data-nav="dynamic">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M4 19V9"></path><path d="M10 19V5"></path><path d="M16 19v-7"></path><path d="M22 19V3"></path></svg>
+          <span>动态</span>
         </button>
       </div>
-      <button class="super-agent-fab has-unread" id="superAgentFab" type="button" aria-label="打开 Simiy的agent">
-        <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=144&q=80" alt="Simiy的agent">
+      <button class="super-agent-fab has-unread" id="superAgentFab" type="button" data-nav="superAgent" aria-label="打开超级 Agent">
+        <img src="assets/super-agent-robot.png" alt="超级 Agent 机器人头像">
       </button>
     </nav>
   </main>
